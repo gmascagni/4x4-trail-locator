@@ -425,6 +425,27 @@ header {
 #mapContainer {
   height: 480px;
   width: 100%;
+  touch-action: pan-x pan-y !important;
+  cursor: grab;
+}
+
+#mapContainer:active {
+  cursor: grabbing;
+}
+
+/* CUSTOM TRAIL HOVER TOOLTIP */
+.custom-trail-tooltip {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  padding: 6px 10px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.custom-trail-tooltip::before {
+  border-top-color: #cbd5e1 !important;
 }
 
 /* MAP DIFFICULTY & EXPEDITION LEGEND BAR */
@@ -4030,6 +4051,201 @@ const TRAILS = [
     status: "Open - Flathead Lake Overlook & Rocks",
     img: "./assets/western_topo_map.jpg",
     tags: ["Flathead Lake", "Blacktail Mountain", "Rock Steps"],
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "SMORR - Guard Rail (Badge of Honor)",
+    region: "Ozark Mountains, Seymour MO",
+    lat: 37.1420,
+    lng: -92.7480,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 3.2,
+    driveTimeEst: "2.0h",
+    airDownPsi: "12-14",
+    status: "Open - Ozark Rock Staircases",
+    img: "./assets/western_topo_map.jpg",
+    tags: ["Ozark Rock", "Guard Rail", "V-Notch Ledge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // ARKANSAS BADGE OF HONOR
+  {
+    id: "boh-hot-springs-rubicon",
+    officialAgency: "El Dorado National Forest & Rubicon Trail Foundation",
+    officialPhone: "(530) 622-5061",
+    officialWebsite: "https://www.rubicontrailfoundation.org/",
+    feeDetails: "Free Public Forest Access â€¢ boh-hot-springs-rubicon0 Optional Trail Maintenance Donation",
+    regulations: "Low range 4WD, minimum 35\" tires and dual lockers strongly recommended. Carry spill kits and human waste bags. Pack it in, pack it out.",
+    stagingArea: "Loon Lake Spillway Staging Area, Georgetown, CA (Air down and toilet facilities)",
+    name: "Hot Springs Off-Road Park - Rubicon Ridge (Badge of Honor)",
+    region: "Ouachita Mountains, Hot Springs AR",
+    lat: 34.5420,
+    lng: -93.0850,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 5.4,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Slate & Novaculite Ledges",
+    img: "./assets/western_topo_map.jpg",
+    tags: ["Rubicon Ridge", "Novaculite Rock", "Hot Springs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // MICHIGAN BADGE OF HONOR
+  {
+    id: "boh-drummond-island",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Drummond Island - Marblehead & South Shore (Badge of Honor)",
+    region: "Upper Peninsula, Drummond Island MI",
+    lat: 45.9850,
+    lng: -83.5650,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.5\"",
+    recTires: "33\"+",
+    lengthMiles: 18.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "14-16",
+    status: "Open - Dolomite Rock Ledges & Lake Huron",
+    img: "./assets/western_topo_map.jpg",
+    tags: ["Marblehead Steps", "Lake Huron Overlook", "Turtle Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // ALABAMA BADGE OF HONOR
+  {
+    id: "boh-stony-lonesome",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Stony Lonesome OHV - Switchback (Badge of Honor)",
+    region: "Cullman County / Bremen, AL",
+    lat: 33.9850,
+    lng: -87.0520,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 4.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Red Clay & Steep Sandstone",
+    img: "./assets/windrock_trail_map.jpg",
+    tags: ["Switchback", "Alabama Clay", "Sandstone Ledges"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // VIRGINIA BADGE OF HONOR
+  {
+    id: "boh-peters-mill-run",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Peters Mill Run (Badge of Honor)",
+    region: "George Washington Forest, Edinburg VA",
+    lat: 38.8350,
+    lng: -78.5320,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 12.5,
+    driveTimeEst: "2.5h",
+    airDownPsi: "18-20",
+    status: "Open - Rocky Ridge & Forest Service Pass",
+    img: "./assets/windrock_trail_map.jpg",
+    tags: ["Shenandoah Valley", "George Washington Forest", "Massanutten Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // WYOMING BADGE OF HONOR
+  {
+    id: "boh-monument-ridge",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Monument Ridge (Badge of Honor)",
+    region: "Bridger-Teton National Forest, Bondurant WY",
+    lat: 43.1950,
+    lng: -110.4280,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 14.5,
+    driveTimeEst: "3.0h",
+    airDownPsi: "16-18",
+    status: "Open - High Ridge Vista of Gros Ventre",
+    img: "./assets/western_topo_map.jpg",
+    tags: ["Gros Ventre Range", "Monument Lookout", "Wyoming Wilderness"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // MONTANA BADGE OF HONOR
+  {
+    id: "boh-blacktail-wild-bill",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access â€¢ Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Blacktail Wild Bill National Trail (Badge of Honor)",
+    region: "Flathead National Forest, Lakeside MT",
+    lat: 48.0120,
+    lng: -114.3950,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 14.0,
+    driveTimeEst: "3.5h",
+    airDownPsi: "16-18",
+    status: "Open - Flathead Lake Overlook & Rocks",
+    img: "./assets/western_topo_map.jpg",
+    tags: ["Flathead Lake", "Blacktail Mountain", "Rock Steps"],
     videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
   }
 ];
@@ -4059,7 +4275,14 @@ function initMap() {
   map = L.map('mapContainer', {
     center: [userLat, userLng],
     zoom: 7,
-    zoomControl: true
+    zoomControl: true,
+    dragging: true,
+    touchZoom: true,
+    scrollWheelZoom: true,
+    doubleClickZoom: true,
+    boxZoom: true,
+    keyboard: true,
+    tap: false
   });
 
   // Topo Layer (USGS National Map)
@@ -4118,8 +4341,6 @@ function calculateDistanceInMiles(lat1, lon1, lat2, lon2) {
   return { miles, hours };
 }
 
-// DIFFICULTY BADGE COLOR HELPER
-
 // RECOMMENDED ESSENTIAL & RECOVERY GEAR HELPER PER TRAIL
 function getRecommendedGear(trail) {
   if (trail.isOverland) {
@@ -4157,6 +4378,7 @@ function getRecommendedGear(trail) {
   }
 }
 
+// DIFFICULTY BADGE COLOR HELPER
 function getDifficultyBadge(scale) {
   if (scale <= 3) return { bg: '#16a34a', text: 'EASY', label: `${scale}/10 EASY` };
   if (scale <= 6) return { bg: '#2563eb', text: 'MODERATE', label: `${scale}/10 MOD` };
@@ -4192,7 +4414,6 @@ function renderShops() {
   let displayShops = shopsWithDist;
   if (activeRadiusMiles < 9000) {
     displayShops = shopsWithDist.filter(s => s.driveMiles <= activeRadiusMiles);
-    // If no shops in tight radius, show closest 3 with radius note
     if (displayShops.length === 0) {
       displayShops = shopsWithDist.slice(0, 3);
     }
@@ -4209,7 +4430,7 @@ function renderShops() {
         <div class="shop-badge-verified"><i class="fa-solid fa-circle-check"></i> ${shop.badge}</div>
         <div class="shop-rating-tag"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> ${shop.rating} (${shop.reviews})</div>
         <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.2);">
-          ðŸ“ <strong>${shop.driveMiles} mi away</strong> (~${shop.driveHours}h)
+          📍 <strong>${shop.driveMiles} mi away</strong> (~${shop.driveHours}h)
         </div>
       </div>
       <div class="shop-body">
@@ -4238,9 +4459,9 @@ function renderShops() {
 
         <div class="shop-action-btns">
           <a href="tel:${shop.phone.replace(/[^0-9]/g, '')}" class="btn-shop-call"><i class="fa-solid fa-phone"></i> Call Shop</a>
-          <a href="https://maps.google.com/?q=${encodeURIComponent(shop.name + ' ' + shop.address)}" target="_blank" class="btn-shop-dir"><i class="fa-solid fa-diamond-turn-right"></i> Directions â†—</a>
+          <a href="https://maps.google.com/?q=${encodeURIComponent(shop.name + ' ' + shop.address)}" target="_blank" class="btn-shop-dir"><i class="fa-solid fa-diamond-turn-right"></i> Directions ↗</a>
           <a href="${shop.website}" target="_blank" style="background:#0f172a; color:#fff; text-decoration:none; padding:10px; border-radius:8px; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px;">
-            <i class="fa-solid fa-globe" style="color:#38bdf8;"></i> Website â†—
+            <i class="fa-solid fa-globe" style="color:#38bdf8;"></i> Website ↗
           </a>
         </div>
       </div>
@@ -4248,6 +4469,7 @@ function renderShops() {
   `).join('');
 }
 
+// RENDER TRAILS & MAP MARKERS
 function renderTrails() {
   const grid = document.getElementById('trailGridContainer');
   if (!grid) return;
@@ -4308,7 +4530,7 @@ function renderTrails() {
       </div>
     `;
     renderMapMarkers(filtered);
-  renderShops();
+    renderShops();
     return;
   }
 
@@ -4376,6 +4598,20 @@ function renderTrails() {
             <div class="tag-cloud">
               ${trail.tags.map(t => `<span class="tag-item"><i class="fa-solid fa-mountain" style="color:var(--amber-orange);"></i> ${t}</span>`).join('')}
             </div>
+
+            <!-- RECOMMENDED ESSENTIAL & RECOVERY GEAR -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:9px 10px; margin: 10px 0 8px;">
+              <div style="font-size:10px; font-weight:800; color:#c2410c; text-transform:uppercase; margin-bottom:5px; display:flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-screwdriver-wrench"></i> Recommended Essential & Recovery Gear:
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                ${getRecommendedGear(trail).map(g => `
+                  <span style="background:#ffffff; border:1px solid #cbd5e1; color:#1e293b; font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:4px;">
+                    <i class="fa-solid ${g.icon}" style="color:var(--amber-orange); font-size:9px;"></i> ${g.label}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
           </div>
 
           <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -4386,7 +4622,7 @@ function renderTrails() {
               <i class="fa-solid fa-circle-play" style="color:var(--amber-orange);"></i> Video
             </button>
             <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="flex: 1; background: linear-gradient(135deg, var(--amber-orange), #c2410c); color: #fff; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 8px rgba(234,88,12,0.3);">
-              <i class="fa-solid fa-diamond-turn-right"></i> Directions â†—
+              <i class="fa-solid fa-diamond-turn-right"></i> Directions ↗
             </a>
           </div>
         </div>
@@ -4397,9 +4633,10 @@ function renderTrails() {
   });
 
   renderMapMarkers(filtered);
+  renderShops();
 }
 
-// RENDER MAP MARKERS WITH POPUP BUBBLES & CARD HIGHLIGHT ACTION
+// RENDER MAP MARKERS WITH HOVER TOOLTIP BUBBLE HELP & RICH POPUPS
 function renderMapMarkers(filteredList = TRAILS) {
   if (!map || !markersGroup) return;
   markersGroup.clearLayers();
@@ -4415,7 +4652,7 @@ function renderMapMarkers(filteredList = TRAILS) {
   L.marker([userLat, userLng], { icon: userPinIcon })
     .bindPopup(`
       <div style="font-family: Inter, sans-serif; font-size:12px; text-align:center; padding:4px;">
-        <strong style="color:#ea580c;">ðŸ“ Your Search Center</strong><br>
+        <strong style="color:#ea580c;">📍 Your Search Center</strong><br>
         Radius: <strong>${activeRadiusMiles < 9000 ? activeRadiusMiles + ' Miles' : 'All Distances'}</strong>
       </div>
     `)
@@ -4435,7 +4672,7 @@ function renderMapMarkers(filteredList = TRAILS) {
     }).addTo(map);
   }
 
-  // Trail Markers with Rich Info Bubbles
+  // Trail Markers with Hover Bubble Help and Tap Popup
   filteredList.forEach(trail => {
     const diff = getDifficultyBadge(trail.difficultyScale);
     const markerIcon = L.divIcon({
@@ -4443,7 +4680,7 @@ function renderMapMarkers(filteredList = TRAILS) {
       html: `
         <div style="background: ${trail.isOverland ? '#14281d' : diff.bg}; color: #fff; width: 34px; height: 34px; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; font-family: Montserrat, sans-serif; cursor:pointer;">
           ${trail.isOverland ? '<i class="fa-solid fa-campground" style="font-size:12px; color:#fef08a;"></i>' : trail.difficultyScale}
-          ${trail.isBadgeOfHonor ? '<div style="position: absolute; top: -5px; right: -5px; width: 14px; height: 14px; background: #fbbf24; color:#000; border-radius:50%; font-size:8px; display:flex; align-items:center; justify-content:center; font-weight:900; border:1px solid #000;">â˜…</div>' : ''}
+          ${trail.isBadgeOfHonor ? '<div style="position: absolute; top: -5px; right: -5px; width: 14px; height: 14px; background: #fbbf24; color:#000; border-radius:50%; font-size:8px; display:flex; align-items:center; justify-content:center; font-weight:900; border:1px solid #000;">★</div>' : ''}
         </div>
       `,
       iconSize: [34, 34],
@@ -4452,7 +4689,30 @@ function renderMapMarkers(filteredList = TRAILS) {
 
     const marker = L.marker([trail.lat, trail.lng], { icon: markerIcon });
 
-    // Interactive Map Info Bubble with Thumbnail and "View Trail Card" Button
+    // Interactive Hover Bubble Help Tooltip (Mouse hover on Desktop & Tap on Mobile)
+    const tooltipHtml = `
+      <div style="font-family: Inter, sans-serif; line-height: 1.3;">
+        <div style="font-size: 12px; font-weight: 900; color: #14281d;">${trail.name}</div>
+        <div style="display:flex; align-items:center; gap:6px; margin-top:3px;">
+          <span style="background:${diff.bg}; color:#fff; font-size:9px; font-weight:900; padding:1px 5px; border-radius:3px;">
+            ${trail.isOverland ? 'OVERLAND' : trail.difficultyScale + '/10 ' + diff.text}
+          </span>
+          <span style="font-size:10px; color:#475569; font-weight:700;">${trail.lengthMiles} mi &bull; ${trail.driveMiles} mi away</span>
+        </div>
+        <div style="font-size: 9.5px; color:#ea580c; font-weight:800; margin-top:3px;">
+          <i class="fa-solid fa-hand-pointer"></i> Click / Tap for options & directions
+        </div>
+      </div>
+    `;
+
+    marker.bindTooltip(tooltipHtml, {
+      direction: 'top',
+      offset: [0, -18],
+      className: 'custom-trail-tooltip',
+      opacity: 0.98
+    });
+
+    // Interactive Map Info Bubble with Full Details & Directions
     const popupHtml = `
       <div style="font-family: Inter, sans-serif; min-width: 220px; padding: 4px;">
         <div style="font-size: 10px; font-weight: 800; color: #ea580c; text-transform:uppercase;">${trail.region}</div>
@@ -4470,7 +4730,7 @@ function renderMapMarkers(filteredList = TRAILS) {
             <i class="fa-solid fa-eye"></i> View Full Trail Card
           </button>
           <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="background:#ea580c; color:#fff; text-decoration:none; text-align:center; padding:6px; border-radius:6px; font-weight:800; font-size:11px; display:block;">
-            GPS Directions â†—
+            GPS Directions ↗
           </a>
         </div>
       </div>
