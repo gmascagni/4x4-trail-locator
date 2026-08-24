@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.7.0_2026-08-24_19-52-32",
+    "version": "v2.7.0",
+    "timestamp": "2026-08-24T23:52:35.694Z",
+    "displayDate": "8/24/2026, 7:52:35 PM",
+    "description": "Upgrade 4x4 shop image acquisition engine with verified garage assets, live storefront photo links & website portals",
+    "zipFile": "v2.7.0_2026-08-24_19-52-32.zip",
+    "sizeMb": "28.92 MB",
+    "gitHash": "647390a"
+  },
+  {
     "id": "v2.6.0_2026-08-24_19-49-38",
     "version": "v2.6.0",
     "timestamp": "2026-08-24T23:49:40.342Z",
