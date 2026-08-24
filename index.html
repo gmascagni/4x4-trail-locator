@@ -1317,8 +1317,7 @@ footer {
       <!-- BIG PRIMARY LOCATE BUTTON -->
       <div class="search-primary-action">
         <button class="btn-gps-main" id="btnFindNearMe" onclick="getUserGPSLocation()">
-          <i class="fa-solid fa-crosshairs"></i>
-          <span id="btnGpsMainText">ðŸŽ¯ LOCATE TRAILS NEAR ME</span>
+          <span id="btnGpsMainText">🎯 LOCATE TRAILS NEAR ME</span>
         </button>
       </div>
 
@@ -1329,10 +1328,10 @@ footer {
           <div class="filter-group">
             <span class="filter-label"><i class="fa-solid fa-compass" style="color:var(--amber-orange);"></i> Category:</span>
             <div class="pill-group">
-              <button class="pill-btn active-green" id="btnCatAll" onclick="selectRouteCategory('all', this)"><i class="fa-solid fa-layer-group"></i> All 4x4 Routes</button>
+              <button class="pill-btn" id="btnCatAll" onclick="selectRouteCategory('all', this)"><i class="fa-solid fa-layer-group"></i> All 4x4 Routes</button>
               <button class="pill-btn" id="btnCatOverland" onclick="selectRouteCategory('overland', this)"><i class="fa-solid fa-campground"></i> Overlanding (Multi-Day)</button>
               <button class="pill-btn" id="btnCatBOH" onclick="selectRouteCategory('boh', this)"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Badge of Honor Only</button>
-              <button class="pill-btn" id="btnCatDay" onclick="selectRouteCategory('day', this)"><i class="fa-solid fa-mountain"></i> Technical Day Trails</button>
+              <button class="pill-btn active-green" id="btnCatDay" onclick="selectRouteCategory('day', this)"><i class="fa-solid fa-mountain"></i> Technical Day Trails</button>
             </div>
           </div>
 
@@ -1352,9 +1351,9 @@ footer {
             <span class="filter-label"><i class="fa-solid fa-circle-dot" style="color:var(--amber-orange);"></i> Search Radius:</span>
             <div class="pill-group">
               <button class="pill-btn" onclick="setMileRadiusFilter(30, this)">30 Miles</button>
-              <button class="pill-btn" onclick="setMileRadiusFilter(60, this)">60 Miles</button>
+              <button class="pill-btn active" onclick="setMileRadiusFilter(60, this)">60 Miles</button>
               <button class="pill-btn" onclick="setMileRadiusFilter(90, this)">90 Miles</button>
-              <button class="pill-btn active" onclick="setMileRadiusFilter(9999, this)">All Distances</button>
+              <button class="pill-btn" onclick="setMileRadiusFilter(9999, this)">All Distances</button>
             </div>
           </div>
 
@@ -4039,9 +4038,9 @@ const TRAILS = [
 let userLat = 34.7000;
 let userLng = -84.0000;
 let isGpsActive = false;
-let activeCategory = 'all'; // 'all', 'overland', 'boh', 'day'
-let activeRadiusMiles = 9999; // Default All Distances so all trails are immediately loaded
-let activeDifficulty = 'all';
+let activeCategory = 'day'; // Default to Technical Day Trails
+let activeRadiusMiles = 60; // Default to 60 Miles
+let activeDifficulty = 'all'; // Default to All difficulty
 let searchQuery = '';
 let map = null;
 let currentTileLayer = null;
