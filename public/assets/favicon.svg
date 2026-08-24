@@ -1,30 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="gradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#14281d"/>
     </linearGradient>
-    <linearGradient id="gradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f97316"/>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c"/>
       <stop offset="100%" stop-color="#ea580c"/>
     </linearGradient>
   </defs>
-  <!-- Background Badge -->
-  <rect width="100" height="100" rx="22" fill="url(#gradBg)" stroke="#334155" stroke-width="3"/>
   
-  <!-- Iconic 4x4 Jeep Round Headlights -->
-  <circle cx="23" cy="46" r="10.5" fill="url(#gradOrange)"/>
-  <circle cx="77" cy="46" r="10.5" fill="url(#gradOrange)"/>
-  <circle cx="23" cy="46" r="6.5" fill="#ffffff"/>
-  <circle cx="77" cy="46" r="6.5" fill="#ffffff"/>
+  <!-- Outer Tactical Shield / Diamond -->
+  <rect x="5" y="5" width="90" height="90" rx="22" fill="url(#shieldGrad)" stroke="#ea580c" stroke-width="4.5"/>
   
-  <!-- 7 Signature Grille Slots -->
-  <rect x="36" y="32" width="3.5" height="28" rx="1.75" fill="#ffffff"/>
-  <rect x="42" y="32" width="3.5" height="28" rx="1.75" fill="#ffffff"/>
-  <rect x="48" y="32" width="3.5" height="28" rx="1.75" fill="#ffffff"/>
-  <rect x="54" y="32" width="3.5" height="28" rx="1.75" fill="#ffffff"/>
-  <rect x="60" y="32" width="3.5" height="28" rx="1.75" fill="#ffffff"/>
+  <!-- Mountain Summit Peak -->
+  <polygon points="50,16 80,62 20,62" fill="url(#orangeGrad)"/>
+  <polygon points="50,16 64,62 36,62" fill="#fdba74"/>
+  <!-- Mountain Snowcap -->
+  <polygon points="50,16 58,32 50,28 42,32" fill="#ffffff"/>
   
-  <!-- 4X4 Bold Label -->
-  <text x="50" y="86" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="20" fill="#f97316" text-anchor="middle" letter-spacing="2">4X4</text>
+  <!-- Rugged 4x4 Tire Tread Tracks at Base -->
+  <rect x="22" y="68" width="10" height="5" rx="1.5" fill="#f8fafc"/>
+  <rect x="36" y="68" width="10" height="5" rx="1.5" fill="#f8fafc"/>
+  <rect x="54" y="68" width="10" height="5" rx="1.5" fill="#f8fafc"/>
+  <rect x="68" y="68" width="10" height="5" rx="1.5" fill="#f8fafc"/>
+
+  <!-- Compass Star Center Highlight -->
+  <polygon points="50,34 54,48 50,54 46,48" fill="#ffffff"/>
+  
+  <!-- Bold 4X4 Label -->
+  <text x="50" y="87" font-family="'Segoe UI', -apple-system, Roboto, sans-serif" font-weight="900" font-size="14" fill="#fbbf24" text-anchor="middle" letter-spacing="2">4X4</text>
 </svg>
