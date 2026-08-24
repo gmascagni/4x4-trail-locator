@@ -1412,9 +1412,9 @@ footer {
 <!-- HERO SECTION WITH JEEP OFF-ROAD BACKGROUND & CLEAN TRAIL LOCATOR -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge"><i class="fa-solid fa-crosshairs"></i> 4x4 Expedition & Overlanding Trail Locator</div>
-    <h1>LOCATE 4X4 & OVERLAND TRAILS NEAR YOU</h1>
-    <p>Find nearby rock crawling passes, mountain gaps, and multi-day overland expeditions filtered by distance and difficulty.</p>
+    <div class="hero-badge"><i class="fa-solid fa-compass" style="color:var(--amber-orange);"></i> 4x4 Expedition, Overlanding & Weekend Adventure Finder</div>
+    <h1>FIND YOUR NEXT WEEKEND 4X4 ADVENTURE</h1>
+    <p>Built for the weekend warrior and seasoned overlander seeking their next dirt escape. Instantly discover nearby scenic mountain gaps, river crossings, waterfall trails, rock crawling passes, and remote dispersed camping within driving distance of your garage.</p>
     
     <div class="search-box-card">
       <!-- BIG PRIMARY LOCATE BUTTON -->
@@ -1437,6 +1437,7 @@ footer {
               <button class="pill-btn" id="btnCatOverland" onclick="selectRouteCategory('overland', this)"><i class="fa-solid fa-campground"></i> Overlanding (Multi-Day)</button>
               <button class="pill-btn" id="btnCatBOH" onclick="selectRouteCategory('boh', this)"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Badge of Honor Only</button>
               <button class="pill-btn active-green" id="btnCatDay" onclick="selectRouteCategory('day', this)"><i class="fa-solid fa-mountain"></i> Technical Day Trails</button>
+              <button class="pill-btn" id="btnCatWater" onclick="selectRouteCategory('water', this)"><i class="fa-solid fa-water" style="color:#38bdf8;"></i> Water Features & Falls</button>
             </div>
           </div>
 
@@ -1474,6 +1475,25 @@ footer {
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- WEEKEND WARRIOR ADVENTURE INSPIRATION HUD -->
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.2); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px;">
+        <span style="font-size: 11px; font-weight: 800; color: #fef08a; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 5px;">
+          <i class="fa-solid fa-bolt" style="color:var(--amber-orange);"></i> Weekend Warrior Quick Escapes:
+        </span>
+        <button onclick="selectRouteCategory('day'); setDiffFilter('Easy', document.querySelectorAll('.filter-row-item')[1].querySelectorAll('.pill-btn')[1]);" style="background: rgba(15,23,42,0.65); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px); transition: all 0.2s;">
+          <span>🌄</span> Saturday Morning Scenic Pass
+        </button>
+        <button onclick="selectRouteCategory('water');" style="background: rgba(15,23,42,0.65); border: 1px solid rgba(56,189,248,0.4); color: #e0f2fe; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px); transition: all 0.2s;">
+          <span>🌊</span> River Crossings & Waterfalls
+        </button>
+        <button onclick="selectRouteCategory('overland');" style="background: rgba(15,23,42,0.65); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px); transition: all 0.2s;">
+          <span>⛺</span> 48-Hour Weekend Campout
+        </button>
+        <button onclick="selectRouteCategory('boh');" style="background: rgba(15,23,42,0.65); border: 1px solid rgba(251,191,36,0.4); color: #fef08a; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px); transition: all 0.2s;">
+          <span>⭐</span> Earn a Badge of Honor
+        </button>
       </div>
     </div>
   </div>
