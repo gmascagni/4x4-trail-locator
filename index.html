@@ -1,0 +1,4892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4x4 TrailFinder &bull; Jeep Off-Road & Overlanding Trail Locator</title>
+
+<!-- Custom 4x4 Climbing Mountain Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M-10 90 L40 30 L65 60 L110 15 L110 100 L-10 100 Z' fill='%2314281d'/%3E%3Cpath d='M-10 90 L40 30 L65 60 L110 15' fill='none' stroke='%23ea580c' stroke-width='6' stroke-linecap='round'/%3E%3Ctext x='42' y='52' font-size='38' text-anchor='middle' transform='rotate(-20 42 52)'%3E🚙%3C/text%3E%3C/svg%3E">
+
+<!-- Leaflet CSS & JS for Interactive Topo/Satellite Maps -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Google Fonts: Montserrat, Inter & JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+<!-- FontAwesome 6 Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg-main: #f4f6f0;
+  --card-bg: #ffffff;
+  --card-border: #cbd5e1;
+  --card-hover: #f8faf5;
+  
+  --forest-dark: #14281d;
+  --forest-mid: #223f2f;
+  --forest-light: #3b634c;
+  
+  --amber-orange: #ea580c;
+  --amber-hover: #c2410c;
+  --amber-light: rgba(234, 88, 12, 0.12);
+  
+  --text-main: #0f1712;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  
+  --easy-green: #16a34a;
+  --mod-blue: #2563eb;
+  --tech-amber: #d97706;
+  --extreme-orange: #ea580c;
+  --buggy-red: #dc2626;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(234, 88, 12, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* HEADER */
+header {
+  background-color: #ffffff;
+  border-bottom: 2px solid var(--card-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(15,23,18,0.06);
+}
+
+.nav-container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-main);
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--forest-dark);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 2px solid var(--amber-orange);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--forest-dark);
+}
+
+.logo-title span {
+  color: var(--amber-orange);
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  background: var(--forest-dark);
+  color: #ffffff;
+}
+
+/* HERO SECTION WITH ICONIC JEEP WRANGLER RUBICON OFF-ROAD BACKGROUND */
+.hero {
+  position: relative;
+  background: linear-gradient(rgba(20, 40, 29, 0.48), rgba(15, 23, 18, 0.78)), 
+              url('/assets/jeep_wrangler_hero.jpg') center 35% / cover no-repeat;
+  padding: 50px 20px 60px;
+  border-bottom: 3px solid var(--amber-orange);
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 1040px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: #fef08a;
+  border: 1px solid rgba(254, 240, 138, 0.4);
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.hero h1 {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #ffffff;
+  margin-bottom: 8px;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+.hero p {
+  font-size: 15px;
+  color: #e2e8f0;
+  margin-bottom: 22px;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* SEARCH & LOCATION CONTROLS */
+.search-box-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  max-width: 960px;
+  margin: 0 auto;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.25);
+  text-align: left;
+}
+
+/* BIG PRIMARY LOCATE BUTTON CENTERED */
+.search-primary-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.btn-gps-main {
+  background: linear-gradient(135deg, var(--amber-orange), #c2410c);
+  color: #ffffff;
+  border: none;
+  padding: 16px 42px;
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-glow);
+  width: 100%;
+  max-width: 580px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-gps-main:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(234, 88, 12, 0.55);
+}
+
+/* FILTERS ROWS */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.filter-row-item {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pill-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.pill-btn:hover {
+  background: #e2e8f0;
+}
+
+.pill-btn.active {
+  background: var(--amber-orange);
+  border-color: var(--amber-orange);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+}
+
+.pill-btn.active-green {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(20, 40, 29, 0.3);
+}
+
+.search-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrap input {
+  width: 100%;
+  padding: 8px 14px 8px 36px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  font-size: 12px;
+  outline: none;
+}
+
+.search-input-wrap input:focus {
+  border-color: var(--amber-orange);
+  background: #ffffff;
+}
+
+.search-icon-btn {
+  position: absolute;
+  left: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+/* MAIN WRAPPER */
+.main-wrapper {
+  max-width: 1360px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* MAP SECTION */
+.map-section {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 35px;
+}
+
+.map-header {
+  padding: 12px 18px;
+  background: var(--forest-dark);
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.map-title {
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.map-controls-group {
+  display: flex;
+  gap: 6px;
+}
+
+.map-layer-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.map-layer-btn.active {
+  background: var(--amber-orange);
+  border-color: var(--amber-orange);
+  color: #ffffff;
+}
+
+#mapContainer {
+  height: 480px;
+  width: 100%;
+}
+
+/* MAP DIFFICULTY & EXPEDITION LEGEND BAR */
+.map-legend-bar {
+  background: #ffffff;
+  border-top: 1.5px solid var(--card-border);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.legend-title {
+  font-weight: 800;
+  color: var(--forest-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.legend-items-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.legend-item strong {
+  color: var(--forest-dark);
+}
+
+.legend-badge {
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 900;
+  font-family: 'Montserrat', sans-serif;
+  display: inline-block;
+  min-width: 24px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.legend-star-badge {
+  background: #fbbf24;
+  color: #000000;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  border: 1px solid #000000;
+}
+
+.legend-overland-badge {
+  background: var(--forest-dark);
+  color: #fef08a;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* COLLAPSIBLE HEADER BARS */
+.collapsible-bar {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  padding: 16px 22px;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.collapsible-bar:hover {
+  background: #fafaf9;
+  border-color: #94a3b8;
+}
+
+.collapsible-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.collapsible-title span {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--forest-dark);
+  letter-spacing: -0.01em;
+}
+
+.collapsible-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  color: var(--forest-dark);
+}
+
+/* TRAIL GRID & POLISHED CARDS */
+.trail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+  gap: 22px;
+}
+
+.trail-card {
+  background: #ffffff;
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  scroll-margin-top: 100px;
+}
+
+.trail-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+  border-color: var(--amber-orange);
+}
+
+.trail-card.card-highlighted {
+  border-color: var(--amber-orange) !important;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.4), 0 16px 32px rgba(234, 88, 12, 0.25) !important;
+  animation: pulseCard 1.5s ease-in-out;
+}
+
+@keyframes pulseCard {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* BADGE OF HONOR RIBBON */
+.boh-banner {
+  background: linear-gradient(90deg, #d97706, #fbbf24, #d97706);
+  color: #0f1712;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+}
+
+/* OVERLANDING EXPEDITION RIBBON */
+.overland-banner {
+  background: linear-gradient(90deg, #14281d, #223f2f, #14281d);
+  color: #fef08a;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--amber-orange);
+}
+
+.trail-card-img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: #1e293b;
+}
+
+.trail-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.trail-card:hover .trail-card-img {
+  transform: scale(1.05);
+}
+
+.diff-badge-1-10 {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.trail-status-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(20,40,29,0.85);
+  color: #86efac;
+  border: 1px solid #22c55e;
+}
+
+.drive-time-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(15,23,18,0.9);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.trail-card-body {
+  padding: 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trail-card-region {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--amber-orange);
+  margin-bottom: 2px;
+}
+
+.trail-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.specs-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 10px;
+}
+
+.specs-grid-mini span {
+  display: block;
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.specs-grid-mini strong {
+  font-size: 11px;
+  color: var(--forest-dark);
+  font-weight: 800;
+}
+
+/* OVERLAND AUTONOMY BOX */
+.overland-autonomy-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #166534;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tag-cloud {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tag-item {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.psi-guide-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff7ed;
+  border: 1px solid #ffedd5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #9a3412;
+  margin-bottom: 12px;
+}
+
+/* GEAR & RECOVERY & BUG-OUT STYLES */
+.bugout-nav-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.bugout-tab-btn {
+  background: #ffffff;
+  border: 1.5px solid var(--card-border);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.bugout-tab-btn:hover {
+  border-color: var(--amber-orange);
+  background: #fffbeb;
+}
+
+.bugout-tab-btn.active {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  color: #ffffff;
+}
+
+.bugout-category-box {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.bugout-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.bugout-cat-header i {
+  font-size: 18px;
+  color: var(--amber-orange);
+}
+
+.bugout-cat-header h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  margin: 0;
+}
+
+.bugout-cat-header span {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.checklist-item:hover {
+  background: #f1f5f9;
+}
+
+.checklist-item input[type="checkbox"] {
+  accent-color: var(--amber-orange);
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.checklist-item-content strong {
+  display: block;
+  color: var(--forest-dark);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.checklist-item-content span {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.checklist-item-content .item-spec {
+  display: inline-block;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.gear-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.gear-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--amber-light);
+  color: var(--amber-orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.gear-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  margin-bottom: 4px;
+}
+
+.gear-importance {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--amber-orange);
+  margin-bottom: 8px;
+}
+
+.gear-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+/* VIDEO LIBRARY */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.video-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.video-thumb-wrap {
+  position: relative;
+  height: 170px;
+  cursor: pointer;
+}
+
+.video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 38px;
+  transition: transform 0.2s;
+}
+
+.video-thumb-wrap:hover .video-play-overlay {
+  transform: scale(1.08);
+}
+
+.video-info {
+  padding: 12px 14px;
+}
+
+.video-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  margin-bottom: 4px;
+}
+
+/* OVERLANDING GUIDE CARDS */
+.overland-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.overland-guide-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.overland-guide-card h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--forest-dark);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.overland-guide-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* 4X4 OFF-ROAD SHOPS & FABRICATION STYLES */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.shop-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.shop-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+.shop-img-wrap {
+  position: relative;
+  height: 175px;
+}
+
+.shop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-badge-verified {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--forest-dark);
+  color: #fef08a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.shop-rating-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffffff;
+  color: #b45309;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.shop-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.shop-name {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--forest-dark);
+  margin-bottom: 2px;
+}
+
+.shop-location {
+  font-size: 12px;
+  color: var(--amber-orange);
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.shop-services-wrap {
+  margin-bottom: 14px;
+}
+
+.shop-section-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.shop-service-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.shop-service-pill {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.shop-contact-info {
+  background: #fafaf9;
+  border: 1px solid #e7e5e4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 11px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text-muted);
+}
+
+.shop-contact-info div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shop-action-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn-shop-call {
+  flex: 1;
+  background: var(--forest-dark);
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  padding: 9px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-shop-dir {
+  flex: 1;
+  background: linear-gradient(135deg, var(--amber-orange), #c2410c);
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  padding: 9px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(234,88,12,0.25);
+}
+
+/* MODALS */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  max-width: 780px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  background: rgba(15,23,18,0.85);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* FOOTER */
+footer {
+  background: var(--forest-dark);
+  color: #f1f5f9;
+  padding: 35px 20px;
+  margin-top: 60px;
+  border-top: 4px solid var(--amber-orange);
+}
+
+.footer-content {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 13px;
+}
+
+@media(max-width: 768px) {
+  .hero h1 { font-size: 26px; }
+  .trail-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<header>
+  <div class="nav-container">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-truck-monster"></i>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">4x4 <span>TrailFinder</span></span>
+        <span class="logo-sub">North Georgia, Tennessee & National 4x4 Locator</span>
+      </div>
+    </a>
+    
+    <ul class="nav-links">
+      <li><a href="#trails" class="active"><i class="fa-solid fa-mountain"></i> All Trails</a></li>
+      <li><a href="#overlanding" onclick="selectRouteCategory('overland')"><i class="fa-solid fa-campground"></i> Overlanding</a></li>
+      <li><a href="#recovery-gear"><i class="fa-solid fa-shield-halved"></i> Recovery Gear</a></li>
+      <li><a href="#offroad-shops"><i class="fa-solid fa-wrench"></i> 4x4 Shops</a></li>
+      <li><a href="#video-library"><i class="fa-solid fa-circle-play"></i> Video Library</a></li>
+      <li><a href="javascript:void(0)" onclick="openInclinometerModal()"><i class="fa-solid fa-compass"></i> Inclinometer</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- HERO SECTION WITH JEEP OFF-ROAD BACKGROUND & CLEAN TRAIL LOCATOR -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fa-solid fa-crosshairs"></i> 4x4 Expedition & Overlanding Trail Locator</div>
+    <h1>LOCATE 4X4 & OVERLAND TRAILS NEAR YOU</h1>
+    <p>Find nearby rock crawling passes, mountain gaps, and multi-day overland expeditions filtered by distance and difficulty.</p>
+    
+    <div class="search-box-card">
+      <!-- BIG PRIMARY LOCATE BUTTON -->
+      <div class="search-primary-action">
+        <button class="btn-gps-main" id="btnFindNearMe" onclick="getUserGPSLocation()">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span id="btnGpsMainText">🎯 LOCATE TRAILS NEAR ME</span>
+        </button>
+      </div>
+
+      <!-- FILTER CONTROLS (RADIUS 30/60/90, DIFFICULTY, OVERLANDING) -->
+      <div class="filters-container">
+        <!-- ROW 1: EXPEDITION CATEGORY & SEARCH -->
+        <div class="filter-row-item">
+          <div class="filter-group">
+            <span class="filter-label"><i class="fa-solid fa-compass" style="color:var(--amber-orange);"></i> Category:</span>
+            <div class="pill-group">
+              <button class="pill-btn active-green" id="btnCatAll" onclick="selectRouteCategory('all', this)"><i class="fa-solid fa-layer-group"></i> All 4x4 Routes</button>
+              <button class="pill-btn" id="btnCatOverland" onclick="selectRouteCategory('overland', this)"><i class="fa-solid fa-campground"></i> Overlanding (Multi-Day)</button>
+              <button class="pill-btn" id="btnCatBOH" onclick="selectRouteCategory('boh', this)"><i class="fa-solid fa-star" style="color:#fbbf24;"></i> Badge of Honor Only</button>
+              <button class="pill-btn" id="btnCatDay" onclick="selectRouteCategory('day', this)"><i class="fa-solid fa-mountain"></i> Technical Day Trails</button>
+            </div>
+          </div>
+
+          <!-- SEARCH INPUT -->
+          <div class="search-input-wrap">
+            <button class="search-icon-btn" onclick="onSearchIconClick()" title="Execute Trail Search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input type="text" id="searchInput" placeholder="Search Georgia, Tennessee, Moab, trail..." oninput="onSearchInput()" onkeydown="if(event.key === 'Enter') onSearchIconClick()">
+          </div>
+        </div>
+
+        <!-- ROW 2: EXACT MILE RADIUS (30 / 60 / 90 MILES) & DIFFICULTY -->
+        <div class="filter-row-item">
+          <!-- 30 / 60 / 90 MILES RADIUS FILTER -->
+          <div class="filter-group">
+            <span class="filter-label"><i class="fa-solid fa-circle-dot" style="color:var(--amber-orange);"></i> Search Radius:</span>
+            <div class="pill-group">
+              <button class="pill-btn" onclick="setMileRadiusFilter(30, this)">30 Miles</button>
+              <button class="pill-btn" onclick="setMileRadiusFilter(60, this)">60 Miles</button>
+              <button class="pill-btn" onclick="setMileRadiusFilter(90, this)">90 Miles</button>
+              <button class="pill-btn active" onclick="setMileRadiusFilter(9999, this)">All Distances</button>
+            </div>
+          </div>
+
+          <!-- 1-10 DIFFICULTY SCALE FILTER -->
+          <div class="filter-group">
+            <span class="filter-label"><i class="fa-solid fa-gauge-high" style="color:var(--amber-orange);"></i> Difficulty:</span>
+            <div class="pill-group">
+              <button class="pill-btn active" onclick="setDiffFilter('all', this)">All</button>
+              <button class="pill-btn" onclick="setDiffFilter('Easy', this)">Easy (1-3)</button>
+              <button class="pill-btn" onclick="setDiffFilter('Moderate', this)">Mod (4-6)</button>
+              <button class="pill-btn" onclick="setDiffFilter('Hard', this)">Hard (7-8)</button>
+              <button class="pill-btn" onclick="setDiffFilter('Extreme', this)">Buggy (9-10)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN WRAPPER -->
+<main class="main-wrapper">
+
+  <!-- MAP SECTION -->
+  <div class="map-section" id="mapSection">
+    <div class="map-header">
+      <div class="map-title"><i class="fa-solid fa-map-location-dot" style="color: var(--amber-orange);"></i> Interactive 4x4 Expedition Map &bull; <span id="mapRadiusIndicator" style="font-size:12px; opacity:0.9;">All Available Routes</span></div>
+      <div class="map-controls-group">
+        <button class="map-layer-btn active" id="btnLayerTopo" onclick="switchMapLayer('topo')"><i class="fa-solid fa-mountain"></i> Topo 3D</button>
+        <button class="map-layer-btn" id="btnLayerSat" onclick="switchMapLayer('satellite')"><i class="fa-solid fa-satellite"></i> Satellite</button>
+        <button class="map-layer-btn" id="btnLayerRoads" onclick="switchMapLayer('roads')"><i class="fa-solid fa-road"></i> Roads</button>
+      </div>
+    </div>
+    <div id="mapContainer"></div>
+    <!-- COLOR-CODED DIFFICULTY & EXPEDITION MAP LEGEND -->
+    <div class="map-legend-bar">
+      <div class="legend-title"><i class="fa-solid fa-layer-group" style="color:var(--amber-orange);"></i> Map Difficulty Legend:</div>
+      <div class="legend-items-wrap">
+        <div class="legend-item"><span class="legend-badge" style="background:#16a34a;">1-3</span> <strong>EASY</strong> (Stock 4x4 / Scenic Pass)</div>
+        <div class="legend-item"><span class="legend-badge" style="background:#2563eb;">4-6</span> <strong>MODERATE</strong> (33" Tires / Rock Steps)</div>
+        <div class="legend-item"><span class="legend-badge" style="background:#d97706;">7-8</span> <strong>HARD / TECH</strong> (35"+ / Lockers / Crawl)</div>
+        <div class="legend-item"><span class="legend-badge" style="background:#dc2626;">9-10</span> <strong>EXTREME BUGGY</strong> (37"+ / Double Lockers)</div>
+        <div class="legend-item"><span class="legend-star-badge">★</span> <strong>BADGE OF HONOR</strong> (Certified)</div>
+        <div class="legend-item"><span class="legend-overland-badge"><i class="fa-solid fa-campground"></i></span> <strong>OVERLANDING</strong> (Multi-Day)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVAILABLE TRAILS & OVERLANDING SECTION -->
+  <section style="margin-bottom: 40px;" id="trails">
+    <div class="collapsible-bar" onclick="toggleTrailsSection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-route" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>LOCATED 4X4 & OVERLANDING TRAILS (<span id="trailCountDisplay">20</span>)</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">North Georgia, Tennessee & iconic US 4x4 routes with obstacle specs & directions</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="trailsToggleIcon" style="transform: rotate(180deg);">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="trailsBody" style="display: block; margin-top: 16px;">
+      <div class="trail-grid" id="trailGridContainer">
+        <!-- Trail cards rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLAPSIBLE OVERLANDING EXPEDITION AUTONOMY GUIDE -->
+  <section style="margin-bottom: 40px;" id="overlanding">
+    <div class="collapsible-bar" onclick="toggleOverlandingGuideSection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-campground" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>OVERLANDING EXPEDITION & CAMP AUTONOMY GUIDE</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Fuel range calculations, potable water autonomy, dispersed camping & rooftop tent rules</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="overlandingToggleIcon">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="overlandingGuideBody" style="display: none; margin-top: 16px;">
+      <div class="overland-guide-grid">
+        <div class="overland-guide-card">
+          <h4><i class="fa-solid fa-gas-pump" style="color:var(--amber-orange);"></i> Fuel Range Autonomy</h4>
+          <p>4WD low-range and soft sand can cut fuel economy by 50%. Always carry RotopaX or Jerry cans to guarantee at least <strong>250-300 miles</strong> of self-contained range before the next remote fuel stop.</p>
+        </div>
+
+        <div class="overland-guide-card">
+          <h4><i class="fa-solid fa-bottle-water" style="color:var(--amber-orange);"></i> Water & Filtration</h4>
+          <p>Carry a minimum of <strong>1 gallon per person per day</strong> plus 1 extra day emergency buffer. Equip a high-flow gravity water filter for creek and river refills.</p>
+        </div>
+
+        <div class="overland-guide-card">
+          <h4><i class="fa-solid fa-tent" style="color:var(--amber-orange);"></i> Dispersed RTT Camping</h4>
+          <p>Most BLM and National Forest land allows free dispersed camping up to 14 days. Level your vehicle with traction boards for comfortable Rooftop Tent sleep.</p>
+        </div>
+
+        <div class="overland-guide-card">
+          <h4><i class="fa-solid fa-satellite" style="color:var(--amber-orange);"></i> Satellite Comms & Nav</h4>
+          <p>Cell coverage is non-existent in deep canyons and wilderness corridors. Download offline Gaia/OnX topo maps and carry a Garmin InReach satellite SOS beacon.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLAPSIBLE RECOVERY GEAR & BUG-OUT GUIDE -->
+  <section style="margin-bottom: 40px;" id="recovery-gear">
+    <div class="collapsible-bar" onclick="toggleRecoveryGearSection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-shield-halved" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>RECOVERY GEAR & EMERGENCY BUG-OUT SAFETY GUIDE</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Self-extraction tools, breakdown survival essentials, how-to video guides & gear links</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="recoveryToggleIcon">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="recoveryGearBody" style="display: none; margin-top: 16px;">
+      <!-- SURVIVAL & RECOVERY TABS -->
+      <div class="bugout-nav-tabs">
+        <button class="bugout-tab-btn active" id="tabBtnDay" onclick="switchBugoutTab('day', this)">
+          <i class="fa-solid fa-person-hiking" style="color:var(--amber-orange);"></i> 🎒 Day-Trip Trail Checklist
+        </button>
+        <button class="bugout-tab-btn" id="tabBtnOvernight" onclick="switchBugoutTab('overnight', this)">
+          <i class="fa-solid fa-campground" style="color:var(--amber-orange);"></i> ⛺ Overnight & Bug-Out Pack
+        </button>
+        <button class="bugout-tab-btn" id="tabBtnRecovery" onclick="switchBugoutTab('recovery', this)">
+          <i class="fa-solid fa-truck-pickup" style="color:var(--amber-orange);"></i> 🛞 Heavy Vehicle Recovery Gear
+        </button>
+      </div>
+
+      <!-- TAB 1: DAY TRIP CHECKLIST -->
+      <div id="bugoutDayTab" style="display: block;">
+        <!-- COMMS & POWER -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-walkie-talkie"></i>
+            <h4>1. Emergency Radio, Comms & Battery Power</h4>
+            <span>Trail Comms & Navigation</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Handheld GMRS / FRS 2-Way Radios</strong>
+                <span>Preset to CB Ch 4 / GMRS Ch 16 for convoy & emergency spotters.</span>
+                <span class="item-spec">Pair (5W Power)</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Spare Lithium Batteries (AA / AAA / 18650)</strong>
+                <span>Cold-resistant lithium cells for headlamps, GPS, and radio backups.</span>
+                <span class="item-spec">Pack of 8-12</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>1,000+ Lumen Tactical Headlamp + Red Light</strong>
+                <span>Hands-free trail recovery and nighttime mechanical repairs.</span>
+                <span class="item-spec">Rechargeable + Spare Cell</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>10,000mAh Rugged USB Power Bank</strong>
+                <span>Keeps smartphone, Gaia GPS, and trail maps powered all day.</span>
+                <span class="item-spec">Dual Fast-Charge USB</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- HYDRATION & NUTRITION -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-bottle-water"></i>
+            <h4>2. Water, Electrolytes & Day Nutrition</h4>
+            <span>Hydration Autonomy</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Potable Drinking Water Storage</strong>
+                <span>Minimum 1 Gallon (3.8L) per person per day in rugged canteens.</span>
+                <span class="item-spec">1 Gal / Person / Day</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Electrolyte Hydration Packets (Liquid I.V.)</strong>
+                <span>Prevents heat exhaustion, muscle cramps, and dehydration on trail.</span>
+                <span class="item-spec">4-6 Packets</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>High-Calorie Trail Snacks & Rations</strong>
+                <span>Beef jerky, trail mix, protein bars, and dried fruit for quick energy.</span>
+                <span class="item-spec">2,000+ Cal Emergency Buffer</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Sawyer Squeeze Backcountry Water Filter</strong>
+                <span>0.1-micron filtration for emergency refills from creeks and springs.</span>
+                <span class="item-spec">100,000 Gal Rating</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- WARMTH, BLANKETS & TRAIL SURVIVAL -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-fire"></i>
+            <h4>3. Thermal Warmth, Space Blankets & Fire</h4>
+            <span>Hypothermia & Exposure Prevention</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Heavy-Duty Mylar Thermal Space Blankets</strong>
+                <span>Reflects 90% body heat; windproof and waterproof emergency shelter.</span>
+                <span class="item-spec">2x Reflective Blankets</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Ferrocerium Firestarter Rod & Tinder Tabs</strong>
+                <span>5,500°F spark thrower that works when soaking wet or sub-zero.</span>
+                <span class="item-spec">Ferro Rod + Storm Matches</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Emergency Ripstop Rain Poncho & Gloves</strong>
+                <span>Keeps core dry during sudden mountain downpours and cold winds.</span>
+                <span class="item-spec">Waterproof + Thermal Layer</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Leatherman Multi-Tool & Bushcraft Fixed Blade</strong>
+                <span>Wire cutters, pliers, serrated blade, and wood-notching tools.</span>
+                <span class="item-spec">Stainless Steel Heavy-Duty</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- FIRST AID & TRAIL MECHANICS -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-kit-medical"></i>
+            <h4>4. Wilderness Trauma First Aid & Tire Repair</h4>
+            <span>Life Safety & Mobility</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Wilderness Trauma IFAK Kit</strong>
+                <span>CAT Tourniquet, QuikClot hemostatic gauze, chest seal & pressure wrap.</span>
+                <span class="item-spec">MOLLE Rip-Away Pouch</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Heavy-Duty T-Handle Tire Plug Kit</strong>
+                <span>Brass reamer, inserting tool, 30 self-vulcanizing plugs & valve cores.</span>
+                <span class="item-spec">For Sidewall / Tread Punctures</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>1,500A Lithium Jump Starter Power Pack</strong>
+                <span>Starts dead vehicle batteries instantly without needing a second rig.</span>
+                <span class="item-spec">12V Multi-Jump Capacity</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Heavy-Duty Gorilla Tape & Bailing Wire</strong>
+                <span>Emergency trail fixes for loose hoses, severed brackets, and wiring.</span>
+                <span class="item-spec">Field Repair Essentials</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: OVERNIGHT & MULTI-DAY BUG-OUT PACK -->
+      <div id="bugoutOvernightTab" style="display: none;">
+        <!-- EXPEDITION SURVIVAL -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-tent"></i>
+            <h4>1. Shelter, Sleeping System & Cold Weather Gear</h4>
+            <span>Overnight Mountain Survival</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>20°F Compact Down Sleeping Bag</strong>
+                <span>Hydrophobic down insulation rated for freezing mountain ridge drops.</span>
+                <span class="item-spec">Comfort Rating 20°F / -7°C</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Rooftop Tent (RTT) or 4-Season All-Weather Ground Tent</strong>
+                <span>Heavy-duty ripstop canvas with waterproof rainfly and wind guy lines.</span>
+                <span class="item-spec">All-Weather Stormproof</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Insulated Ground Sleep Pad (R-Value 4.5+)</strong>
+                <span>Prevents dangerous thermal ground chill from sapping body warmth.</span>
+                <span class="item-spec">Self-Inflating Thermal Pad</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Emergency Thermal Bivvy Sack</strong>
+                <span>Waterproof seam-taped survival shelter if caught away from vehicle.</span>
+                <span class="item-spec">Reflects 90% Body Heat</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 72-HOUR SUSTENANCE & WATER PURIFICATION -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-utensils"></i>
+            <h4>2. 72-Hour Food, Camp Stove & Gravity Water Filter</h4>
+            <span>Multi-Day Autonomy</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>72-Hour Freeze-Dried Meals (Mountain House / Peak)</strong>
+                <span>6x high-protein freeze-dried pouches (Beef Stroganoff, Chicken Teriyaki).</span>
+                <span class="item-spec">3-Day Calorie Supply</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Jetboil Flash / MSR PocketRocket Camp Stove</strong>
+                <span>Boils 2 cups of mountain water in 100 seconds with isobutane fuel.</span>
+                <span class="item-spec">Stove + 2x 230g Fuel Cans</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Gravity-Fed Water Filter Bag & Chlorine Dioxide Tablets</strong>
+                <span>3-Liter dirty water reservoir with 0.1-micron inline micro-filter.</span>
+                <span class="item-spec">1L/min Flow Rate + 30 Tabs</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Titanium Camp Cookset & Spork</strong>
+                <span>Ultralight non-toxic boiling pot with folding insulated handles.</span>
+                <span class="item-spec">750ml Titanium Pot</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- SATELLITE COMMS & OFF-GRID POWER -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-satellite-dish"></i>
+            <h4>3. Satellite SOS, NOAA Weather & Solar Charging</h4>
+            <span>Off-Grid Emergency Comms</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Garmin InReach Mini 2 / SPOT Satellite SOS Messenger</strong>
+                <span>100% global Iridium satellite coverage for two-way SOS & live tracking.</span>
+                <span class="item-spec">Interactive GEOS SOS</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>NOAA Emergency Alert Weather Radio (Hand-Crank + Solar)</strong>
+                <span>Live National Weather Service alert broadcasts for flash floods & storms.</span>
+                <span class="item-spec">7 NOAA Channels + Siren</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>24,000mAh LiFePO4 Battery Pack + 28W Folding Solar Panel</strong>
+                <span>Recharges radios, GPS, phones, and headlamps indefinitely off-grid.</span>
+                <span class="item-spec">Solar & Type-C 65W PD</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>Offline GPS Navigation Tablet (Gaia GPS / OnX Offroad)</strong>
+                <span>Full topographic maps & satellite imagery pre-downloaded offline.</span>
+                <span class="item-spec">With 12V Dash Mount</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- MECHANICAL SPARES -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-wrench"></i>
+            <h4>4. Field Mechanics & Breakdown Spares</h4>
+            <span>Self-Repair Capability</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>4x4 Trail Tool Kit (Metric & SAE Sockets + Torx/Allen)</strong>
+                <span>3/8" ratchet, deep sockets (8-19mm), breaker bar & Torx bits for Jeep/trucks.</span>
+                <span class="item-spec">64-Piece Roll-Up Bag</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Emergency Vehicle Fluids & JB Weld Quick-Steel</strong>
+                <span>1 Qt 75W-90 gear oil, 1 Qt motor oil, DOT 4 brake fluid & metal epoxy.</span>
+                <span class="item-spec">Differential & Oil Pan Fix</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <strong>Spare Fuses, Heavy Zip Ties (150 lb) & Hose Clamps</strong>
+                <span>Replaces blown electrical circuits and seals punctured radiator hoses.</span>
+                <span class="item-spec">Assorted Multi-Pack</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox">
+              <div class="checklist-item-content">
+                <strong>High-Lift Jack / Bottle Jack & Jack Base Plate</strong>
+                <span>Lifts lifted rigs on uneven terrain for tire swaps and suspension fixes.</span>
+                <span class="item-spec">6-Ton Hydraulic + Base</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: HEAVY VEHICLE RECOVERY -->
+      <div id="bugoutRecoveryTab" style="display: none;">
+        <div class="gear-grid">
+          <div class="gear-card">
+            <div class="gear-icon"><i class="fa-solid fa-link"></i></div>
+            <div class="gear-title">Kinetic Recovery Rope & Soft Shackles</div>
+            <div class="gear-importance"><i class="fa-solid fa-triangle-exclamation"></i> Essential #1: Dynamic Snatch</div>
+            <div class="gear-desc">Kinetic ropes stretch up to 30% to smoothly snatch stuck 4x4s out of mud, sand, or snow without damaging frame mounts. Soft synthetic shackles prevent dangerous flying metal missiles.</div>
+            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/KZiA6rcJgFk', 'Kinetic Rope & Soft Shackle Safety')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
+              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
+            </button>
+          </div>
+
+          <div class="gear-card">
+            <div class="gear-icon"><i class="fa-solid fa-anchor"></i></div>
+            <div class="gear-title">10k+ Electric Winch & Tree Trunk Saver</div>
+            <div class="gear-importance"><i class="fa-solid fa-triangle-exclamation"></i> Essential #2: Self-Extraction</div>
+            <div class="gear-desc">A heavy-duty winch with synthetic line is the gold standard for solo recovery on boulder ledges and washed-out shelves. Always use a wide tree strap to protect anchor points.</div>
+            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Winch Rigging & Tree Saver Safety Guide')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
+              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
+            </button>
+          </div>
+
+          <div class="gear-card">
+            <div class="gear-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="gear-title">Heavy-Duty Nylon Traction Boards</div>
+            <div class="gear-importance"><i class="fa-solid fa-circle-check"></i> High Friction Bite</div>
+            <div class="gear-desc">Reinforced traction ramps provide instant tire traction when high-centered, spinning on slick wet clay, or digging into soft sand dunes.</div>
+            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'Traction Board Mud & Sand Recovery')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
+              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
+            </button>
+          </div>
+
+          <div class="gear-card">
+            <div class="gear-icon"><i class="fa-solid fa-gauge-high"></i></div>
+            <div class="gear-title">Brass Rapid Deflator & 12V Air Compressor</div>
+            <div class="gear-importance"><i class="fa-solid fa-circle-check"></i> Traction & Sidewall Flex</div>
+            <div class="gear-desc">Airing down tires from 35 PSI to 12-16 PSI doubles your rubber footprint, smoothing out jagged rocks and drastically improving grip.</div>
+            <button onclick="openInclinometerModal()" style="width:100%; background:var(--amber-orange); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer;">
+              <i class="fa-solid fa-calculator"></i> Calculate Optimal PSI
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLAPSIBLE VIDEO LIBRARY -->
+  <section style="margin-bottom: 40px;" id="video-library">
+    <div class="collapsible-bar" onclick="toggleVideoLibrarySection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-circle-play" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>4X4 & OVERLANDING EXPEDITION VIDEO LIBRARY</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Filterable trail walkthroughs, overland expedition documentaries & recovery tutorials</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="videoToggleIcon">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="videoLibraryBody" style="display: none; margin-top: 16px;">
+      <div class="video-grid" id="videoGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLAPSIBLE 4X4 OFF-ROAD SHOPS & FABRICATION OUTFITTERS -->
+  <section style="margin-bottom: 40px;" id="offroad-shops">
+    <div class="collapsible-bar" onclick="toggleShopsSection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-wrench" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>4X4 OFF-ROAD SHOPS, OUTFITTERS & FABRICATION GARAGES</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Certified axle re-gearing, suspension lifts, custom roll cages, overland builds & emergency trail repair</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="shopsToggleIcon">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="shopsBody" style="display: none; margin-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+        <div style="font-size: 13px; color: #64748b; font-weight: 700;">
+          <i class="fa-solid fa-location-crosshairs" style="color: var(--amber-orange);"></i> Sorted by Proximity to your Location (<span id="shopsLocationLabel">North Georgia / Current GPS</span>)
+        </div>
+        <div id="shopsCountBadge" style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 11px; padding: 4px 10px; border-radius: 6px;">
+          Showing Verified 4x4 Garages
+        </div>
+      </div>
+      <div class="shop-grid" id="shopsGridContainer">
+        <!-- Rendered dynamically by renderShops() -->
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- TRAIL SYSTEM SOURCE & OFFICIAL DETAILS MODAL -->
+<div class="modal-overlay" id="trailSourceModal" onclick="closeModalOnBackdrop(event)">
+  <div class="modal-content" style="max-width: 760px; padding: 24px;">
+    <button class="modal-close-btn" onclick="closeTrailSourceModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div id="trailSourceModalBody">
+      <!-- Dynamic Content Injected Here -->
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal" onclick="closeModalOnBackdrop(event)">
+  <div class="modal-content" style="max-width: 840px;">
+    <button class="modal-close-btn" onclick="closeVideoModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div style="padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <h3 id="videoModalTitle" style="font-size: 18px; margin: 0; color: var(--forest-dark);">Video Tutorial</h3>
+        <a id="videoDirectSearchLink" href="#" target="_blank" style="font-size: 12px; font-weight: 800; color: #ea580c; text-decoration: none; display: flex; align-items: center; gap: 4px; background: #fff7ed; padding: 4px 10px; border-radius: 6px; border: 1px solid #ffedd5;">
+          <i class="fa-brands fa-youtube" style="color:#ef4444;"></i> Search More on YouTube ↗
+        </a>
+      </div>
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000;">
+        <iframe id="videoIframe" src="" style="position: absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INCLINOMETER & AIR-DOWN MODAL -->
+<div class="modal-overlay" id="inclinometerModal" onclick="closeModalOnBackdrop(event)">
+  <div class="modal-content" style="max-width: 620px; padding: 24px;">
+    <button class="modal-close-btn" onclick="closeInclinometerModal()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 style="font-size: 20px; font-weight: 900; color: var(--forest-dark); margin-bottom: 6px; display:flex; align-items:center; gap:8px;">
+      <i class="fa-solid fa-compass" style="color: var(--amber-orange);"></i> Tactical 4x4 Inclinometer HUD & Air-Down
+    </h3>
+    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Real-time pitch & roll angles with rollover alerts and terrain tire pressure guide.</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: center; margin-bottom: 20px;">
+      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 18px; border-radius: 12px;">
+        <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Pitch Angle</span>
+        <div style="font-size: 36px; font-weight: 900; color: var(--forest-dark); font-family: 'JetBrains Mono', monospace;" id="inclinePitchVal">+12°</div>
+        <span style="font-size: 10px; font-weight: 800; background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">APPROACH</span>
+      </div>
+
+      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 18px; border-radius: 12px;">
+        <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Roll Camber</span>
+        <div style="font-size: 36px; font-weight: 900; color: var(--amber-orange); font-family: 'JetBrains Mono', monospace;" id="inclineRollVal">+8°</div>
+        <span style="font-size: 10px; font-weight: 800; background: #ffedd5; color:#c2410c; padding: 2px 8px; border-radius: 4px;">TILT RIGHT</span>
+      </div>
+    </div>
+
+    <!-- Quick Air Down Guide -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+      <strong style="color: var(--forest-dark); display:block; margin-bottom: 6px;">💨 Recommended Air-Down Pressures:</strong>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+        <div>• Appalachian Mountain Rock: <strong>14-16 PSI</strong></div>
+        <div>• Deep Clay & Mud: <strong>12-14 PSI</strong></div>
+        <div>• Moab Slickrock: <strong>12-14 PSI</strong></div>
+        <div>• Overlanding Forest Roads: <strong>18-22 PSI</strong></div>
+      </div>
+    </div>
+
+    <div style="background: #f1f5f9; padding: 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px;">
+      <label style="font-weight: 700; display: block; margin-bottom: 4px;">Simulate Off-Camber Roll (°)</label>
+      <input type="range" min="-35" max="35" value="8" oninput="document.getElementById('inclineRollVal').innerText = (this.value > 0 ? '+' : '') + this.value + '°'" style="width: 100%; accent-color: var(--amber-orange);">
+    </div>
+
+    <button onclick="closeInclinometerModal()" style="width: 100%; background: var(--forest-dark); color:#fff; border:none; padding: 12px; border-radius: 8px; font-weight: 800; cursor:pointer;">
+      CLOSE INCLINOMETER
+    </button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div>
+      <h4 style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 4px;">4X4 TRAILFINDER & OVERLANDING EXPEDITION GUIDE</h4>
+      <p style="color: #94a3b8; font-size: 12px;">Tread Lightly! &copy; 2026. Built for off-roaders, rock crawlers, and overland explorers.</p>
+    </div>
+    <div style="font-size: 12px; color: #cbd5e1;">
+      Emergency Trail Radio: <strong style="color: #f59e0b;">CB Ch 4 / GMRS Ch 16</strong>
+    </div>
+  </div>
+</footer>
+
+<script>
+// 4X4 & OVERLANDING DATABASE (NORTH GEORGIA, TENNESSEE & NATIONAL TRAILS)
+
+// 4X4 OFF-ROAD SHOPS & FABRICATION OUTFITTERS DATABASE
+const SHOPS = [
+  {
+    id: "shop-fortec-4x4-roswell",
+    name: "FORTEC 4x4 Custom Jeeps & Outfitters",
+    region: "Roswell & North Atlanta, Georgia",
+    lat: 34.0535,
+    lng: -84.3418,
+    badge: "Premier Jeep & 4x4 Outfitter",
+    rating: 4.9,
+    reviews: 520,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://fortec4x4.com/",
+    phone: "(770) 518-6878",
+    hours: "Mon-Fri 8:30 AM - 5:30 PM",
+    address: "11115 Houze Rd, Roswell, GA 30076",
+    services: [
+      "Custom Jeep Builds & Turnkey Packages",
+      "AEV, TeraFlex & MetalCloak Suspension Lifts",
+      "Dana 44/60 Re-Gearing & ARB Air Lockers",
+      "Warn Winches, Steel Bumpers & Rock Sliders",
+      "Fox & Falcon Performance Shock Tuning"
+    ],
+    specialties: ["Jeep Wrangler JL/JK/TJ", "Jeep Gladiator JT", "Ford Bronco", "Custom Overland 4x4s"]
+  },
+  {
+    id: "shop-appalachian-offroad",
+    name: "Appalachian Offroad & Performance",
+    region: "Blairsville & Blue Ridge, North Georgia",
+    lat: 34.8760,
+    lng: -83.9580,
+    badge: "Certified 4x4 Tech Center",
+    rating: 4.9,
+    reviews: 185,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://www.facebook.com/appalachianoffroad/",
+    phone: "(706) 745-4900",
+    hours: "Mon-Fri 8:00 AM - 5:30 PM",
+    address: "128 Blue Ridge Hwy, Blairsville, GA 30512",
+    services: [
+      "Dana 44/60 Re-Gearing (4.88 / 5.13)",
+      "ARB Air Locker Installs",
+      "Long-Arm Suspension Lifts",
+      "Trail Breakage & Axle Repair",
+      "Heavy-Duty Steering Upgrades"
+    ],
+    specialties: ["Jeep Wrangler JL/JK/TJ", "Jeep Gladiator JT", "Toyota 4Runner & Tacoma", "Ford Bronco"]
+  },
+  {
+    id: "shop-chattanooga-4x4",
+    name: "Chattanooga 4x4 & Overland Outfitter",
+    region: "Chattanooga & Marion County, Tennessee",
+    lat: 35.0456,
+    lng: -85.3097,
+    badge: "Master Overland Outfitter",
+    rating: 4.8,
+    reviews: 220,
+    img: "/assets/overland_shop_garage.jpg",
+    website: "https://www.chattanooga4x4.com/",
+    phone: "(423) 892-4949",
+    hours: "Mon-Fri 8:30 AM - 6:00 PM",
+    address: "5400 Highway 153, Chattanooga, TN 37443",
+    services: [
+      "Falcon & Fox Shock Tuning",
+      "RTT & Bed Rack Fabrication",
+      "12V Dual Battery & Solar Wiring",
+      "Full Underbody Armor & Steel Skids",
+      "Heavy-Duty Tie Rods / Draglinks"
+    ],
+    specialties: ["Jeep 4x4s", "Toyota Land Cruiser & Tacoma", "Lexus GX470 / GX460", "Ram 2500 Power Wagon"]
+  },
+  {
+    id: "shop-smoky-mountain-4wd",
+    name: "Smoky Mountain 4WD & Custom Fabrication",
+    region: "Knoxville & Maryville (Near Windrock Park), TN",
+    lat: 35.7565,
+    lng: -83.9705,
+    badge: "Windrock Tech Approved",
+    rating: 4.9,
+    reviews: 310,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://www.smokymountain4wd.com/",
+    phone: "(865) 984-4943",
+    hours: "Mon-Sat 8:00 AM - 6:00 PM",
+    address: "1820 Alcoa Hwy, Maryville / Knoxville, TN 37701",
+    services: [
+      "Solid Axle Swaps (SAS)",
+      "Custom DOM Tube Roll Cages",
+      "Hydraulic Ram Steering",
+      "Chromoly Axle Shafts & U-Joints",
+      "Windrock Trail Rig Recovery & Towing"
+    ],
+    specialties: ["Jeep Buggies & Rock Crawlers", "Ultra4 & Bouncer Rigs", "Ford Super Duty 1-Ton Swaps"]
+  },
+  {
+    id: "shop-allsouth-autosports",
+    name: "Allsouth Autosports & 4x4 Garage",
+    region: "Buford & North Atlanta, Georgia",
+    lat: 34.1207,
+    lng: -84.0044,
+    badge: "Turnkey 4x4 Builder",
+    rating: 4.8,
+    reviews: 450,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://allsouthautosports.com/",
+    phone: "(770) 881-8400",
+    hours: "Mon-Fri 8:00 AM - 5:00 PM",
+    address: "4247 South Lee St, Buford, GA 30518",
+    services: [
+      "Turnkey Jeep & Bronco Builds",
+      '40" Tire High-Line Clearancing',
+      "King & Fox 2.5/3.0 Coilovers",
+      "Supercharger & Hemi V8 Swaps",
+      "Warn Winch & Steel Bumpers"
+    ],
+    specialties: ["Jeep Wrangler Rubicon 392", "Ford Raptor & Bronco Raptor", "Toyota TRD Pro Fleet"]
+  },
+  {
+    id: "shop-moab-4x4-outpost",
+    name: "Moab 4x4 Outpost (M4O)",
+    region: "Moab Sand Flats & Slickrock Hub, Utah",
+    lat: 38.5733,
+    lng: -109.5498,
+    badge: "Emergency Slickrock Recovery",
+    rating: 4.9,
+    reviews: 890,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://www.moab4x4outpost.com/",
+    phone: "(435) 259-0204",
+    hours: "7 Days 7:30 AM - 6:30 PM (24/7 Trail Extraction)",
+    address: "1142 S Highway 191, Moab, UT 84532",
+    services: [
+      "Emergency Slickrock Trail Extraction",
+      "Custom Dana 60 & 70 1-Ton Axles",
+      "Atlas 2 & 4-Speed Transfer Cases",
+      "High-Angle 1350/1410 Driveshafts",
+      "Same-Day Welded Axle Repair"
+    ],
+    specialties: ["Moab Trail Rigs & Jeep Rubicons", "Extreme Buggies", "Custom 1-Ton Conversions"]
+  },
+  {
+    id: "shop-summit-4x4",
+    name: "Summit 4x4 Company & Overland Garage",
+    region: "Prescott & Phoenix High Country, Arizona",
+    lat: 34.5400,
+    lng: -112.4685,
+    badge: "ARB & Warn Tech Center",
+    rating: 4.9,
+    reviews: 340,
+    img: "/assets/overland_shop_garage.jpg",
+    website: "https://summit4x4company.com/",
+    phone: "(928) 227-2026",
+    hours: "Mon-Fri 8:00 AM - 5:00 PM",
+    address: "420 6th St, Prescott, AZ 86301",
+    services: [
+      "ARB Twin Onboard Air Compressors",
+      "Long-Travel Suspension & Shocks",
+      "Off-Road Laser Alignment",
+      "Custom Steel Bumpers & Sliders",
+      "Expedition Water & Power Systems"
+    ],
+    specialties: ["Jeep Wrangler & Gladiator", "Toyota Tacoma / 4Runner / Tundra", "Ford Bronco & Tremor"]
+  },
+  {
+    id: "shop-4wp-marietta",
+    name: "4 Wheel Parts (4WP) - Atlanta / Marietta",
+    region: "Marietta & Cobb County, Georgia",
+    lat: 33.9526,
+    lng: -84.5499,
+    badge: "National 4x4 Tech Supercenter",
+    rating: 4.7,
+    reviews: 680,
+    img: "/assets/offroad_shop_garage.jpg",
+    website: "https://www.4wheelparts.com/",
+    phone: "(770) 428-1110",
+    hours: "Mon-Sat 9:00 AM - 6:00 PM",
+    address: "1200 Cobb Pkwy N, Marietta, GA 30062",
+    services: [
+      "Suspension Lift Kit Installations (Fox/Bilstein/ProComp)",
+      "Wheel & Off-Road Tire Mounting & Balancing",
+      "Drivetrain Re-Gearing & Differential Lockers",
+      "Steel Bumper, Winch & Lighting Outfitting",
+      "4x4 Laser Alignment & Drivetrain Diagnostics"
+    ],
+    specialties: ["Jeep Wrangler & Gladiator", "Ford F-150 & Bronco", "Chevy Silverado / ZR2", "Toyota Tacoma & Tundra"]
+  },
+  {
+    id: "shop-carolina-metal-masters",
+    name: "Carolina Metal Masters & 4x4 Fabrication",
+    region: "Asheville & Pisgah Blue Ridge, NC",
+    lat: 35.5951,
+    lng: -82.5515,
+    badge: "Billet & Precision Fab Specialists",
+    rating: 4.9,
+    reviews: 290,
+    img: "/assets/overland_shop_garage.jpg",
+    website: "https://carolinametalmasters.com/",
+    phone: "(828) 424-9189",
+    hours: "Mon-Fri 8:30 AM - 5:00 PM",
+    address: "135 Sweeten Creek Rd, Asheville, NC 28803",
+    services: [
+      "Custom CNC Billet Side Mirrors & Grab Handles",
+      "Custom Rock Slider & Roll Cage Fabrication",
+      "Extreme Long-Arm Suspensions",
+      "Dana 60 / 1-Ton Axle Builds",
+      "Expedition Overland Rack Fabrication"
+    ],
+    specialties: ["Jeep Wrangler JL/JK", "Jeep Gladiator JT", "Ford Bronco", "Custom Tube Crawlers"]
+  }
+];
+
+const TRAILS = [
+  // ── NORTH GEORGIA 4X4 & OVERLAND TRAILS ──
+  {
+    id: "ga-beasley-knob-93a",
+    officialAgency: "USFS - Blue Ridge Ranger District (Chattahoochee-Oconee National Forest)",
+    officialPhone: "(706) 745-6928",
+    officialWebsite: "https://www.fs.usda.gov/recarea/conf/recarea/?recid=10531",
+    feeDetails: "$5.00 / vehicle per day or $50.00 Annual OHV Pass (Available on Recreation.gov or cash fee tube at trailhead)",
+    regulations: "Open sunrise to sunset (Seasonal closure Jan 1 - Mar 31 & during heavy rain). Spark arrestor required. No alcohol allowed on trail. 4WD with winch & 33\"+ tires strongly recommended.",
+    stagingArea: "Beasley Knob Trailhead Staging Area, Blairsville, GA 30512 (Air-down lot & kiosk)",
+    name: "Beasley Knob OHV - Trail 93A & 93B (Badge of Honor)",
+    region: "Chattahoochee National Forest, Blairsville GA",
+    lat: 34.8450,
+    lng: -83.9210,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 10.6,
+    driveTimeEst: "3.5h",
+    airDownPsi: "12-14",
+    status: "Open (Apr-Jan) - Steep Clay Climbs & Rock Ledges",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Beasley Knob", "Trail 93A", "Steep Clay Climbs", "Rock Staircases", "Winch Essential"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-beasley-knob-blue-mtn",
+    officialAgency: "USFS - Blue Ridge Ranger District (Chattahoochee-Oconee National Forest)",
+    officialPhone: "(706) 745-6928",
+    officialWebsite: "https://www.fs.usda.gov/recarea/conf/recarea/?recid=10531",
+    feeDetails: "$5.00 / vehicle per day or $50.00 Annual OHV Pass (Available on Recreation.gov or cash fee tube at trailhead)",
+    regulations: "Open sunrise to sunset (Seasonal closure Jan 1 - Mar 31 & during heavy rain). Spark arrestor required. No alcohol allowed on trail. 4WD with winch & 33\"+ tires strongly recommended.",
+    stagingArea: "Beasley Knob Trailhead Staging Area, Blairsville, GA 30512 (Air-down lot & kiosk)",
+    name: "Beasley Knob - Blue Mountain Trail 93",
+    region: "Chattahoochee Forest, Blairsville GA",
+    lat: 34.8510,
+    lng: -83.9150,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 8.2,
+    driveTimeEst: "2.5h",
+    airDownPsi: "14-16",
+    status: "Open - Mountain Ruts & Rock Gardens",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Blue Mountain", "Beasley Knob OHV", "Chattahoochee Forest", "Ruts"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-tray-mountain",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Tray Mountain Road (FS 79)",
+    region: "Chattahoochee Forest, Helen & Hiawassee GA",
+    lat: 34.7997,
+    lng: -83.6841,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "32\"+",
+    lengthMiles: 14.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "16-18",
+    status: "Open - Mountain Gap & Ruts",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Blue Ridge Gap", "Appalachian Trail Cross", "Rocky Ruts", "3800ft Summit"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-nimblewill-gap",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Nimblewill Gap & High Shoals Road",
+    region: "Chattahoochee Forest, Dahlonega GA",
+    lat: 34.6192,
+    lng: -84.1436,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 10.5,
+    driveTimeEst: "2.0h",
+    airDownPsi: "16-18",
+    status: "Open - Stream Crossings & Clay",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["High Shoals", "Stream Fords", "Dispersed Camping", "Springer Mountain"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-charlies-creek",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Charlie's Creek Road (FS 89)",
+    region: "Tallulah River, Hiawassee & Clayton GA",
+    lat: 34.8872,
+    lng: -83.5681,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 9.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "14-16",
+    status: "Open - Deep River Water Fords",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Tallulah River Fords", "Deep Water", "Rocky Ledges", "Snorkel Recommended"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "ga-sarahs-creek",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Sarah's Creek 4WD Trail",
+    region: "Warwoman WMA, Clayton & Rabun County GA",
+    lat: 34.9250,
+    lng: -83.3360,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 8.5,
+    driveTimeEst: "1.8h",
+    airDownPsi: "16-18",
+    status: "Open - Creek Crossings & Pines",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Creek Fords", "Warwoman Forest", "Dispersed Campsites"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-bell-mountain",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Bell Mountain Rock Trail & Summit",
+    region: "Lake Chatuge, Hiawassee GA",
+    lat: 34.9575,
+    lng: -83.7431,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 3.2,
+    driveTimeEst: "1.0h",
+    airDownPsi: "15-18",
+    status: "Open - Steep Rock Grade & Views",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["360 View", "Lake Chatuge", "Steep Rock Pitch", "Summit Overlook"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "ga-cohutta-wilderness",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Cohutta Wilderness 4WD Forest Loop",
+    region: "Jacks River, Blue Ridge & Ellijay GA",
+    lat: 34.8820,
+    lng: -84.6210,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: true,
+    overlandDays: "2 Days",
+    fuelRangeReq: "150 mi",
+    campingType: "Wilderness Dispersed",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 38.0,
+    driveTimeEst: "5.0h",
+    airDownPsi: "18-20",
+    status: "Open - Remote Forest Ridges",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Cohutta", "Jacks River", "Remote Overlanding", "Forest Service"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-georgia-traverse",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "The Georgia Traverse Overland Transect",
+    region: "Chattahoochee Forest, GA / NC / SC",
+    lat: 34.8210,
+    lng: -83.6150,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: true,
+    overlandDays: "4-5 Days",
+    fuelRangeReq: "200 mi",
+    campingType: "Forest Service Dispersed",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 390.0,
+    driveTimeEst: "5 Days",
+    airDownPsi: "18-20",
+    status: "Open - 390-Mile Cross-State Overland",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Cross-State Overland", "River Crossings", "Mountain Ridges", "Dispersed Camp"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-oakey-mountain",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Oakey Mountain OHV Trail System",
+    region: "Chattahoochee Forest, Clayton & Rabun GA",
+    lat: 34.8250,
+    lng: -83.4750,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 9.2,
+    driveTimeEst: "2.0h",
+    airDownPsi: "16-18",
+    status: "Open (Apr-Jan) - Forest Ridgeline & Ruts",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Oakey Mountain", "Rabun County", "Chattahoochee OHV", "Forest Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-currahee-mountain",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Currahee Mountain 4x4 Trail",
+    region: "Chattahoochee Forest, Toccoa & Stephens GA",
+    lat: 34.5290,
+    lng: -83.3760,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 6.4,
+    driveTimeEst: "1.5h",
+    airDownPsi: "16-18",
+    status: "Open - Granite Slabs & 360° Summit View",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Currahee Mountain", "Band of Brothers Hill", "Rock Slabs", "Summit View"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "ga-locust-stake",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Locust Stake OHV Area",
+    region: "Chattahoochee Forest, Toccoa GA",
+    lat: 34.5710,
+    lng: -83.4210,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 10.0,
+    driveTimeEst: "2.5h",
+    airDownPsi: "14-16",
+    status: "Open - Mud Crossings & Steep Gradients",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Locust Stake", "Stephens County", "Mud Crossings", "Forest Service"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-whissenhunt",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Whissenhunt OHV Trail System",
+    region: "Chattahoochee Forest, Dahlonega GA",
+    lat: 34.5750,
+    lng: -84.0520,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 11.2,
+    driveTimeEst: "2.0h",
+    airDownPsi: "16-18",
+    status: "Open - Red Clay Ruts & Stream Crossings",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Whissenhunt", "Dahlonega 4x4", "Clay Ruts", "Stream Crossings"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "ga-cashes-valley",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Cashes Valley Road & Fightingtown Creek",
+    region: "Blue Ridge & Fannin County, GA",
+    lat: 34.8320,
+    lng: -84.4120,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 7.5,
+    driveTimeEst: "1.8h",
+    airDownPsi: "16-18",
+    status: "Open - Multiple Creek Water Fords",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Cashes Valley", "Fightingtown Creek", "Water Fords", "Blue Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // ── TENNESSEE & SOUTHEAST 4X4 PARKS ──
+  {
+    id: "tn-aop-crawling",
+    officialAgency: "Adventure Off Road Park (AOP)",
+    officialPhone: "(423) 486-5055",
+    officialWebsite: "https://www.adventureoffroadpark.com/",
+    feeDetails: "$30.00 per vehicle per day • Camping tn-aop-crawling5.00/night",
+    regulations: "Full-size buggies and 4x4 rigs welcome. Roll cages & harnesses required on extreme trails. Seatbelts required at all times.",
+    stagingArea: "AOP Main Pavilion & Tech Inspection Lot, 1040 Pocket Rd, South Pittsburg, TN 37380",
+    name: "Adventure Off Road Park (AOP)",
+    region: "Cumberland Plateau, South Pittsburg TN",
+    lat: 35.0520,
+    lng: -85.7250,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "12.0\"",
+    recTires: "37\"+",
+    lengthMiles: 25.0,
+    driveTimeEst: "5.0h",
+    airDownPsi: "10-12",
+    status: "Open - Hardcore Boulder Canyons",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["AOP", "Boulder Canyon", "Hardcore Crawl", "500-Acre Park"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-brimstone",
+    officialAgency: "Brimstone Recreation LLC",
+    officialPhone: "(800) 274-6786",
+    officialWebsite: "https://www.brimstonerecreation.com/",
+    feeDetails: "$28.00 Daily Band per adult • $98.00 Annual Land Permit",
+    regulations: "Permit wristbands must be worn visibly. Over 300 miles of marked trails across 19,000 acres. Night riding permitted.",
+    stagingArea: "Brimstone Headquarters & Staging Park, 2860 Baker Highway, Huntsville, TN 37756",
+    name: "Brimstone Recreation Area",
+    region: "Cumberland Mountains, Huntsville TN",
+    lat: 36.3850,
+    lng: -84.4920,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: true,
+    overlandDays: "2-3 Days",
+    fuelRangeReq: "150 mi",
+    campingType: "Cabins & Dispersed RV",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.5\"",
+    recTires: "33\"+",
+    lengthMiles: 300.0,
+    driveTimeEst: "2 Days",
+    airDownPsi: "14-16",
+    status: "Open - 300+ Miles of Mountain Trails",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Brimstone", "300+ Miles", "Cumberland Plateau", "Mountain Mud"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-golden-mountain",
+    officialAgency: "Tennessee Department of Environment & Conservation (TDEC) / TWRA",
+    officialPhone: "(423) 658-5551",
+    officialWebsite: "https://www.tn.gov/environment/program-areas/na-natural-areas/prentice-cooper.html",
+    feeDetails: "Free Public Access with TWRA High-Clearance Guidelines",
+    regulations: "Open for 4x4 access outside of scheduled big game hunting closures. Stay on authorized routes. No mud bogging off established corridors.",
+    stagingArea: "State Forest Checkpoint & Air-Down Pull-Offs",
+    name: "Golden Mountain Off Road Park",
+    region: "Sparta & White County, TN",
+    lat: 35.9520,
+    lng: -85.3980,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 18.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "12-14",
+    status: "Open - Technical Limestone Ledges",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Golden Mountain", "Limestone Ledges", "Rock Gardens", "Bounty Hills"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "nc-uwharrie-daniel",
+    officialAgency: "USDA Forest Service - Uwharrie National Forest",
+    officialPhone: "(910) 576-6391",
+    officialWebsite: "https://www.fs.usda.gov/recarea/nfsnc/recarea/?recid=48934",
+    feeDetails: "$5.00 Daily Trail Pass per vehicle • $30.00 Season Pass (April 1 - December 15)",
+    regulations: "Open April 1 through Dec 15. Spark arrestors required. Stay on designated trail diamond markers. Winch and front/rear lockers recommended on Daniel Trail.",
+    stagingArea: "Hunt Camp & Eldorado Outpost Staging Lot, NC-109, Troy, NC 27371",
+    name: "Uwharrie National Forest - Daniel Trail",
+    region: "Uwharrie Mountains, Troy NC",
+    lat: 35.4410,
+    lng: -80.0480,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 3.2,
+    driveTimeEst: "2.0h",
+    airDownPsi: "12-14",
+    status: "Open - Extreme Rocky Ledge Climb",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Daniel Trail", "Extreme Rock Ledge", "Uwharrie", "Double Lockers"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "nc-brown-mountain",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Brown Mountain OHV Trail System",
+    region: "Pisgah National Forest, Morganton NC",
+    lat: 35.9850,
+    lng: -81.7250,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 34.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "14-16",
+    status: "Open (Apr-Jan) - Mountain Ridge Climbs",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Brown Mountain", "Pisgah Forest", "Rock Climbs", "Blue Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "al-choccolocco",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Choccolocco Mountain Off Road Park",
+    region: "Jacksonville & Calhoun County, AL",
+    lat: 33.8210,
+    lng: -85.7350,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 15.0,
+    driveTimeEst: "3.5h",
+    airDownPsi: "12-14",
+    status: "Open - Hell's Gate & Rock Slabs",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Choccolocco", "Alabama Rocks", "Hell's Gate", "Rock Crawl"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-windrock-16",
+    officialAgency: "Windrock Park LLC & Tennessee Wildlife Resources Agency (TWRA)",
+    officialPhone: "(865) 435-1251",
+    officialWebsite: "https://www.windrockpark.com/",
+    feeDetails: "$28.00 / person per day • tn-windrock-1637.00 Annual Land Use Permit (Purchase at Windrock General Store or online)",
+    regulations: "All drivers & passengers must carry valid Land Use Permit. Helmets recommended. Park open 365 days, 24 hours. Full-size 4x4 rigs welcome on designated trails.",
+    stagingArea: "Windrock General Store & Main Staging Lot, 912 Windrock Rd, Oliver Springs, TN 37840 (Wash station & air compressors available)",
+    name: "Windrock Park - Trail 16 (Badge of Honor)",
+    region: "Appalachian Mountains, Oliver Springs TN",
+    lat: 36.0381,
+    lng: -84.3417,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "12.5\"",
+    recTires: "37\"+",
+    lengthMiles: 3.8,
+    driveTimeEst: "3.5h",
+    airDownPsi: "10-12",
+    status: "Open - Wet Limestone Rock Crawling",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Limestone Ledges", "Winch Essential", "Mud Chutes", "Hardcore Crawl"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-windrock-panther",
+    officialAgency: "Windrock Park LLC & Tennessee Wildlife Resources Agency (TWRA)",
+    officialPhone: "(865) 435-1251",
+    officialWebsite: "https://www.windrockpark.com/",
+    feeDetails: "$28.00 / person per day • tn-windrock-panther37.00 Annual Land Use Permit (Purchase at Windrock General Store or online)",
+    regulations: "All drivers & passengers must carry valid Land Use Permit. Helmets recommended. Park open 365 days, 24 hours. Full-size 4x4 rigs welcome on designated trails.",
+    stagingArea: "Windrock General Store & Main Staging Lot, 912 Windrock Rd, Oliver Springs, TN 37840 (Wash station & air compressors available)",
+    name: "Windrock Park - Panther Rock Trail 2 (Badge of Honor)",
+    region: "Appalachian Mountains, Oliver Springs TN",
+    lat: 36.0420,
+    lng: -84.3250,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 7.2,
+    driveTimeEst: "3.0h",
+    airDownPsi: "12-14",
+    status: "Open - Scenic Ridge & Rock Slabs",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Panther Rock Overlook", "Mountain Ridge", "Rocky Slabs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-prentice-cooper",
+    officialAgency: "Tennessee Department of Environment & Conservation (TDEC) / TWRA",
+    officialPhone: "(423) 658-5551",
+    officialWebsite: "https://www.tn.gov/environment/program-areas/na-natural-areas/prentice-cooper.html",
+    feeDetails: "Free Public Access with TWRA High-Clearance Guidelines",
+    regulations: "Open for 4x4 access outside of scheduled big game hunting closures. Stay on authorized routes. No mud bogging off established corridors.",
+    stagingArea: "State Forest Checkpoint & Air-Down Pull-Offs",
+    name: "Prentice Cooper - Haley Road Trail",
+    region: "Tennessee River Gorge, Chattanooga & Marion TN",
+    lat: 35.1265,
+    lng: -85.4180,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 12.0,
+    driveTimeEst: "3.0h",
+    airDownPsi: "12-14",
+    status: "Open - Technical Limestone & Mud",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Haley Road", "Limestone Steps", "Tennessee Gorge", "Mud Holes"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "tn-royal-blue",
+    officialAgency: "Tennessee Department of Environment & Conservation (TDEC) / TWRA",
+    officialPhone: "(423) 658-5551",
+    officialWebsite: "https://www.tn.gov/environment/program-areas/na-natural-areas/prentice-cooper.html",
+    feeDetails: "Free Public Access with TWRA High-Clearance Guidelines",
+    regulations: "Open for 4x4 access outside of scheduled big game hunting closures. Stay on authorized routes. No mud bogging off established corridors.",
+    stagingArea: "State Forest Checkpoint & Air-Down Pull-Offs",
+    name: "Royal Blue & Tackett Creek Crawl",
+    region: "Cumberland Mountains, Pioneer & Campbell TN",
+    lat: 36.3580,
+    lng: -84.2250,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 25.0,
+    driveTimeEst: "5.0h",
+    airDownPsi: "12-14",
+    status: "Open - Huge Rock Gardens & Creeks",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Tackett Creek", "Rock Gardens", "Cumberland Mountains", "Waterfall Runs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-smoky-500",
+    officialAgency: "USDA Forest Service - Chattahoochee-Oconee National Forests (Blue Ridge & Chattooga River Districts)",
+    officialPhone: "(706) 754-6221",
+    officialWebsite: "https://www.fs.usda.gov/conf",
+    feeDetails: "Free Public Access on Forest Service Roads • No Pass Required for Dispersed Camping",
+    regulations: "Street-legal 4x4 vehicles permitted. Stay on designated USFS numbered routes. Pack it in, pack it out. Check USFS road alerts for seasonal storm washouts.",
+    stagingArea: "Various Forest Service Trailheads & Air-Down Pull-Offs (Chattahoochee NF)",
+    name: "Smoky Mountain 500 (SM500)",
+    region: "Cherokee National Forest, TN / NC / GA",
+    lat: 35.3560,
+    lng: -84.3010,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: true,
+    overlandDays: "3-4 Days",
+    fuelRangeReq: "180 mi",
+    campingType: "Primitive Dispersed Camp",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 500.0,
+    driveTimeEst: "4 Days",
+    airDownPsi: "18-20",
+    status: "Open - 500-Mile Appalachian Loop",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Tellico Plains", "Fire Towers", "Forest Service Roads", "Waterfalls"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-aetna-mountain",
+    officialAgency: "Tennessee Department of Environment & Conservation (TDEC) / TWRA",
+    officialPhone: "(423) 658-5551",
+    officialWebsite: "https://www.tn.gov/environment/program-areas/na-natural-areas/prentice-cooper.html",
+    feeDetails: "Free Public Access with TWRA High-Clearance Guidelines",
+    regulations: "Open for 4x4 access outside of scheduled big game hunting closures. Stay on authorized routes. No mud bogging off established corridors.",
+    stagingArea: "State Forest Checkpoint & Air-Down Pull-Offs",
+    name: "Aetna Mountain Off-Road Trails",
+    region: "Raccoon Mountain, Chattanooga TN",
+    lat: 35.0210,
+    lng: -85.3950,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "12.0\"",
+    recTires: "35\"+",
+    lengthMiles: 16.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "10-12",
+    status: "Open - Boulder Trenches & Crawls",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Aetna Boulder Field", "Rock Trenches", "Chattanooga Overlooks"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "tn-citico-tellico",
+    officialAgency: "Tennessee Department of Environment & Conservation (TDEC) / TWRA",
+    officialPhone: "(423) 658-5551",
+    officialWebsite: "https://www.tn.gov/environment/program-areas/na-natural-areas/prentice-cooper.html",
+    feeDetails: "Free Public Access with TWRA High-Clearance Guidelines",
+    regulations: "Open for 4x4 access outside of scheduled big game hunting closures. Stay on authorized routes. No mud bogging off established corridors.",
+    stagingArea: "State Forest Checkpoint & Air-Down Pull-Offs",
+    name: "Citico Creek & Tellico River 4WD Corridor",
+    region: "Cherokee National Forest, Tellico Plains TN",
+    lat: 35.3120,
+    lng: -84.1480,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: true,
+    overlandDays: "2 Days",
+    fuelRangeReq: "140 mi",
+    campingType: "Riverbank Dispersed",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 28.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "18-20",
+    status: "Open - Scenic River & Wilderness",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Tellico River", "Citico Wilderness", "Riverbank Camping", "Water Fording"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // ── ICONIC NATIONAL 4X4 & OVERLAND EXPEDITIONS ──
+  {
+    id: "trail-hells-revenge",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • trail-hells-revenge0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Hell's Revenge (Badge of Honor)",
+    region: "Sand Flats, Moab Utah",
+    lat: 38.5772,
+    lng: -109.5238,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.5\"",
+    recTires: "35\"+",
+    lengthMiles: 6.5,
+    driveTimeEst: "3.5h",
+    airDownPsi: "12-14",
+    status: "Open - Grippy Slickrock Fins",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Slickrock", "Fins", "Escalator", "Hot Tub"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "trail-rubicon",
+    officialAgency: "El Dorado National Forest & Rubicon Trail Foundation",
+    officialPhone: "(530) 622-5061",
+    officialWebsite: "https://www.rubicontrailfoundation.org/",
+    feeDetails: "Free Public Forest Access • trail-rubicon0 Optional Trail Maintenance Donation",
+    regulations: "Low range 4WD, minimum 35\" tires and dual lockers strongly recommended. Carry spill kits and human waste bags. Pack it in, pack it out.",
+    stagingArea: "Loon Lake Spillway Staging Area, Georgetown, CA (Air down and toilet facilities)",
+    name: "The Rubicon Trail (Badge of Honor)",
+    region: "Lake Tahoe / Sierra Nevada, CA",
+    lat: 39.0039,
+    lng: -120.2505,
+    difficultyScale: 9,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "12.0\"",
+    recTires: "37\"+",
+    lengthMiles: 22.0,
+    driveTimeEst: "12.0h",
+    airDownPsi: "10-12",
+    status: "Open - Giant Granite Boulders",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Rock Crawling", "Big Sluice", "Cadillac Hill"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "trail-black-bear-pass",
+    officialAgency: "USDA Forest Service - Grand Mesa, Uncompahgre and San Juan National Forests",
+    officialPhone: "(970) 240-5300",
+    officialWebsite: "https://www.fs.usda.gov/recarea/gmug/recarea/?recid=33554",
+    feeDetails: "Free Public Forest Pass • No Permit Required for High Alpine Shelf Roads",
+    regulations: "Black Bear Pass is ONE-WAY from Summit to Telluride (No uphill travel permitted on shelf). Low-range 4WD and experienced mountain driving essential.",
+    stagingArea: "Red Mountain Pass (US-550) Summit Staging Area, Ouray/Silverton, CO",
+    name: "Black Bear Pass (Badge of Honor)",
+    region: "San Juan Mountains, Telluride CO",
+    lat: 37.9042,
+    lng: -107.7592,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 8.6,
+    driveTimeEst: "3.0h",
+    airDownPsi: "16-18",
+    status: "Caution - 1,000 ft Shelf Drop-Offs",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Shelf Road", "Ingram Falls", "High Alpine"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "overland-white-rim",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "White Rim Trail Expedition",
+    region: "Canyonlands National Park, Utah",
+    lat: 38.3175,
+    lng: -109.8569,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: true,
+    overlandDays: "2-3 Days",
+    fuelRangeReq: "250 mi",
+    campingType: "Permit RTT Campsites",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 100.0,
+    driveTimeEst: "3 Days",
+    airDownPsi: "16-18",
+    status: "Open - 100-Mile Canyon Rim Loop",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Overlanding", "White Rim", "Shafer Switchbacks", "Hardscrabble"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "overland-mojave-road",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "The Historic Mojave Road Expedition",
+    region: "Mojave National Preserve, California",
+    lat: 35.1050,
+    lng: -115.4730,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: true,
+    overlandDays: "2-3 Days",
+    fuelRangeReq: "300 mi",
+    campingType: "Free Dispersed BLM",
+    isBadgeOfHonor: false,
+    badgePoints: 0,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 138.0,
+    driveTimeEst: "3 Days",
+    airDownPsi: "12-14",
+    status: "Open - Deep Sand & Water Ford",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Overlanding", "Afton Canyon", "Watson Wash", "Mojave Desert"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "trail-uwharrie-dickie-bell",
+    officialAgency: "USDA Forest Service - Uwharrie National Forest",
+    officialPhone: "(910) 576-6391",
+    officialWebsite: "https://www.fs.usda.gov/recarea/nfsnc/recarea/?recid=48934",
+    feeDetails: "$5.00 Daily Trail Pass per vehicle • $30.00 Season Pass (April 1 - December 15)",
+    regulations: "Open April 1 through Dec 15. Spark arrestors required. Stay on designated trail diamond markers. Winch and front/rear lockers recommended on Daniel Trail.",
+    stagingArea: "Hunt Camp & Eldorado Outpost Staging Lot, NC-109, Troy, NC 27371",
+    name: "Uwharrie National Forest - Dickey Bell (Badge of Honor)",
+    region: "Troy, North Carolina",
+    lat: 35.4380,
+    lng: -80.0520,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.5\"",
+    recTires: "33\"+",
+    lengthMiles: 3.5,
+    driveTimeEst: "2.0h",
+    airDownPsi: "14-16",
+    status: "Open - Steep Rocky Hillclimbs",
+    img: "/assets/north_ga_trail_map.jpg",
+    tags: ["Rocky Hillclimb", "Uwharrie Clay", "Bypass Routes"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // ── MORE OFFICIAL JEEP BADGE OF HONOR TRAILS ──
+  // UTAH (MOAB & SAND HOLLOW)
+  {
+    id: "boh-fins-and-things",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • boh-fins-and-things0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Fins & Things (Badge of Honor)",
+    region: "Sand Flats, Moab Utah",
+    lat: 38.5833,
+    lng: -109.4833,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 9.4,
+    driveTimeEst: "3.0h",
+    airDownPsi: "14-16",
+    status: "Open - Steep Sandstone Domes",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Slickrock", "Dino Ledge", "Frenchie's Fin"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-poison-spider",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • boh-poison-spider0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Poison Spider Mesa (Badge of Honor)",
+    region: "Potash Road, Moab Utah",
+    lat: 38.5322,
+    lng: -109.6085,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 16.0,
+    driveTimeEst: "4.5h",
+    airDownPsi: "12-14",
+    status: "Open - The Waterfall Ledge",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["The Waterfall", "Little Arch", "Sand Washes"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-top-of-the-world",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • boh-top-of-the-world0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Top of the World (Badge of Honor)",
+    region: "Dewey Bridge, Moab Utah",
+    lat: 38.7051,
+    lng: -109.2550,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 19.0,
+    driveTimeEst: "4.5h",
+    airDownPsi: "12-14",
+    status: "Open - 2,000 ft Cliff Overlook",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Cliff Overhang", "Onion Creek", "Rocky Ledges"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-cliff-hanger",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • boh-cliff-hanger0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Cliff Hanger (Badge of Honor)",
+    region: "Kane Creek, Moab Utah",
+    lat: 38.5280,
+    lng: -109.5990,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 9.5,
+    driveTimeEst: "3.5h",
+    airDownPsi: "12-14",
+    status: "Open - Extreme Shelf Road",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Kane Creek", "Cliff Steps", "High Exposure"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-metal-masher",
+    officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
+    officialPhone: "(435) 259-2100",
+    officialWebsite: "https://www.grandcountyutah.net/157/Sand-Flats-Recreation-Area",
+    feeDetails: "$5.00 / vehicle day pass (Sand Flats Recreation Area) • boh-metal-masher0.00 / night primitive camping",
+    regulations: "Stay on marked trail painted dashes on slickrock. Do not drive on cryptobiotic soil crusts. WAG bag / human waste disposal mandatory in backcountry.",
+    stagingArea: "Sand Flats Recreation Area Main Entrance Kiosk & Trailhead Staging, Sand Flats Rd, Moab, UT 84532",
+    name: "Metal Masher (Badge of Honor)",
+    region: "Gemini Bridges, Moab Utah",
+    lat: 38.6410,
+    lng: -109.6890,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 18.0,
+    driveTimeEst: "4.5h",
+    airDownPsi: "12-14",
+    status: "Open - Rock Chutes & Ledges",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Rock Chutes", "Widowmaker", "Mirror Gulch"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-sand-hollow-maze",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Sand Hollow - The Maze (Badge of Honor)",
+    region: "Sand Mountain, Hurricane UT",
+    lat: 37.1235,
+    lng: -113.3855,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 7.2,
+    driveTimeEst: "3.5h",
+    airDownPsi: "10-12",
+    status: "Open - Red Sand & Slabs",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Red Sand", "The Chute", "Slickrock Steps"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-sand-hollow-milts",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Sand Hollow - Milts Mile (Badge of Honor)",
+    region: "Sand Mountain, Hurricane UT",
+    lat: 37.1350,
+    lng: -113.3720,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 4.8,
+    driveTimeEst: "3.0h",
+    airDownPsi: "10-12",
+    status: "Open - Steep Sandstone Notch",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["The Notch", "Sand Canyons", "V-Crack"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-elephant-hill",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Elephant Hill (Badge of Honor)",
+    region: "Needles District, Canyonlands UT",
+    lat: 38.1415,
+    lng: -109.8270,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 11.2,
+    driveTimeEst: "4.0h",
+    airDownPsi: "14-16",
+    status: "Open - Narrow Rock Staircases",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["The Needles", "Switchback Backing", "Devil's Pocket"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+
+  // COLORADO BADGE OF HONOR
+  {
+    id: "boh-imogene-pass",
+    officialAgency: "USDA Forest Service - Grand Mesa, Uncompahgre and San Juan National Forests",
+    officialPhone: "(970) 240-5300",
+    officialWebsite: "https://www.fs.usda.gov/recarea/gmug/recarea/?recid=33554",
+    feeDetails: "Free Public Forest Pass • No Permit Required for High Alpine Shelf Roads",
+    regulations: "Black Bear Pass is ONE-WAY from Summit to Telluride (No uphill travel permitted on shelf). Low-range 4WD and experienced mountain driving essential.",
+    stagingArea: "Red Mountain Pass (US-550) Summit Staging Area, Ouray/Silverton, CO",
+    name: "Imogene Pass (Badge of Honor)",
+    region: "San Juan Mountains, Ouray & Telluride CO",
+    lat: 37.9317,
+    lng: -107.7364,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.5\"",
+    recTires: "33\"+",
+    lengthMiles: 17.5,
+    driveTimeEst: "4.5h",
+    airDownPsi: "16-18",
+    status: "Open - 13,114 ft Summit Ridge",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Tomboy Ghost Town", "High Alpine", "Creek Fording"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "boh-engineer-pass",
+    officialAgency: "USDA Forest Service - Grand Mesa, Uncompahgre and San Juan National Forests",
+    officialPhone: "(970) 240-5300",
+    officialWebsite: "https://www.fs.usda.gov/recarea/gmug/recarea/?recid=33554",
+    feeDetails: "Free Public Forest Pass • No Permit Required for High Alpine Shelf Roads",
+    regulations: "Black Bear Pass is ONE-WAY from Summit to Telluride (No uphill travel permitted on shelf). Low-range 4WD and experienced mountain driving essential.",
+    stagingArea: "Red Mountain Pass (US-550) Summit Staging Area, Ouray/Silverton, CO",
+    name: "Engineer Pass (Badge of Honor)",
+    region: "San Juan Mountains, Silverton & Lake City CO",
+    lat: 37.9708,
+    lng: -107.5925,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 20.5,
+    driveTimeEst: "4.0h",
+    airDownPsi: "16-18",
+    status: "Open - 12,800 ft Summit & Mineral Creek",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Mineral Creek Ledges", "Engineer Summit", "Alpine Loop"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "boh-ophir-pass",
+    officialAgency: "USDA Forest Service - Grand Mesa, Uncompahgre and San Juan National Forests",
+    officialPhone: "(970) 240-5300",
+    officialWebsite: "https://www.fs.usda.gov/recarea/gmug/recarea/?recid=33554",
+    feeDetails: "Free Public Forest Pass • No Permit Required for High Alpine Shelf Roads",
+    regulations: "Black Bear Pass is ONE-WAY from Summit to Telluride (No uphill travel permitted on shelf). Low-range 4WD and experienced mountain driving essential.",
+    stagingArea: "Red Mountain Pass (US-550) Summit Staging Area, Ouray/Silverton, CO",
+    name: "Ophir Pass (Badge of Honor)",
+    region: "San Juan Mountains, Ophir & Silverton CO",
+    lat: 37.8500,
+    lng: -107.7810,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 9.8,
+    driveTimeEst: "2.0h",
+    airDownPsi: "18-20",
+    status: "Open - Loose Slate Rock Pass",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Ophir Rockfield", "11789 ft Pass", "Shelf Road"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "boh-poughkeepsie-gulch",
+    officialAgency: "USDA Forest Service - Grand Mesa, Uncompahgre and San Juan National Forests",
+    officialPhone: "(970) 240-5300",
+    officialWebsite: "https://www.fs.usda.gov/recarea/gmug/recarea/?recid=33554",
+    feeDetails: "Free Public Forest Pass • No Permit Required for High Alpine Shelf Roads",
+    regulations: "Black Bear Pass is ONE-WAY from Summit to Telluride (No uphill travel permitted on shelf). Low-range 4WD and experienced mountain driving essential.",
+    stagingArea: "Red Mountain Pass (US-550) Summit Staging Area, Ouray/Silverton, CO",
+    name: "Poughkeepsie Gulch (Badge of Honor)",
+    region: "San Juan Mountains, Ouray CO",
+    lat: 37.9380,
+    lng: -107.6320,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "12.0\"",
+    recTires: "37\"+",
+    lengthMiles: 8.4,
+    driveTimeEst: "4.0h",
+    airDownPsi: "10-12",
+    status: "Open - The Wall (Winch Anchor)",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["The Wall", "Winch Cable Anchor", "Como Lake"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "boh-holy-cross",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Holy Cross Trail (Badge of Honor)",
+    region: "White River Forest, Minturn CO",
+    lat: 39.5120,
+    lng: -106.4520,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "12.0\"",
+    recTires: "37\"+",
+    lengthMiles: 7.6,
+    driveTimeEst: "4.5h",
+    airDownPsi: "10-12",
+    status: "Open - French Creek Boulder Garden",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["French Creek", "Holy Cross City", "Rock Slabs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // CALIFORNIA BADGE OF HONOR
+  {
+    id: "boh-dusy-ershim",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Dusy Ershim Trail (Badge of Honor)",
+    region: "Sierra National Forest, Shaver Lake CA",
+    lat: 37.1580,
+    lng: -119.0120,
+    difficultyScale: 9,
+    difficultyCategory: "Extreme",
+    isOverland: true,
+    overlandDays: "3 Days",
+    fuelRangeReq: "150 mi",
+    campingType: "High Sierra Dispersed",
+    isBadgeOfHonor: true,
+    badgePoints: 20,
+    minClearance: "12.5\"",
+    recTires: "37\"+",
+    lengthMiles: 33.0,
+    driveTimeEst: "3 Days",
+    airDownPsi: "10-12",
+    status: "Open - 10,000 ft Granite Wilderness",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Thompson Hill", "Courtright Reservoir", "Granite Crawl"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "boh-john-bull",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "John Bull Trail (Badge of Honor)",
+    region: "San Bernardino Mountains, Big Bear CA",
+    lat: 34.2980,
+    lng: -116.8520,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 5.5,
+    driveTimeEst: "2.5h",
+    airDownPsi: "10-12",
+    status: "Open - Massive Boulder Gatekeeper",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Gatekeeper", "Big Bear Rocks", "Hardcore Crawl"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "boh-gold-mountain",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Gold Mountain Trail (Badge of Honor)",
+    region: "San Bernardino Mountains, Big Bear CA",
+    lat: 34.2750,
+    lng: -116.8320,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.5\"",
+    recTires: "33\"+",
+    lengthMiles: 7.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Rock Steps & Lake Views",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["The Rock Waterfall", "Baldwin Lake Overlook", "Big Bear"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+  {
+    id: "boh-holcomb-creek",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Holcomb Creek Trail (Badge of Honor)",
+    region: "San Bernardino Mountains, Big Bear CA",
+    lat: 34.2880,
+    lng: -116.9850,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 6.2,
+    driveTimeEst: "3.0h",
+    airDownPsi: "10-12",
+    status: "Open - Rock Gardens & Creek Crossings",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Lower Rock Garden", "Creek Fords", "V-Notch"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // PENNSYLVANIA BADGE OF HONOR
+  {
+    id: "boh-rausch-creek-crawldaddy",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Rausch Creek - Crawldaddy (Badge of Honor)",
+    region: "Pine Grove, Pennsylvania",
+    lat: 40.5971,
+    lng: -76.4719,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 3.5,
+    driveTimeEst: "2.0h",
+    airDownPsi: "12-14",
+    status: "Open - Glacial Boulder Glades",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Glacial Boulders", "Lake Christy", "Rock Creek"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "boh-rausch-creek-trail11",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Rausch Creek - Trail 11 (Badge of Honor)",
+    region: "Pine Grove, Pennsylvania",
+    lat: 40.6010,
+    lng: -76.4650,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 4.2,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Technical Rock Crawl",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Rock Slabs", "Anthracite Mud", "Wooded Crawl"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+  {
+    id: "boh-aoaa-barney-rubble",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "AOAA - Barney Rubble (Badge of Honor)",
+    region: "Coal Township, Shamokin PA",
+    lat: 40.7850,
+    lng: -76.5420,
+    difficultyScale: 8,
+    difficultyCategory: "Extreme",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "12.0\"",
+    recTires: "37\"+",
+    lengthMiles: 2.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "10-12",
+    status: "Open - Massive Anthracite Boulders",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Anthracite Boulders", "Barney Rubble", "AOAA West"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // ARIZONA BADGE OF HONOR
+  {
+    id: "boh-schnebly-hill",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Schnebly Hill Road (Badge of Honor)",
+    region: "Red Rock Country, Sedona AZ",
+    lat: 34.8697,
+    lng: -111.7610,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 12.0,
+    driveTimeEst: "2.0h",
+    airDownPsi: "16-18",
+    status: "Open - Red Rock Vista & Bumpy Steps",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Red Rock Overlooks", "Munds Mountain", "Sedona"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+  {
+    id: "boh-table-mesa-raw-deal",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Table Mesa - Raw Deal (Badge of Honor)",
+    region: "Black Canyon City / Phoenix, AZ",
+    lat: 33.9850,
+    lng: -112.1450,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 4.5,
+    driveTimeEst: "3.0h",
+    airDownPsi: "12-14",
+    status: "Open - Sonoran Desert Boulder Wash",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Desert Wash", "Saguaro Rock Crawl", "Raw Deal"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+  },
+
+  // FLORIDA BADGE OF HONOR
+  {
+    id: "boh-ocala-tread-lightly",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Ocala National Forest - Tread Lightly 4WD (Badge of Honor)",
+    region: "Silver Springs, Central Florida",
+    lat: 29.1872,
+    lng: -81.7947,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 81.0,
+    driveTimeEst: "6.0h",
+    airDownPsi: "12-14",
+    status: "Open - Deep Sugar Sand & Scrub",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Sugar Sand", "Pine Scrub", "Water Fords"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // TEXAS BADGE OF HONOR
+  {
+    id: "boh-hidden-falls",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Hidden Falls Adventure Park (Badge of Honor)",
+    region: "Hill Country, Marble Falls TX",
+    lat: 30.5600,
+    lng: -98.2400,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 15.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "12-14",
+    status: "Open - Limestone Ledges & Creek Beds",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Hill Country Ledges", "Wildcat Staircase", "Limestone Slabs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // MISSOURI BADGE OF HONOR
+  {
+    id: "boh-smorr-guard-rail",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "SMORR - Guard Rail (Badge of Honor)",
+    region: "Ozark Mountains, Seymour MO",
+    lat: 37.1420,
+    lng: -92.7480,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 3.2,
+    driveTimeEst: "2.0h",
+    airDownPsi: "12-14",
+    status: "Open - Ozark Rock Staircases",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Ozark Rock", "Guard Rail", "V-Notch Ledge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // ARKANSAS BADGE OF HONOR
+  {
+    id: "boh-hot-springs-rubicon",
+    officialAgency: "El Dorado National Forest & Rubicon Trail Foundation",
+    officialPhone: "(530) 622-5061",
+    officialWebsite: "https://www.rubicontrailfoundation.org/",
+    feeDetails: "Free Public Forest Access • boh-hot-springs-rubicon0 Optional Trail Maintenance Donation",
+    regulations: "Low range 4WD, minimum 35\" tires and dual lockers strongly recommended. Carry spill kits and human waste bags. Pack it in, pack it out.",
+    stagingArea: "Loon Lake Spillway Staging Area, Georgetown, CA (Air down and toilet facilities)",
+    name: "Hot Springs Off-Road Park - Rubicon Ridge (Badge of Honor)",
+    region: "Ouachita Mountains, Hot Springs AR",
+    lat: 34.5420,
+    lng: -93.0850,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.0\"",
+    recTires: "35\"+",
+    lengthMiles: 5.4,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Slate & Novaculite Ledges",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Rubicon Ridge", "Novaculite Rock", "Hot Springs"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // MICHIGAN BADGE OF HONOR
+  {
+    id: "boh-drummond-island",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Drummond Island - Marblehead & South Shore (Badge of Honor)",
+    region: "Upper Peninsula, Drummond Island MI",
+    lat: 45.9850,
+    lng: -83.5650,
+    difficultyScale: 6,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.5\"",
+    recTires: "33\"+",
+    lengthMiles: 18.0,
+    driveTimeEst: "4.0h",
+    airDownPsi: "14-16",
+    status: "Open - Dolomite Rock Ledges & Lake Huron",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Marblehead Steps", "Lake Huron Overlook", "Turtle Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // ALABAMA BADGE OF HONOR
+  {
+    id: "boh-stony-lonesome",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Stony Lonesome OHV - Switchback (Badge of Honor)",
+    region: "Cullman County / Bremen, AL",
+    lat: 33.9850,
+    lng: -87.0520,
+    difficultyScale: 7,
+    difficultyCategory: "Hard",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "11.5\"",
+    recTires: "35\"+",
+    lengthMiles: 4.8,
+    driveTimeEst: "2.5h",
+    airDownPsi: "12-14",
+    status: "Open - Red Clay & Steep Sandstone",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Switchback", "Alabama Clay", "Sandstone Ledges"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // VIRGINIA BADGE OF HONOR
+  {
+    id: "boh-peters-mill-run",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Peters Mill Run (Badge of Honor)",
+    region: "George Washington Forest, Edinburg VA",
+    lat: 38.8350,
+    lng: -78.5320,
+    difficultyScale: 3,
+    difficultyCategory: "Easy",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "9.0\"",
+    recTires: "32\"+",
+    lengthMiles: 12.5,
+    driveTimeEst: "2.5h",
+    airDownPsi: "18-20",
+    status: "Open - Rocky Ridge & Forest Service Pass",
+    img: "/assets/windrock_trail_map.jpg",
+    tags: ["Shenandoah Valley", "George Washington Forest", "Massanutten Ridge"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg"
+  },
+
+  // WYOMING BADGE OF HONOR
+  {
+    id: "boh-monument-ridge",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Monument Ridge (Badge of Honor)",
+    region: "Bridger-Teton National Forest, Bondurant WY",
+    lat: 43.1950,
+    lng: -110.4280,
+    difficultyScale: 4,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 14.5,
+    driveTimeEst: "3.0h",
+    airDownPsi: "16-18",
+    status: "Open - High Ridge Vista of Gros Ventre",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Gros Ventre Range", "Monument Lookout", "Wyoming Wilderness"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  },
+
+  // MONTANA BADGE OF HONOR
+  {
+    id: "boh-blacktail-wild-bill",
+    officialAgency: "US Department of the Interior - BLM / USFS National Public Lands",
+    officialPhone: "(800) 877-8339",
+    officialWebsite: "https://www.recreation.gov/",
+    feeDetails: "Public Lands Access • Standard recreation passes or free dispersed forest rules apply",
+    regulations: "Tread Lightly principles apply. Stay on established trails. Carry fire extinguishers, first aid, and vehicle recovery gear.",
+    stagingArea: "Official Public Lands Trailhead & Air-Down Turnouts",
+    name: "Blacktail Wild Bill National Trail (Badge of Honor)",
+    region: "Flathead National Forest, Lakeside MT",
+    lat: 48.0120,
+    lng: -114.3950,
+    difficultyScale: 5,
+    difficultyCategory: "Moderate",
+    isOverland: false,
+    isBadgeOfHonor: true,
+    badgePoints: 10,
+    minClearance: "10.0\"",
+    recTires: "33\"+",
+    lengthMiles: 14.0,
+    driveTimeEst: "3.5h",
+    airDownPsi: "16-18",
+    status: "Open - Flathead Lake Overlook & Rocks",
+    img: "/assets/western_topo_map.jpg",
+    tags: ["Flathead Lake", "Blacktail Mountain", "Rock Steps"],
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ"
+  }
+];
+
+// STATE: Default to North Georgia / Tennessee Appalachian center
+let userLat = 34.7000;
+let userLng = -84.0000;
+let isGpsActive = false;
+let activeCategory = 'all'; // 'all', 'overland', 'boh', 'day'
+let activeRadiusMiles = 9999; // Default All Distances so all trails are immediately loaded
+let activeDifficulty = 'all';
+let searchQuery = '';
+let map = null;
+let currentTileLayer = null;
+let markersGroup = null;
+let radiusCircle = null;
+
+// INIT MAP WITH LEAFLET
+function initMap() {
+  const container = document.getElementById('mapContainer');
+  if (!container) return;
+
+  if (container._leaflet_id) {
+    container._leaflet_id = null;
+  }
+
+  map = L.map('mapContainer', {
+    center: [userLat, userLng],
+    zoom: 7,
+    zoomControl: true
+  });
+
+  // Topo Layer (USGS National Map)
+  currentTileLayer = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 16,
+    attribution: 'USGS National Map &copy; U.S. Geological Survey'
+  }).addTo(map);
+
+  markersGroup = L.layerGroup().addTo(map);
+  renderMapMarkers();
+
+  setTimeout(() => {
+    if (map) map.invalidateSize();
+  }, 250);
+}
+
+// SWITCH MAP LAYER
+function switchMapLayer(type) {
+  if (!map) return;
+  if (currentTileLayer) map.removeLayer(currentTileLayer);
+
+  document.querySelectorAll('.map-layer-btn').forEach(b => b.classList.remove('active'));
+
+  if (type === 'satellite') {
+    document.getElementById('btnLayerSat').classList.add('active');
+    currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 18,
+      attribution: 'Esri World Imagery'
+    }).addTo(map);
+  } else if (type === 'roads') {
+    document.getElementById('btnLayerRoads').classList.add('active');
+    currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+  } else {
+    document.getElementById('btnLayerTopo').classList.add('active');
+    currentTileLayer = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16,
+      attribution: 'USGS National Map'
+    }).addTo(map);
+  }
+}
+
+// HAVERSINE DISTANCE IN MILES
+function calculateDistanceInMiles(lat1, lon1, lat2, lon2) {
+  const R = 3958.8; // Miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const miles = Math.round(R * c);
+  const hours = (miles / 45.0).toFixed(1);
+  return { miles, hours };
+}
+
+// DIFFICULTY BADGE COLOR HELPER
+function getDifficultyBadge(scale) {
+  if (scale <= 3) return { bg: '#16a34a', text: 'EASY', label: `${scale}/10 EASY` };
+  if (scale <= 6) return { bg: '#2563eb', text: 'MODERATE', label: `${scale}/10 MOD` };
+  if (scale <= 8) return { bg: '#d97706', text: 'HARD', label: `${scale}/10 TECH` };
+  return { bg: '#dc2626', text: 'EXTREME', label: `${scale}/10 BUGGY` };
+}
+
+// RENDER 4X4 SHOPS DYNAMICALLY ACCORDING TO GPS LOCATION & RADIUS
+function renderShops() {
+  const container = document.getElementById('shopsGridContainer');
+  const countBadge = document.getElementById('shopsCountBadge');
+  const locationLabel = document.getElementById('shopsLocationLabel');
+  if (!container) return;
+
+  if (locationLabel) {
+    locationLabel.innerText = isGpsActive ? 'Current Live GPS' : 'North Georgia Search Center';
+  }
+
+  // Calculate distance for each shop
+  const shopsWithDist = SHOPS.map(shop => {
+    const d = calculateDistanceInMiles(userLat, userLng, shop.lat, shop.lng);
+    return {
+      ...shop,
+      driveMiles: d.miles,
+      driveHours: d.hours
+    };
+  });
+
+  // Sort by closest distance
+  shopsWithDist.sort((a, b) => a.driveMiles - b.driveMiles);
+
+  // Filter by active radius if applicable
+  let displayShops = shopsWithDist;
+  if (activeRadiusMiles < 9000) {
+    displayShops = shopsWithDist.filter(s => s.driveMiles <= activeRadiusMiles);
+    // If no shops in tight radius, show closest 3 with radius note
+    if (displayShops.length === 0) {
+      displayShops = shopsWithDist.slice(0, 3);
+    }
+  }
+
+  if (countBadge) {
+    countBadge.innerText = `${displayShops.length} 4x4 Shops Found (${activeRadiusMiles < 9000 ? activeRadiusMiles + ' mi radius' : 'All Proximities'})`;
+  }
+
+  container.innerHTML = displayShops.map(shop => `
+    <div class="shop-card">
+      <div class="shop-img-wrap">
+        <img src="${shop.img}" class="shop-img" alt="${shop.name}">
+        <div class="shop-badge-verified"><i class="fa-solid fa-circle-check"></i> ${shop.badge}</div>
+        <div class="shop-rating-tag"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> ${shop.rating} (${shop.reviews})</div>
+        <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.2);">
+          📍 <strong>${shop.driveMiles} mi away</strong> (~${shop.driveHours}h)
+        </div>
+      </div>
+      <div class="shop-body">
+        <div class="shop-name">${shop.name}</div>
+        <div class="shop-location"><i class="fa-solid fa-location-dot"></i> ${shop.region}</div>
+        
+        <div class="shop-services-wrap">
+          <div class="shop-section-label">Core Services:</div>
+          <div class="shop-service-pills">
+            ${shop.services.map(s => `<span class="shop-service-pill">${s}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="shop-services-wrap">
+          <div class="shop-section-label">Vehicle Specialties:</div>
+          <div class="shop-service-pills">
+            ${shop.specialties.map(v => `<span class="shop-service-pill" style="${v.includes('Jeep') ? 'background:#fef3c7; border-color:#fde68a; color:#92400e;' : ''}">${v}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="shop-contact-info">
+          <div><i class="fa-solid fa-phone" style="color:var(--amber-orange);"></i> <strong>Phone:</strong> ${shop.phone}</div>
+          <div><i class="fa-solid fa-clock" style="color:var(--amber-orange);"></i> <strong>Hours:</strong> ${shop.hours}</div>
+          <div><i class="fa-solid fa-map-pin" style="color:var(--amber-orange);"></i> <strong>Address:</strong> ${shop.address}</div>
+        </div>
+
+        <div class="shop-action-btns">
+          <a href="tel:${shop.phone.replace(/[^0-9]/g, '')}" class="btn-shop-call"><i class="fa-solid fa-phone"></i> Call Shop</a>
+          <a href="https://maps.google.com/?q=${encodeURIComponent(shop.name + ' ' + shop.address)}" target="_blank" class="btn-shop-dir"><i class="fa-solid fa-diamond-turn-right"></i> Directions ↗</a>
+          <a href="${shop.website}" target="_blank" style="background:#0f172a; color:#fff; text-decoration:none; padding:10px; border-radius:8px; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <i class="fa-solid fa-globe" style="color:#38bdf8;"></i> Website ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTrails() {
+  const grid = document.getElementById('trailGridContainer');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  let filtered = TRAILS.map(t => {
+    const d = calculateDistanceInMiles(userLat, userLng, t.lat, t.lng);
+    return { ...t, driveMiles: d.miles, driveHours: d.hours };
+  });
+
+  // Filter Category
+  if (activeCategory === 'overland') {
+    filtered = filtered.filter(t => t.isOverland);
+  } else if (activeCategory === 'boh') {
+    filtered = filtered.filter(t => t.isBadgeOfHonor);
+  } else if (activeCategory === 'day') {
+    filtered = filtered.filter(t => !t.isOverland);
+  }
+
+  // Filter Exact Radius (30, 60, 90, All)
+  if (activeRadiusMiles < 9000) {
+    filtered = filtered.filter(t => t.driveMiles <= activeRadiusMiles);
+  }
+
+  // Filter Difficulty
+  if (activeDifficulty !== 'all') {
+    if (activeDifficulty === 'Easy') filtered = filtered.filter(t => t.difficultyScale <= 3);
+    else if (activeDifficulty === 'Moderate') filtered = filtered.filter(t => t.difficultyScale >= 4 && t.difficultyScale <= 6);
+    else if (activeDifficulty === 'Hard') filtered = filtered.filter(t => t.difficultyScale >= 7 && t.difficultyScale <= 8);
+    else if (activeDifficulty === 'Extreme') filtered = filtered.filter(t => t.difficultyScale >= 9);
+  }
+
+  // Filter Query
+  if (searchQuery.trim()) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(t => 
+      t.name.toLowerCase().includes(q) || 
+      t.region.toLowerCase().includes(q) ||
+      t.tags.some(tag => tag.toLowerCase().includes(q))
+    );
+  }
+
+  // Sort by nearest distance
+  filtered.sort((a, b) => a.driveMiles - b.driveMiles);
+
+  document.getElementById('trailCountDisplay').innerText = filtered.length;
+  document.getElementById('mapRadiusIndicator').innerText = activeRadiusMiles < 9000 ? `${activeRadiusMiles}-Mile Radius` : 'All Available Routes';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 45px 20px; background: #fff; border-radius: 14px; border: 1.5px solid #cbd5e1; box-shadow: var(--shadow-card);">
+        <i class="fa-solid fa-crosshairs" style="font-size: 42px; color: var(--amber-orange); margin-bottom: 14px;"></i>
+        <h3 style="color: var(--forest-dark); font-size: 19px; margin-bottom: 6px; font-weight:800;">No 4x4 trails found within ${activeRadiusMiles < 9000 ? activeRadiusMiles + ' miles' : 'selected filters'}</h3>
+        <p style="color: #64748b; font-size: 13px; margin-bottom: 18px;">Try expanding your search radius to 60 or 90 miles, or select "All Distances" to view all North Georgia, Tennessee & destination routes.</p>
+        <button onclick="setMileRadiusFilter(9999, document.querySelector('.filter-row-item:nth-child(2) .pill-btn:nth-child(4)')); selectRouteCategory('all');" style="background: var(--amber-orange); color:#fff; border:none; padding:12px 24px; border-radius:8px; font-weight:800; cursor:pointer; box-shadow:var(--shadow-glow);">
+          Show All Routes Everywhere
+        </button>
+      </div>
+    `;
+    renderMapMarkers(filtered);
+  renderShops();
+    return;
+  }
+
+  filtered.forEach(trail => {
+    const diff = getDifficultyBadge(trail.difficultyScale);
+    const card = document.createElement('div');
+    card.className = 'trail-card';
+    card.id = `card-${trail.id}`;
+
+    let topBannerHtml = '';
+    if (trail.isBadgeOfHonor) {
+      topBannerHtml = `
+        <div class="boh-banner">
+          <span><i class="fa-solid fa-star"></i> OFFICIAL JEEP BADGE OF HONOR</span>
+          <span>+${trail.badgePoints} PTS</span>
+        </div>
+      `;
+    } else if (trail.isOverland) {
+      topBannerHtml = `
+        <div class="overland-banner">
+          <span><i class="fa-solid fa-campground"></i> MULTI-DAY OVERLAND EXPEDITION</span>
+          <span>${trail.overlandDays}</span>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div>
+        ${topBannerHtml}
+        
+        <div class="trail-card-img-wrap">
+          <img src="${trail.img}" class="trail-card-img" alt="${trail.name}" loading="lazy">
+          <div class="diff-badge-1-10" style="background: ${diff.bg};">
+            <span>${trail.difficultyScale}/10</span>
+            <span style="font-size: 9px; opacity: 0.9;">${diff.text}</span>
+          </div>
+          <div class="trail-status-pill"><i class="fa-solid fa-circle-check"></i> ${trail.status}</div>
+          <div class="drive-time-badge"><i class="fa-solid fa-location-arrow"></i> ${trail.driveMiles} mi away (~${trail.driveHours}h)</div>
+        </div>
+
+        <div class="trail-card-body">
+          <div>
+            <div class="trail-card-region">${trail.region}</div>
+            <h3 class="trail-card-title">${trail.name}</h3>
+
+            ${trail.isOverland ? `
+              <div class="overland-autonomy-box">
+                <div><i class="fa-solid fa-gas-pump"></i> Fuel Range: <strong>${trail.fuelRangeReq}</strong></div>
+                <div><i class="fa-solid fa-tent"></i> Camp: <strong>${trail.campingType}</strong></div>
+              </div>
+            ` : ''}
+
+            <div class="specs-grid-mini">
+              <div><span>LENGTH</span><strong>${trail.lengthMiles} mi</strong></div>
+              <div><span>DURATION</span><strong>${trail.driveTimeEst}</strong></div>
+              <div><span>CLEARANCE</span><strong>${trail.minClearance}</strong></div>
+              <div><span>REC TIRE</span><strong>${trail.recTires}</strong></div>
+            </div>
+
+            <div class="psi-guide-mini">
+              <span><i class="fa-solid fa-gauge-high"></i> Air-Down PSI: <strong>${trail.airDownPsi} PSI</strong></span>
+              <span style="color:#64748b;"><i class="fa-solid fa-radio"></i> CB 4 / GMRS 16</span>
+            </div>
+
+            <div class="tag-cloud">
+              ${trail.tags.map(t => `<span class="tag-item"><i class="fa-solid fa-mountain" style="color:var(--amber-orange);"></i> ${t}</span>`).join('')}
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button onclick="openTrailSourceModal('${trail.id}')" style="flex: 1.1; background: #0f172a; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(15,23,42,0.3);">
+              <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Official Details
+            </button>
+            <button onclick="openTrailVideoGuide('${trail.name}', '${trail.region}')" style="flex: 0.9; background: var(--forest-dark); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <i class="fa-solid fa-circle-play" style="color:var(--amber-orange);"></i> Video
+            </button>
+            <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="flex: 1; background: linear-gradient(135deg, var(--amber-orange), #c2410c); color: #fff; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 8px rgba(234,88,12,0.3);">
+              <i class="fa-solid fa-diamond-turn-right"></i> Directions ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  renderMapMarkers(filtered);
+}
+
+// RENDER MAP MARKERS WITH POPUP BUBBLES & CARD HIGHLIGHT ACTION
+function renderMapMarkers(filteredList = TRAILS) {
+  if (!map || !markersGroup) return;
+  markersGroup.clearLayers();
+
+  // User position pin
+  const userPinIcon = L.divIcon({
+    className: 'custom-user-pin',
+    html: '<div style="background:#ea580c; width:24px; height:24px; border-radius:50%; border:3.5px solid #fff; box-shadow:0 0 16px #ea580c;"></div>',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+
+  L.marker([userLat, userLng], { icon: userPinIcon })
+    .bindPopup(`
+      <div style="font-family: Inter, sans-serif; font-size:12px; text-align:center; padding:4px;">
+        <strong style="color:#ea580c;">📍 Your Search Center</strong><br>
+        Radius: <strong>${activeRadiusMiles < 9000 ? activeRadiusMiles + ' Miles' : 'All Distances'}</strong>
+      </div>
+    `)
+    .addTo(markersGroup);
+
+  // Exact Search Radius Circle on Map
+  if (radiusCircle) map.removeLayer(radiusCircle);
+  if (activeRadiusMiles < 9000) {
+    const radiusMeters = activeRadiusMiles * 1609.34;
+    radiusCircle = L.circle([userLat, userLng], {
+      radius: radiusMeters,
+      color: '#ea580c',
+      fillColor: '#ea580c',
+      fillOpacity: 0.07,
+      weight: 2.5,
+      dashArray: '8, 8'
+    }).addTo(map);
+  }
+
+  // Trail Markers with Rich Info Bubbles
+  filteredList.forEach(trail => {
+    const diff = getDifficultyBadge(trail.difficultyScale);
+    const markerIcon = L.divIcon({
+      className: 'custom-trail-marker',
+      html: `
+        <div style="background: ${trail.isOverland ? '#14281d' : diff.bg}; color: #fff; width: 34px; height: 34px; border-radius: 10px; border: 2px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; font-family: Montserrat, sans-serif; cursor:pointer;">
+          ${trail.isOverland ? '<i class="fa-solid fa-campground" style="font-size:12px; color:#fef08a;"></i>' : trail.difficultyScale}
+          ${trail.isBadgeOfHonor ? '<div style="position: absolute; top: -5px; right: -5px; width: 14px; height: 14px; background: #fbbf24; color:#000; border-radius:50%; font-size:8px; display:flex; align-items:center; justify-content:center; font-weight:900; border:1px solid #000;">★</div>' : ''}
+        </div>
+      `,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+
+    const marker = L.marker([trail.lat, trail.lng], { icon: markerIcon });
+
+    // Interactive Map Info Bubble with Thumbnail and "View Trail Card" Button
+    const popupHtml = `
+      <div style="font-family: Inter, sans-serif; min-width: 220px; padding: 4px;">
+        <div style="font-size: 10px; font-weight: 800; color: #ea580c; text-transform:uppercase;">${trail.region}</div>
+        <h4 style="font-size: 14px; font-weight: 800; margin: 2px 0 6px; color:#14281d;">${trail.name}</h4>
+        
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <span style="background:${diff.bg}; color:#fff; font-size:10px; font-weight:900; padding:2px 6px; border-radius:4px;">
+            ${trail.isOverland ? 'OVERLAND' : 'RATING ' + trail.difficultyScale + '/10'}
+          </span>
+          <span style="font-size:11px; color:#64748b; font-weight:700;">${trail.lengthMiles} mi &bull; ${trail.driveMiles} mi away</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <button onclick="scrollToTrailCard('${trail.id}')" style="background:#14281d; color:#fff; border:none; padding:7px; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <i class="fa-solid fa-eye"></i> View Full Trail Card
+          </button>
+          <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="background:#ea580c; color:#fff; text-decoration:none; text-align:center; padding:6px; border-radius:6px; font-weight:800; font-size:11px; display:block;">
+            GPS Directions ↗
+          </a>
+        </div>
+      </div>
+    `;
+
+    marker.bindPopup(popupHtml, { maxWidth: 260 });
+    marker.addTo(markersGroup);
+  });
+}
+
+// SCROLL TO AND HIGHLIGHT TRAIL CARD ON MARKER CLICK
+function scrollToTrailCard(trailId) {
+  const card = document.getElementById(`card-${trailId}`);
+  const trailsBody = document.getElementById('trailsBody');
+  const icon = document.getElementById('trailsToggleIcon');
+  
+  if (trailsBody && trailsBody.style.display === 'none') {
+    trailsBody.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  }
+
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Remove previous highlights
+    document.querySelectorAll('.trail-card').forEach(c => c.classList.remove('card-highlighted'));
+    
+    // Add pulsing highlight
+    card.classList.add('card-highlighted');
+    setTimeout(() => {
+      card.classList.remove('card-highlighted');
+    }, 3500);
+  }
+}
+
+// GET USER GPS LOCATION (TRAIL LOCATOR)
+function getUserGPSLocation() {
+  const btn = document.getElementById('btnGpsMainText');
+  if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> LOCATING TRAILS NEAR YOU...';
+
+  const applyLocation = (lat, lng, isDeviceGps) => {
+    userLat = lat;
+    userLng = lng;
+    isGpsActive = true;
+    if (btn) btn.innerHTML = isDeviceGps ? '📍 GPS POSITION LOCKED' : '📍 CENTERED: NORTH GEORGIA';
+
+    if (map) {
+      map.flyTo([userLat, userLng], 8, { duration: 1.2 });
+      setTimeout(() => { if (map) map.invalidateSize(); }, 200);
+    }
+
+    renderTrails();
+    renderShops();
+
+    const mapSec = document.getElementById('mapSection');
+    if (mapSec) mapSec.scrollIntoView({ behavior: 'smooth' });
+
+    setTimeout(() => {
+      if (btn) btn.innerHTML = '🎯 LOCATE TRAILS NEAR ME';
+    }, 3500);
+  };
+
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        applyLocation(pos.coords.latitude, pos.coords.longitude, true);
+      },
+      (err) => {
+        console.warn("GPS Sensor unavailable:", err.message);
+        // Default North Georgia / Appalachian center
+        applyLocation(34.7000, -84.0000, false);
+      },
+      { enableHighAccuracy: true, timeout: 6000 }
+    );
+  } else {
+    applyLocation(34.7000, -84.0000, false);
+  }
+}
+
+// CATEGORY SWITCHER (ALL / OVERLAND / BOH / DAY)
+function selectRouteCategory(cat, btn) {
+  activeCategory = cat;
+  
+  document.querySelectorAll('#btnCatAll, #btnCatOverland, #btnCatBOH, #btnCatDay').forEach(b => {
+    b.classList.remove('active-green', 'active');
+  });
+
+  if (btn) {
+    btn.classList.add('active-green');
+  } else {
+    if (cat === 'overland') document.getElementById('btnCatOverland')?.classList.add('active-green');
+    else if (cat === 'boh') document.getElementById('btnCatBOH')?.classList.add('active-green');
+    else if (cat === 'day') document.getElementById('btnCatDay')?.classList.add('active-green');
+    else document.getElementById('btnCatAll')?.classList.add('active-green');
+  }
+
+  renderTrails();
+
+  if (cat === 'overland') {
+    const guide = document.getElementById('overlandingGuideBody');
+    const icon = document.getElementById('overlandingToggleIcon');
+    if (guide) {
+      guide.style.display = 'block';
+      if (icon) icon.style.transform = 'rotate(180deg)';
+    }
+  }
+}
+
+// EXACT MILE RADIUS FILTER (30 / 60 / 90 MILES / ALL)
+function setMileRadiusFilter(miles, btn) {
+  activeRadiusMiles = miles;
+  btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrails();
+}
+
+// DIFFICULTY FILTER (1-10)
+function setDiffFilter(diff, btn) {
+  activeDifficulty = diff;
+  btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrails();
+}
+
+function onSearchInput() {
+  searchQuery = document.getElementById('searchInput').value;
+  renderTrails();
+}
+
+function onSearchIconClick() {
+  onSearchInput();
+  const trailsSec = document.getElementById('trails');
+  if (trailsSec) trailsSec.scrollIntoView({ behavior: 'smooth' });
+}
+
+// COLLAPSIBLE TOGGLES
+function toggleTrailsSection() {
+  const body = document.getElementById('trailsBody');
+  const icon = document.getElementById('trailsToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+    renderShops();
+    if (map) setTimeout(() => map.invalidateSize(), 150);
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+function toggleOverlandingGuideSection() {
+  const body = document.getElementById('overlandingGuideBody');
+  const icon = document.getElementById('overlandingToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+function toggleRecoveryGearSection() {
+  const body = document.getElementById('recoveryGearBody');
+  const icon = document.getElementById('recoveryToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// BUGOUT TAB SWITCHER
+function switchBugoutTab(tab, btn) {
+  document.querySelectorAll('.bugout-tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const dayTab = document.getElementById('bugoutDayTab');
+  const overnightTab = document.getElementById('bugoutOvernightTab');
+  const recoveryTab = document.getElementById('bugoutRecoveryTab');
+
+  if (dayTab) dayTab.style.display = (tab === 'day') ? 'block' : 'none';
+  if (overnightTab) overnightTab.style.display = (tab === 'overnight') ? 'block' : 'none';
+  if (recoveryTab) recoveryTab.style.display = (tab === 'recovery') ? 'block' : 'none';
+}
+
+function toggleVideoLibrarySection() {
+  const body = document.getElementById('videoLibraryBody');
+  const icon = document.getElementById('videoToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+    renderVideoLibrary();
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// VIDEO LIBRARY RENDER
+function renderVideoLibrary() {
+  const container = document.getElementById('videoGridContainer');
+  if (!container) return;
+  container.innerHTML = `
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Tray Mountain & North Georgia 4x4 Trail Guide')">
+        <img src="/assets/north_ga_trail_map.jpg" class="video-thumb" alt="Tray Mountain Topo Map">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Tray Mountain Road: Helen to Hiawassee 4x4</div>
+        <div style="font-size:11px; color:#64748b;">North Georgia Mountains • Blue Ridge Gap Overlooks</div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Windrock Park Trail 16 Hardcore Crawl')">
+        <img src="/assets/windrock_trail_map.jpg" class="video-thumb" alt="Windrock Park Topo Map">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Windrock Park: Trail 16 (Jeep Badge of Honor)</div>
+        <div style="font-size:11px; color:#64748b;">Oliver Springs TN • Wet Limestone Ledge Crawling</div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'The Georgia Traverse 390-Mile Overland')">
+        <img src="/assets/north_ga_trail_map.jpg" class="video-thumb" alt="Georgia Traverse Topo Map">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">The Georgia Traverse: 390-Mile Mountain Overland</div>
+        <div style="font-size:11px; color:#64748b;">River Fords & Ridge Top Forest Service Tracks</div>
+      </div>
+    </div>
+  `;
+}
+
+// CURATED TRAIL VIDEO MAP & MODAL CONTROLLER
+const TRAIL_VIDEO_MAP = {
+  "Beasley Knob": "https://www.youtube-nocookie.com/embed/R9o65pZ8_6g",
+  "Tray Mountain": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Nimblewill Gap": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Charlie's Creek": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Sarah's Creek": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Bell Mountain": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Cohutta Wilderness": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Georgia Traverse": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Currahee Mountain": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Whissenhunt": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Cashes Valley": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Adventure Off Road Park": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Windrock Park": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Prentice Cooper": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Royal Blue": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Smoky Mountain 500": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Aetna Mountain": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Hell's Revenge": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Rubicon Trail": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Black Bear Pass": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "White Rim": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Mojave Road": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Uwharrie": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Fins & Things": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Poison Spider": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Top of the World": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Sand Hollow": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Imogene Pass": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Engineer Pass": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "Dusy Ershim": "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+  "John Bull": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk",
+  "Rausch Creek": "https://www.youtube-nocookie.com/embed/KZiA6rcJgFk"
+};
+
+function openTrailVideoGuide(trailName, region) {
+  let matchedVideoUrl = "https://www.youtube-nocookie.com/embed/R9o65pZ8_6g"; // Default authentic 4x4 crawl
+  
+  for (const [key, url] of Object.entries(TRAIL_VIDEO_MAP)) {
+    if (trailName.includes(key)) {
+      matchedVideoUrl = url;
+      break;
+    }
+  }
+
+  const title = `${trailName} Walkthrough`;
+  openVideoModal(matchedVideoUrl, title);
+}
+
+
+// OPEN TRAIL SOURCE & OFFICIAL SYSTEM DETAILS MODAL
+function openTrailSourceModal(trailId) {
+  const trail = TRAILS.find(t => t.id === trailId);
+  if (!trail) return;
+
+  const diff = getDifficultyBadge(trail.difficultyScale);
+  const body = document.getElementById('trailSourceModalBody');
+  if (!body) return;
+
+  body.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; border-bottom:1.5px solid #e2e8f0; padding-bottom:14px; gap:12px;">
+      <div>
+        <span style="font-size:11px; font-weight:800; color:#ea580c; text-transform:uppercase; letter-spacing:0.5px;">${trail.region}</span>
+        <h2 style="font-size:22px; font-weight:900; color:#14281d; margin:4px 0 6px;">${trail.name}</h2>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="background:${diff.bg}; color:#fff; font-size:11px; font-weight:900; padding:3px 8px; border-radius:6px;">
+            ${trail.isOverland ? 'OVERLAND ROUTE' : 'DIFFICULTY ' + trail.difficultyScale + '/10 • ' + diff.text}
+          </span>
+          ${trail.isBadgeOfHonor ? '<span style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; font-size:11px; font-weight:900; padding:3px 8px; border-radius:6px;">★ Jeep Badge of Honor (+10 PTS)</span>' : ''}
+          <span style="font-size:12px; color:#64748b; font-weight:700;">${trail.lengthMiles} Miles &bull; Est. Drive: ${trail.driveTimeEst}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Topo Map Banner -->
+    <div style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:18px; max-height:180px; border:1px solid #cbd5e1;">
+      <img src="${trail.img}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${trail.name}">
+      <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.75); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:6px; backdrop-filter:blur(4px);">
+        📍 GPS: ${trail.lat.toFixed(4)}, ${trail.lng.toFixed(4)}
+      </div>
+    </div>
+
+    <!-- Official Source & Agency Cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-bottom:16px;">
+      
+      <!-- Agency & Contact -->
+      <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px; padding:14px;">
+        <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-landmark" style="color:#0284c7;"></i> Managing Agency & Office
+        </div>
+        <div style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:8px; line-height:1.4;">
+          ${trail.officialAgency || 'US Forest Service / Regional District Office'}
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <a href="tel:${(trail.officialPhone || '').replace(/[^0-9]/g, '')}" style="display:inline-flex; align-items:center; gap:6px; background:#0284c7; color:#fff; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:12px;">
+            <i class="fa-solid fa-phone"></i> Call Hotline: ${trail.officialPhone || '(706) 745-6928'}
+          </a>
+        </div>
+      </div>
+
+      <!-- Passes & Fees -->
+      <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px; padding:14px;">
+        <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-ticket" style="color:#ea580c;"></i> Passes, Permits & Fees
+        </div>
+        <div style="font-size:13px; font-weight:800; color:#0f172a; line-height:1.4; margin-bottom:6px;">
+          ${trail.feeDetails || 'Free Public Forest Access • Dispersed camping permitted'}
+        </div>
+        <div style="font-size:11px; color:#64748b;">Permits can be purchased online or via trailhead kiosks prior to departure.</div>
+      </div>
+
+    </div>
+
+    <!-- Regulations & Trail Rules -->
+    <div style="background:#fff7ed; border:1.5px solid #fed7aa; border-radius:10px; padding:14px; margin-bottom:16px;">
+      <div style="font-size:11px; font-weight:800; color:#c2410c; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-triangle-exclamation" style="color:#ea580c;"></i> Crucial Trail Regulations & Season Info
+      </div>
+      <p style="font-size:12px; color:#431407; margin:0; line-height:1.5; font-weight:600;">
+        ${trail.regulations || 'Stay on designated marked trails. Spark arrestor required on all motorized vehicles. No open alcoholic beverages allowed.'}
+      </p>
+    </div>
+
+    <!-- Staging & Staging Area -->
+    <div style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:12px; margin-bottom:18px; font-size:12px;">
+      <strong style="color:#14281d; display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+        <i class="fa-solid fa-square-parking" style="color:#ea580c;"></i> Official Staging & Air-Down Location:
+      </strong>
+      <span style="color:#475569;">${trail.stagingArea || trail.region}</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+      <a href="${trail.officialWebsite}" target="_blank" style="background:#0f172a; color:#fff; text-decoration:none; padding:12px; border-radius:8px; font-weight:800; font-size:12px; text-align:center; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+        <i class="fa-solid fa-globe" style="color:#38bdf8;"></i> Official Website ↗
+      </a>
+      <button onclick="openTrailVideoGuide('${trail.name}', '${trail.region}')" style="background:var(--forest-dark); color:#fff; border:none; padding:12px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <i class="fa-solid fa-circle-play" style="color:var(--amber-orange);"></i> Video Guide
+      </button>
+      <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="background:linear-gradient(135deg, var(--amber-orange), #c2410c); color:#fff; text-decoration:none; padding:12px; border-radius:8px; font-weight:800; font-size:12px; text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <i class="fa-solid fa-diamond-turn-right"></i> GPS Directions ↗
+      </a>
+    </div>
+  `;
+
+  document.getElementById('trailSourceModal').style.display = 'flex';
+}
+
+function closeTrailSourceModal() {
+  const modal = document.getElementById('trailSourceModal');
+  if (modal) modal.style.display = 'none';
+}
+
+// MODAL CONTROLLERS
+function openVideoModal(url, title) {
+  const iframe = document.getElementById('videoIframe');
+  const titleEl = document.getElementById('videoModalTitle');
+  const linkEl = document.getElementById('videoDirectSearchLink');
+
+  if (iframe) iframe.src = url;
+  if (titleEl) titleEl.innerText = title;
+  if (linkEl) {
+    const cleanSearchQuery = encodeURIComponent(title.replace('Walkthrough', '').trim() + ' off road 4x4 trail ride');
+    linkEl.href = `https://www.youtube.com/results?search_query=${cleanSearchQuery}`;
+  }
+  document.getElementById('videoModal').style.display = 'flex';
+}
+
+function closeVideoModal() {
+  document.getElementById('videoIframe').src = '';
+  document.getElementById('videoModal').style.display = 'none';
+}
+
+function openInclinometerModal() {
+  document.getElementById('inclinometerModal').style.display = 'flex';
+}
+
+function closeInclinometerModal() {
+  document.getElementById('inclinometerModal').style.display = 'none';
+}
+
+function closeModalOnBackdrop(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    closeVideoModal();
+    closeTrailSourceModal();
+    closeInclinometerModal();
+  }
+}
+
+function toggleShopsSection() {
+  const body = document.getElementById('shopsBody');
+  const icon = document.getElementById('shopsToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+// INIT
+window.onload = function() {
+  initMap();
+  renderTrails();
+};
+</script>
+</body>
+</html>
