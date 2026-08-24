@@ -1307,8 +1307,8 @@ footer {
 <header>
   <div class="nav-container">
     <a href="#" class="logo">
-      <div class="logo-icon">
-        <i class="fa-solid fa-compass" style="color:var(--amber-orange);"></i>
+      <div class="logo-icon" style="background:transparent; padding:0; overflow:hidden; border:none; display:flex; align-items:center; justify-content:center;">
+        <img src="./assets/favicon.svg" style="width:38px; height:38px; display:block; border-radius:8px;" alt="Jeep Grille 4x4 Logo">
       </div>
       <div class="logo-text">
         <span class="logo-title">4x4 <span>TrailFinder</span></span>
@@ -1338,7 +1338,9 @@ footer {
       <!-- BIG PRIMARY LOCATE BUTTON -->
       <div class="search-primary-action">
         <button class="btn-gps-main" id="btnFindNearMe" onclick="getUserGPSLocation()">
-          <span id="btnGpsMainText"><i class="fa-solid fa-location-crosshairs" style="margin-right:6px;"></i> LOCATE TRAILS NEAR ME</span>
+          <span id="btnGpsMainText" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+            <img src="./assets/favicon.svg" style="width:22px; height:22px; display:inline-block; vertical-align:middle; border-radius:4px;" alt="Jeep Grille"> LOCATE TRAILS NEAR ME
+          </span>
         </button>
       </div>
 
@@ -4936,7 +4938,7 @@ function getUserGPSLocation() {
     if (mapSec) mapSec.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-location-crosshairs" style="margin-right:6px;"></i> LOCATE TRAILS NEAR ME';
+      if (btn) btn.innerHTML = '<img src="./assets/favicon.svg" style="width:22px; height:22px; display:inline-block; vertical-align:middle; border-radius:4px; margin-right:6px;"> LOCATE TRAILS NEAR ME';
     }, 3500);
   };
 
@@ -5103,7 +5105,7 @@ function getUserGPSLocation() {
     userLat = lat;
     userLng = lng;
     isGpsActive = true;
-    if (btn) btn.innerHTML = isDeviceGps ? '📍 GPS POSITION LOCKED' : '📍 CENTERED: NORTH GEORGIA';
+    if (btn) btn.innerHTML = '<img src="./assets/favicon.svg" style="width:20px; height:20px; display:inline-block; vertical-align:middle; border-radius:3px; margin-right:6px;"> ' + (isDeviceGps ? 'GPS POSITION LOCKED' : 'CENTERED: NORTH GEORGIA');
 
     if (map) {
       map.flyTo([userLat, userLng], 8, { duration: 1.2 });
@@ -5117,7 +5119,7 @@ function getUserGPSLocation() {
     if (mapSec) mapSec.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
-      if (btn) btn.innerHTML = '🎯 LOCATE TRAILS NEAR ME';
+      if (btn) btn.innerHTML = '<img src="./assets/favicon.svg" style="width:22px; height:22px; display:inline-block; vertical-align:middle; border-radius:4px; margin-right:6px;"> LOCATE TRAILS NEAR ME';
     }, 3500);
   };
 
