@@ -1,0 +1,22 @@
+[
+  {
+    "id": "v2.5.0_2026-08-24_19-47-25",
+    "version": "v2.5.0",
+    "timestamp": "2026-08-24T23:47:27.089Z",
+    "displayDate": "8/24/2026, 7:47:27 PM",
+    "description": "Release v2.4.0: Complete Version Control & 1-Click Rollback System Installed",
+    "zipFile": "v2.5.0_2026-08-24_19-47-25.zip",
+    "sizeMb": "12.90 MB",
+    "gitHash": "402d2c7"
+  },
+  {
+    "id": "v2.4.0_2026-08-24_19-46-29",
+    "version": "v2.4.0",
+    "timestamp": "2026-08-24T23:46:31.727Z",
+    "displayDate": "8/24/2026, 7:46:31 PM",
+    "description": "Production v2.4.0: Weather AI, Multi-Section Systems, Water Crossings & Verified Gear",
+    "zipFile": "v2.4.0_2026-08-24_19-46-29.zip",
+    "sizeMb": "12.90 MB",
+    "gitHash": "402d2c7"
+  }
+]

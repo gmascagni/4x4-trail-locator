@@ -2289,6 +2289,51 @@ footer {
   </div>
 </div>
 
+
+<!-- VERSION CONTROL & ROLLBACK SYSTEM MODAL -->
+<div class="modal-overlay" id="vcModal" onclick="closeModalOnBackdrop(event)">
+  <div class="modal-content" style="max-width: 680px; padding: 24px;">
+    <button class="modal-close-btn" onclick="closeVcModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; border-bottom:1.5px solid #e2e8f0; padding-bottom:12px;">
+      <div style="background:#0f172a; color:#f59e0b; width:38px; height:38px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">
+        <i class="fa-solid fa-code-branch"></i>
+      </div>
+      <div>
+        <h3 style="font-size:18px; font-weight:900; color:var(--forest-dark); margin:0;">Version Control & Rollback System</h3>
+        <div style="font-size:11.5px; color:#64748b;">Automated immutable snapshots & 1-click rollback recovery</div>
+      </div>
+    </div>
+
+    <!-- Active Build Info -->
+    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span style="font-size:13px; font-weight:900; color:#0f172a;">Current Build: <span style="color:#ea580c;">v2.4.0</span></span>
+        <span style="background:#dcfce7; color:#166534; border:1px solid #bbf7d0; font-size:10px; font-weight:800; padding:2px 8px; border-radius:4px;">
+          <i class="fa-solid fa-circle-check"></i> STABLE RELEASE
+        </span>
+      </div>
+      <div style="font-size:11.5px; color:#475569; line-height:1.4;">
+        Active Features: Real-Time Weather API, AI Open/Closed Predictability HUD, Interconnected Trail Systems (Beasley Knob 8-route breakdown), Water Crossings & Falls, Verified Amazon Gear Affiliate tags.
+      </div>
+    </div>
+
+    <!-- Easy 1-Click Rollback Instructions -->
+    <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:10px; padding:14px; margin-bottom:16px;">
+      <h4 style="color:#1d4ed8; font-size:13px; font-weight:900; margin:0 0 6px; display:flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-shield-halved"></i> How to Roll Back a Feature:
+      </h4>
+      <div style="font-size:11.5px; color:#1e40af; line-height:1.5;">
+        <strong>Method 1 (Double-Click):</strong> Double-click <code style="background:#dbeafe; padding:1px 5px; border-radius:3px;">version_control.bat</code> in the project folder to open the interactive Snapshot & Rollback Menu.<br>
+        <strong>Method 2 (Terminal):</strong> Run <code style="background:#dbeafe; padding:1px 5px; border-radius:3px;">npm run rollback</code> to restore any previous version or <code style="background:#dbeafe; padding:1px 5px; border-radius:3px;">npm run snapshot</code> to create a new save point.
+      </div>
+    </div>
+
+    <button onclick="closeVcModal()" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:11px; border-radius:8px; font-weight:800; cursor:pointer;">
+      CLOSE VERSION MANAGER
+    </button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-content">
@@ -6029,6 +6074,16 @@ function openVideoModal(url, title) {
 function closeVideoModal() {
   document.getElementById('videoIframe').src = '';
   document.getElementById('videoModal').style.display = 'none';
+}
+
+
+function openVcModal() {
+  const m = document.getElementById('vcModal');
+  if (m) m.style.display = 'flex';
+}
+function closeVcModal() {
+  const m = document.getElementById('vcModal');
+  if (m) m.style.display = 'none';
 }
 
 function openInclinometerModal() {
