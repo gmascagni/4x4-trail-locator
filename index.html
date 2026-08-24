@@ -1584,13 +1584,13 @@ footer {
       <!-- SURVIVAL & RECOVERY TABS -->
       <div class="bugout-nav-tabs">
         <button class="bugout-tab-btn active" id="tabBtnDay" onclick="switchBugoutTab('day', this)">
-          <i class="fa-solid fa-person-hiking" style="color:var(--amber-orange);"></i> ðŸŽ’ Day-Trip Trail Checklist
+          <i class="fa-solid fa-person-hiking" style="color:var(--amber-orange); margin-right:4px;"></i> Day-Trip Trail Checklist
         </button>
         <button class="bugout-tab-btn" id="tabBtnOvernight" onclick="switchBugoutTab('overnight', this)">
-          <i class="fa-solid fa-campground" style="color:var(--amber-orange);"></i> â›º Overnight & Bug-Out Pack
+          <i class="fa-solid fa-campground" style="color:var(--amber-orange); margin-right:4px;"></i> Overnight & Bug-Out Pack
         </button>
         <button class="bugout-tab-btn" id="tabBtnRecovery" onclick="switchBugoutTab('recovery', this)">
-          <i class="fa-solid fa-truck-pickup" style="color:var(--amber-orange);"></i> ðŸ›ž Heavy Vehicle Recovery Gear
+          <i class="fa-solid fa-truck-pickup" style="color:var(--amber-orange); margin-right:4px;"></i> Heavy Vehicle Recovery Gear
         </button>
       </div>
 
@@ -1712,7 +1712,7 @@ footer {
               <div class="checklist-item-content">
                 <strong>Ferrocerium Firestarter Rod & Tinder Tabs</strong>
                 <a href="https://www.amazon.com/s?k=${encodeURIComponent('ferrocerium rod fire starter kit bushcraft')}&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>5,500Â°F spark thrower that works when soaking wet or sub-zero.</span>
+                <span>5,500°F spark thrower that works when soaking wet or sub-zero.</span>
                 <span class="item-spec">Ferro Rod + Storm Matches</span>
               </div>
             </label>
@@ -1798,9 +1798,9 @@ footer {
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>20Â°F Compact Down Sleeping Bag</strong>
+                <strong>20°F Compact Down Sleeping Bag</strong>
                 <span>Hydrophobic down insulation rated for freezing mountain ridge drops.</span>
-                <span class="item-spec">Comfort Rating 20Â°F / -7Â°C</span>
+                <span class="item-spec">Comfort Rating 20°F / -7°C</span>
               </div>
             </label>
             <label class="checklist-item">
@@ -2117,20 +2117,20 @@ footer {
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: center; margin-bottom: 20px;">
       <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 18px; border-radius: 12px;">
         <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Pitch Angle</span>
-        <div style="font-size: 36px; font-weight: 900; color: var(--forest-dark); font-family: 'JetBrains Mono', monospace;" id="inclinePitchVal">+12Â°</div>
+        <div style="font-size: 36px; font-weight: 900; color: var(--forest-dark); font-family: 'JetBrains Mono', monospace;" id="inclinePitchVal">+12°</div>
         <span style="font-size: 10px; font-weight: 800; background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">APPROACH</span>
       </div>
 
       <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 18px; border-radius: 12px;">
         <span style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Roll Camber</span>
-        <div style="font-size: 36px; font-weight: 900; color: var(--amber-orange); font-family: 'JetBrains Mono', monospace;" id="inclineRollVal">+8Â°</div>
+        <div style="font-size: 36px; font-weight: 900; color: var(--amber-orange); font-family: 'JetBrains Mono', monospace;" id="inclineRollVal">+8°</div>
         <span style="font-size: 10px; font-weight: 800; background: #ffedd5; color:#c2410c; padding: 2px 8px; border-radius: 4px;">TILT RIGHT</span>
       </div>
     </div>
 
     <!-- Quick Air Down Guide -->
     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
-      <strong style="color: var(--forest-dark); display:block; margin-bottom: 6px;">ðŸ’¨ Recommended Air-Down Pressures:</strong>
+      <strong style="color: var(--forest-dark); display:block; margin-bottom: 6px;">💨 Recommended Air-Down Pressures:</strong>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
         <div>• Appalachian Mountain Rock: <strong>14-16 PSI</strong></div>
         <div>• Deep Clay & Mud: <strong>12-14 PSI</strong></div>
@@ -2140,8 +2140,8 @@ footer {
     </div>
 
     <div style="background: #f1f5f9; padding: 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px;">
-      <label style="font-weight: 700; display: block; margin-bottom: 4px;">Simulate Off-Camber Roll (Â°)</label>
-      <input type="range" min="-35" max="35" value="8" oninput="document.getElementById('inclineRollVal').innerText = (this.value > 0 ? '+' : '') + this.value + 'Â°'" style="width: 100%; accent-color: var(--amber-orange);">
+      <label style="font-weight: 700; display: block; margin-bottom: 4px;">Simulate Off-Camber Roll (°)</label>
+      <input type="range" min="-35" max="35" value="8" oninput="document.getElementById('inclineRollVal').innerText = (this.value > 0 ? '+' : '') + this.value + '°'" style="width: 100%; accent-color: var(--amber-orange);">
     </div>
 
     <button onclick="closeInclinometerModal()" style="width: 100%; background: var(--forest-dark); color:#fff; border:none; padding: 12px; border-radius: 8px; font-weight: 800; cursor:pointer;">
@@ -2378,7 +2378,7 @@ const SHOPS = [
 ];
 
 const TRAILS = [
-  // â”€â”€ NORTH GEORGIA 4X4 & OVERLAND TRAILS â”€â”€
+  // ── NORTH GEORGIA 4X4 & OVERLAND TRAILS ──
   {
     id: "ga-beasley-knob-93a",
     officialAgency: "USFS - Blue Ridge Ranger District (Chattahoochee-Oconee National Forest)",
@@ -2683,7 +2683,7 @@ const TRAILS = [
     lengthMiles: 6.4,
     driveTimeEst: "1.5h",
     airDownPsi: "16-18",
-    status: "Open - Granite Slabs & 360Â° Summit View",
+    status: "Open - Granite Slabs & 360° Summit View",
     img: "./assets/north_ga_trail_map.jpg",
     hasVideo: true,
     tags: ["Currahee Mountain", "Band of Brothers Hill", "Rock Slabs", "Summit View"],
@@ -2771,7 +2771,7 @@ const TRAILS = [
     
   },
 
-  // â”€â”€ TENNESSEE & SOUTHEAST 4X4 PARKS â”€â”€
+  // ── TENNESSEE & SOUTHEAST 4X4 PARKS ──
   {
     id: "tn-aop-crawling",
     officialAgency: "Adventure Off Road Park (AOP)",
@@ -3138,7 +3138,7 @@ const TRAILS = [
     
   },
 
-  // â”€â”€ ICONIC NATIONAL 4X4 & OVERLAND EXPEDITIONS â”€â”€
+  // ── ICONIC NATIONAL 4X4 & OVERLAND EXPEDITIONS ──
   {
     id: "trail-hells-revenge",
     officialAgency: "Bureau of Land Management (BLM) - Moab Field Office & Grand County Sand Flats",
@@ -3308,7 +3308,7 @@ const TRAILS = [
     
   },
 
-  // â”€â”€ MORE OFFICIAL JEEP BADGE OF HONOR TRAILS â”€â”€
+  // ── MORE OFFICIAL JEEP BADGE OF HONOR TRAILS ──
   // UTAH (MOAB & SAND HOLLOW)
   {
     id: "boh-fins-and-things",
@@ -4924,7 +4924,7 @@ function getUserGPSLocation() {
     userLat = lat;
     userLng = lng;
     isGpsActive = true;
-    if (btn) btn.innerHTML = isDeviceGps ? 'ðŸ“ GPS POSITION LOCKED' : 'ðŸ“ CENTERED: NORTH GEORGIA';
+    if (btn) btn.innerHTML = isDeviceGps ? '📍  GPS POSITION LOCKED' : '📍  CENTERED: NORTH GEORGIA';
 
     if (map) {
       map.flyTo([userLat, userLng], 8, { duration: 1.2 });
@@ -5341,7 +5341,7 @@ function openTrailSourceModal(trailId) {
     <div style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:18px; max-height:180px; border:1px solid #cbd5e1;">
       <img src="${trail.img}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${trail.name}">
       <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.75); color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:6px; backdrop-filter:blur(4px);">
-        ðŸ“ GPS: ${trail.lat.toFixed(4)}, ${trail.lng.toFixed(4)}
+        📍  GPS: ${trail.lat.toFixed(4)}, ${trail.lng.toFixed(4)}
       </div>
     </div>
 
