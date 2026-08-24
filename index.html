@@ -1275,6 +1275,40 @@ header {
 }
 
 
+
+/* WATER CROSSINGS & WATERFALLS STYLES */
+.active-blue {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 4px 12px rgba(2,132,199,0.3) !important;
+}
+
+.water-feature-banner {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  color: #f0f9ff;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.04em;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.water-info-box {
+  background: linear-gradient(135deg, #0f172a 0%, #082f49 100%);
+  border: 2px solid #38bdf8;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 25px;
+  color: #f0f9ff;
+  box-shadow: 0 10px 25px -5px rgba(2,132,199,0.25);
+  display: none;
+}
+
 /* REAL-TIME WEATHER & AI TRAIL STATUS ENGINE */
 .trail-weather-bar {
   display: flex;
@@ -1365,6 +1399,7 @@ footer {
     
     <ul class="nav-links">
       <li><a href="#trails" class="active"><i class="fa-solid fa-mountain"></i> All Trails</a></li>
+      <li><a href="#trails" onclick="selectRouteCategory('water')"><i class="fa-solid fa-water" style="color:#38bdf8;"></i> Water Crossings</a></li>
       <li><a href="#overlanding" onclick="selectRouteCategory('overland')"><i class="fa-solid fa-campground"></i> Overlanding</a></li>
       <li><a href="#recovery-gear"><i class="fa-solid fa-shield-halved"></i> Recovery Gear</a></li>
       <li><a href="#offroad-shops"><i class="fa-solid fa-wrench"></i> 4x4 Shops</a></li>
@@ -1489,7 +1524,43 @@ footer {
 
     <div id="trailsBody" style="display: block; margin-top: 16px;">
             <!-- JEEP BADGE OF HONOR PROGRAM OVERVIEW (DISPLAYED WHEN BOH FILTER IS ACTIVE) -->
-      <div id="bohProgramInfoBox" style="display: none; background: linear-gradient(135deg, #14281d 0%, #1e3a29 100%); border: 2px solid #fbbf24; border-radius: 14px; padding: 22px; margin-bottom: 24px; color: #fff; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25);">
+      
+    <!-- WATER CROSSINGS & WATERFALLS SPECIAL SECTION -->
+    <div id="waterCrossingsInfoBox" class="water-info-box">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:18px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="background:#0284c7; color:#fff; width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(56,189,248,0.4);">
+            <i class="fa-solid fa-water"></i>
+          </div>
+          <div>
+            <h3 style="font-size:19px; font-weight:900; color:#38bdf8; margin:0 0 4px;">4x4 Water Crossings, River Fords & Scenic Waterfalls</h3>
+            <p style="font-size:13px; color:#bae6fd; margin:0; line-height:1.4;">
+              Curated routes featuring active river fords, mountain stream crossings, and dramatic Appalachian & Alpine waterfalls.
+            </p>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.08); border:1px solid #38bdf8; border-radius:8px; padding:6px 14px; font-size:12px; font-weight:800; color:#e0f2fe;">
+          <i class="fa-solid fa-shield-halved" style="color:#38bdf8;"></i> Fording Protocols & Depth Safety
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px;">
+        <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:14px; border-left:3px solid #38bdf8;">
+          <strong style="color:#38bdf8; font-size:13px; display:block; margin-bottom:4px;"><i class="fa-solid fa-person-walking"></i> 1. Inspect on Foot First</strong>
+          <span style="font-size:11.5px; color:#cbd5e1; line-height:1.4; display:block;">Always walk unfamiliar river crossings to identify submerged boulders, holes, and current velocity before committing.</span>
+        </div>
+        <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:14px; border-left:3px solid #38bdf8;">
+          <strong style="color:#38bdf8; font-size:13px; display:block; margin-bottom:4px;"><i class="fa-solid fa-wind"></i> 2. Air Intake / Snorkel Safety</strong>
+          <span style="font-size:11.5px; color:#cbd5e1; line-height:1.4; display:block;">Maintain steady forward bow wave in 4-Low (2nd gear). Water above tire centerline requires differential breather extensions and snorkel.</span>
+        </div>
+        <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:14px; border-left:3px solid #38bdf8;">
+          <strong style="color:#38bdf8; font-size:13px; display:block; margin-bottom:4px;"><i class="fa-solid fa-camera"></i> 3. Waterfall Overlooks</strong>
+          <span style="font-size:11.5px; color:#cbd5e1; line-height:1.4; display:block;">Includes famous falls such as High Shoals Falls (Nimblewill), Bridal Veil Falls (Telluride), Tallulah River Cascades, and Warwoman Creek.</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="bohProgramInfoBox" style="display: none; background: linear-gradient(135deg, #14281d 0%, #1e3a29 100%); border: 2px solid #fbbf24; border-radius: 14px; padding: 22px; margin-bottom: 24px; color: #fff; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25);">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; border-bottom: 1px solid rgba(251, 191, 36, 0.3); padding-bottom: 14px;">
           <div>
             <div style="display: inline-flex; align-items: center; gap: 6px; background: #fbbf24; color: #14281d; font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
@@ -2498,6 +2569,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Chattahoochee Headwaters & Creeks",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.0\"",
@@ -2526,6 +2599,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "High Shoals Waterfall & Stream Fords",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.0\"",
@@ -2554,6 +2629,8 @@ const TRAILS = [
     difficultyScale: 3,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Multi-River Fords & Tallulah River",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.5\"",
@@ -2582,6 +2659,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Mountain Creek Fords & Waterfalls",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.0\"",
@@ -2637,6 +2716,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: true,
+    hasWaterFeature: true,
+    waterFeatureType: "Jacks River & Conasauga River Fords",
     overlandDays: "2 Days",
     fuelRangeReq: "150 mi",
     campingType: "Wilderness Dispersed",
@@ -2779,6 +2860,8 @@ const TRAILS = [
     difficultyScale: 3,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Town Creek & Stream Crossings",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.5\"",
@@ -2806,6 +2889,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Fightingtown Creek River Crossings",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.5\"",
@@ -2919,6 +3004,8 @@ const TRAILS = [
     difficultyScale: 6,
     difficultyCategory: "Moderate",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Artz Creek Crossings",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "10.0\"",
@@ -3056,6 +3143,8 @@ const TRAILS = [
     difficultyScale: 2,
     difficultyCategory: "Easy",
     isOverland: false,
+    hasWaterFeature: true,
+    waterFeatureType: "Suck Creek Stream Crossings",
     isBadgeOfHonor: false,
     badgePoints: 0,
     minClearance: "8.0\"",
@@ -5178,37 +5267,30 @@ function getUserGPSLocation() {
 // CATEGORY SWITCHER (ALL / OVERLAND / BOH / DAY)
 function selectRouteCategory(cat, btn) {
   activeCategory = cat;
-  
-  document.querySelectorAll('#btnCatAll, #btnCatOverland, #btnCatBOH, #btnCatDay').forEach(b => {
-    b.classList.remove('active-green', 'active');
+  document.querySelectorAll('#btnCatAll, #btnCatWater, #btnCatOverland, #btnCatBOH, #btnCatDay').forEach(b => {
+    b.classList.remove('active', 'active-green', 'active-blue');
   });
 
   if (btn) {
-    btn.classList.add('active-green');
+    btn.classList.add(cat === 'water' ? 'active-blue' : 'active-green');
   } else {
-    if (cat === 'overland') document.getElementById('btnCatOverland')?.classList.add('active-green');
-    else if (cat === 'boh') document.getElementById('btnCatBOH')?.classList.add('active-green');
-    else if (cat === 'day') document.getElementById('btnCatDay')?.classList.add('active-green');
-    else document.getElementById('btnCatAll')?.classList.add('active-green');
+    const targetBtn = document.getElementById(
+      cat === 'all' ? 'btnCatAll' : 
+      cat === 'water' ? 'btnCatWater' :
+      cat === 'overland' ? 'btnCatOverland' : 
+      cat === 'boh' ? 'btnCatBOH' : 'btnCatDay'
+    );
+    if (targetBtn) targetBtn.classList.add(cat === 'water' ? 'active-blue' : 'active-green');
   }
 
-  renderTrails();
+  // Toggle BOH box
+  const bohBox = document.getElementById('bohProgramInfoBox');
+  if (bohBox) bohBox.style.display = (cat === 'boh') ? 'block' : 'none';
 
-  if (cat === 'overland') {
-    const guide = document.getElementById('overlandingGuideBody');
-    const icon = document.getElementById('overlandingToggleIcon');
-    if (guide) {
-      guide.style.display = 'block';
-      if (icon) icon.style.transform = 'rotate(180deg)';
-    }
-  }
-}
+  // Toggle Water Crossings box
+  const waterBox = document.getElementById('waterCrossingsInfoBox');
+  if (waterBox) waterBox.style.display = (cat === 'water') ? 'block' : 'none';
 
-// EXACT MILE RADIUS FILTER (30 / 60 / 90 MILES / ALL)
-function setMileRadiusFilter(miles, btn) {
-  activeRadiusMiles = miles;
-  btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
   renderTrails();
 }
 
