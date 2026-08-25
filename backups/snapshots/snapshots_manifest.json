@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.32.0_2026-08-25_00-46-21",
+    "version": "v2.32.0",
+    "timestamp": "2026-08-25T04:46:25.226Z",
+    "displayDate": "8/25/2026, 12:46:25 AM",
+    "description": "Expand 4x4 Shops database to 32 premier nationwide off-road outfitter and fabrication hubs",
+    "zipFile": "v2.32.0_2026-08-25_00-46-21.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "d12052c"
+  },
+  {
     "id": "v2.31.0_2026-08-25_00-38-31",
     "version": "v2.31.0",
     "timestamp": "2026-08-25T04:38:35.346Z",

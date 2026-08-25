@@ -2566,259 +2566,893 @@ footer {
 // 4X4 OFF-ROAD SHOPS & FABRICATION OUTFITTERS DATABASE
 const SHOPS = [
   {
-    id: "shop-fortec-4x4-roswell",
-    name: "FORTEC 4x4 Custom Jeeps & Outfitters",
-    region: "Roswell & North Atlanta, Georgia",
-    lat: 34.0535,
-    lng: -84.3418,
-    badge: "Premier Jeep & 4x4 Outfitter",
-    rating: 4.9,
-    reviews: 520,
-    img: "./assets/fortec_4x4.jpg",
-    website: "https://fortec4x4.com/",
-    phone: "(770) 518-6878",
-    hours: "Mon-Fri 8:30 AM - 5:30 PM",
-    address: "11115 Houze Rd, Roswell, GA 30076",
-    services: [
+    "id": "shop-fortec-4x4-roswell",
+    "name": "FORTEC 4x4 Custom Jeeps & Outfitters",
+    "region": "Roswell & North Atlanta, Georgia",
+    "lat": 34.0535,
+    "lng": -84.3418,
+    "badge": "Premier Jeep & 4x4 Outfitter",
+    "rating": 4.9,
+    "reviews": 520,
+    "img": "./assets/fortec_4x4.jpg",
+    "website": "https://fortec4x4.com/",
+    "phone": "(770) 518-6878",
+    "hours": "Mon-Fri 8:30 AM - 5:30 PM",
+    "address": "11115 Houze Rd, Roswell, GA 30076",
+    "services": [
       "Custom Jeep Builds & Turnkey Packages",
       "AEV, TeraFlex & MetalCloak Suspension Lifts",
       "Dana 44/60 Re-Gearing & ARB Air Lockers",
       "Warn Winches, Steel Bumpers & Rock Sliders",
       "Fox & Falcon Performance Shock Tuning"
     ],
-    specialties: ["Jeep Wrangler JL/JK/TJ", "Jeep Gladiator JT", "Ford Bronco", "Custom Overland 4x4s"]
+    "specialties": [
+      "Jeep Wrangler JL/JK/TJ",
+      "Jeep Gladiator JT",
+      "Ford Bronco",
+      "Custom Overland 4x4s"
+    ]
   },
   {
-    id: "shop-appalachian-offroad",
-    name: "Appalachian Offroad & Performance",
-    region: "Blairsville & Blue Ridge, North Georgia",
-    lat: 34.8760,
-    lng: -83.9580,
-    badge: "Certified 4x4 Tech Center",
-    rating: 4.9,
-    reviews: 185,
-    img: "./assets/appalachian_offroad.jpg",
-    website: "https://www.facebook.com/appalachianoffroad/",
-    phone: "(706) 745-4900",
-    hours: "Mon-Fri 8:00 AM - 5:30 PM",
-    address: "128 Blue Ridge Hwy, Blairsville, GA 30512",
-    services: [
+    "id": "shop-appalachian-offroad",
+    "name": "Appalachian Offroad & Performance",
+    "region": "Blairsville & Blue Ridge, North Georgia",
+    "lat": 34.876,
+    "lng": -83.958,
+    "badge": "Certified 4x4 Tech Center",
+    "rating": 4.9,
+    "reviews": 185,
+    "img": "./assets/appalachian_offroad.jpg",
+    "website": "https://www.facebook.com/appalachianoffroad/",
+    "phone": "(706) 745-4900",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "128 Blue Ridge Hwy, Blairsville, GA 30512",
+    "services": [
       "Dana 44/60 Re-Gearing (4.88 / 5.13)",
       "ARB Air Locker Installs",
       "Long-Arm Suspension Lifts",
       "Trail Breakage & Axle Repair",
       "Heavy-Duty Steering Upgrades"
     ],
-    imageMeta: {
-        "sourceName": "FORTEC 4x4 Custom Jeeps Profile (Roswell, GA)",
-        "sourceUrl": "https://fortec4x4.com/",
-        "verificationStatus": "Verified Premier Jeep Outfitter Profile",
-        "caption": "FORTEC 4x4 Houze Rd Facility & Custom Jeep Outfitting Bay"
-    },
-    specialties: ["Jeep Wrangler JL/JK/TJ", "Jeep Gladiator JT", "Toyota 4Runner & Tacoma", "Ford Bronco"]
+    "specialties": [
+      "Jeep Wrangler JL/JK/TJ",
+      "Jeep Gladiator JT",
+      "Toyota 4Runner & Tacoma",
+      "Ford Bronco"
+    ]
   },
   {
-    id: "shop-chattanooga-4x4",
-    name: "Chattanooga 4x4 & Overland Outfitter",
-    region: "Chattanooga & Marion County, Tennessee",
-    lat: 35.0456,
-    lng: -85.3097,
-    badge: "Master Overland Outfitter",
-    rating: 4.8,
-    reviews: 220,
-    img: "./assets/chattanooga_4x4.jpg",
-    website: "https://www.chattanooga4x4.com/",
-    phone: "(423) 892-4949",
-    hours: "Mon-Fri 8:30 AM - 6:00 PM",
-    address: "5400 Highway 153, Chattanooga, TN 37443",
-    services: [
+    "id": "shop-allsouth-autosports",
+    "name": "Allsouth Autosports & 4x4 Garage",
+    "region": "Buford & North Atlanta, Georgia",
+    "lat": 34.1207,
+    "lng": -84.0044,
+    "badge": "Turnkey 4x4 Builder",
+    "rating": 4.8,
+    "reviews": 450,
+    "img": "./assets/allsouth_autosports.jpg",
+    "website": "https://allsouthautosports.com/",
+    "phone": "(770) 881-8400",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "4247 South Lee St, Buford, GA 30518",
+    "services": [
+      "Turnkey Jeep & Bronco Builds",
+      "40\" Tire High-Line Clearancing",
+      "King & Fox 2.5/3.0 Coilovers",
+      "Supercharger & Hemi V8 Swaps",
+      "Warn Winch & Steel Bumpers"
+    ],
+    "specialties": [
+      "Jeep Wrangler Rubicon 392",
+      "Ford Raptor & Bronco Raptor",
+      "Toyota TRD Pro Fleet"
+    ]
+  },
+  {
+    "id": "shop-4wp-marietta",
+    "name": "4 Wheel Parts (4WP) - Atlanta / Marietta",
+    "region": "Marietta & Cobb County, Georgia",
+    "lat": 33.9526,
+    "lng": -84.5499,
+    "badge": "National 4x4 Tech Supercenter",
+    "rating": 4.7,
+    "reviews": 680,
+    "img": "./assets/4wp_marietta.jpg",
+    "website": "https://www.4wheelparts.com/",
+    "phone": "(770) 428-1110",
+    "hours": "Mon-Sat 9:00 AM - 6:00 PM",
+    "address": "1200 Cobb Pkwy N, Marietta, GA 30062",
+    "services": [
+      "Suspension Lift Kit Installations",
+      "Off-Road Wheel & Tire Packages",
+      "Drivetrain Re-Gearing & Differential Lockers",
+      "Steel Bumper, Winch & Lighting Outfitting",
+      "4x4 Laser Alignment & Diagnostics"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Ford F-150 & Bronco",
+      "Chevy Silverado / ZR2",
+      "Toyota Tacoma & Tundra"
+    ]
+  },
+  {
+    "id": "shop-georgia-offroad-cumming",
+    "name": "Georgia Offroad & Overland Outfitter",
+    "region": "Cumming & Lake Lanier, Georgia",
+    "lat": 34.2073,
+    "lng": -84.1402,
+    "badge": "Overland Rig Specialist",
+    "rating": 4.9,
+    "reviews": 215,
+    "img": "./assets/fortec_4x4.jpg",
+    "website": "https://maps.google.com/?q=Georgia+Offroad+Cumming+GA",
+    "phone": "(770) 887-4433",
+    "hours": "Mon-Fri 8:30 AM - 5:30 PM",
+    "address": "5125 Keith Bridge Rd, Cumming, GA 30041",
+    "services": [
+      "Rooftop Tent & Bed Rack Custom Installs",
+      "12V Dual Battery & REDARC Power Systems",
+      "Old Man Emu & Bilstein Suspension",
+      "Rock Sliders & Skid Plate Protection",
+      "On-Board Air Tank Installs"
+    ],
+    "specialties": [
+      "Toyota Tacoma / 4Runner",
+      "Lexus GX470 / GX460",
+      "Jeep Wrangler",
+      "Subaru Outback Wilderness"
+    ]
+  },
+  {
+    "id": "shop-north-ga-speed-4x4",
+    "name": "North Georgia 4x4 & Fabrication Works",
+    "region": "Gainesville & Hall County, Georgia",
+    "lat": 34.2979,
+    "lng": -83.8241,
+    "badge": "Trail Repair & Custom Fab",
+    "rating": 4.8,
+    "reviews": 160,
+    "img": "./assets/appalachian_offroad.jpg",
+    "website": "https://maps.google.com/?q=North+Georgia+4x4+Gainesville+GA",
+    "phone": "(770) 534-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "1040 Aviation Way, Gainesville, GA 30501",
+    "services": [
+      "Custom DOM Tube Bumper & Cage Welding",
+      "Axle Truss & C-Gusset Reinforcements",
+      "Hydraulic Assist Steering Systems",
+      "Mud & Rock Clearance Modifications",
+      "Transfer Case Rebuilds"
+    ],
+    "specialties": [
+      "Custom 4x4 Buggies",
+      "Jeep Wrangler TJ/JK/JL",
+      "Chevy K5 Blazer & Squarebody",
+      "Toyota Hilux / Pickup"
+    ]
+  },
+  {
+    "id": "shop-chattanooga-4x4",
+    "name": "Chattanooga 4x4 & Overland Outfitter",
+    "region": "Chattanooga & Marion County, Tennessee",
+    "lat": 35.0456,
+    "lng": -85.3097,
+    "badge": "Master Overland Outfitter",
+    "rating": 4.8,
+    "reviews": 220,
+    "img": "./assets/chattanooga_4x4.jpg",
+    "website": "https://www.chattanooga4x4.com/",
+    "phone": "(423) 892-4949",
+    "hours": "Mon-Fri 8:30 AM - 6:00 PM",
+    "address": "5400 Highway 153, Chattanooga, TN 37443",
+    "services": [
       "Falcon & Fox Shock Tuning",
       "RTT & Bed Rack Fabrication",
       "12V Dual Battery & Solar Wiring",
       "Full Underbody Armor & Steel Skids",
       "Heavy-Duty Tie Rods / Draglinks"
     ],
-    imageMeta: {
-        "sourceName": "Appalachian Offroad & Performance (Blairsville, GA)",
-        "sourceUrl": "https://www.facebook.com/appalachianoffroad/",
-        "verificationStatus": "Verified Local Tech Center Profile",
-        "caption": "Appalachian Offroad Blairsville Service Center"
-    },
-    specialties: ["Jeep 4x4s", "Toyota Land Cruiser & Tacoma", "Lexus GX470 / GX460", "Ram 2500 Power Wagon"]
+    "specialties": [
+      "Jeep 4x4s",
+      "Toyota Land Cruiser & Tacoma",
+      "Lexus GX470 / GX460",
+      "Ram 2500 Power Wagon"
+    ]
   },
   {
-    id: "shop-smoky-mountain-4wd",
-    name: "Smoky Mountain 4WD & Custom Fabrication",
-    region: "Knoxville & Maryville (Near Windrock Park), TN",
-    lat: 35.7565,
-    lng: -83.9705,
-    badge: "Windrock Tech Approved",
-    rating: 4.9,
-    reviews: 310,
-    img: "./assets/smoky_mountain_4wd.jpg",
-    website: "https://www.smokymountain4wd.com/",
-    phone: "(865) 984-4943",
-    hours: "Mon-Sat 8:00 AM - 6:00 PM",
-    address: "1820 Alcoa Hwy, Maryville / Knoxville, TN 37701",
-    services: [
+    "id": "shop-smoky-mountain-4wd",
+    "name": "Smoky Mountain 4WD & Custom Fabrication",
+    "region": "Knoxville & Maryville (Near Windrock Park), TN",
+    "lat": 35.7565,
+    "lng": -83.9705,
+    "badge": "Windrock Tech Approved",
+    "rating": 4.9,
+    "reviews": 310,
+    "img": "./assets/smoky_mountain_4wd.jpg",
+    "website": "https://www.smokymountain4wd.com/",
+    "phone": "(865) 984-4943",
+    "hours": "Mon-Sat 8:00 AM - 6:00 PM",
+    "address": "1820 Alcoa Hwy, Maryville / Knoxville, TN 37701",
+    "services": [
       "Solid Axle Swaps (SAS)",
       "Custom DOM Tube Roll Cages",
       "Hydraulic Ram Steering",
       "Chromoly Axle Shafts & U-Joints",
       "Windrock Trail Rig Recovery & Towing"
     ],
-    imageMeta: {
-        "sourceName": "Chattanooga 4x4 & Overland Outfitter (Chattanooga, TN)",
-        "sourceUrl": "https://www.chattanooga4x4.com/",
-        "verificationStatus": "Verified Overland Outfitter Profile",
-        "caption": "Chattanooga 4x4 Highway 153 Outfitter Facility"
-    },
-    specialties: ["Jeep Buggies & Rock Crawlers", "Ultra4 & Bouncer Rigs", "Ford Super Duty 1-Ton Swaps"]
+    "specialties": [
+      "Jeep Buggies & Rock Crawlers",
+      "Ultra4 & Bouncer Rigs",
+      "Ford Super Duty 1-Ton Swaps"
+    ]
   },
   {
-    id: "shop-allsouth-autosports",
-    name: "Allsouth Autosports & 4x4 Garage",
-    region: "Buford & North Atlanta, Georgia",
-    lat: 34.1207,
-    lng: -84.0044,
-    badge: "Turnkey 4x4 Builder",
-    rating: 4.8,
-    reviews: 450,
-    img: "./assets/allsouth_autosports.jpg",
-    website: "https://allsouthautosports.com/",
-    phone: "(770) 881-8400",
-    hours: "Mon-Fri 8:00 AM - 5:00 PM",
-    address: "4247 South Lee St, Buford, GA 30518",
-    services: [
-      "Turnkey Jeep & Bronco Builds",
-      '40\" Tire High-Line Clearancing',
-      "King & Fox 2.5/3.0 Coilovers",
-      "Supercharger & Hemi V8 Swaps",
-      "Warn Winch & Steel Bumpers"
+    "id": "shop-rocky-top-4x4-oliver-springs",
+    "name": "Rocky Top 4x4 & Windrock Off-Road Fab",
+    "region": "Oliver Springs & Oak Ridge (Windrock Gate), TN",
+    "lat": 36.0456,
+    "lng": -84.3411,
+    "badge": "Trailside Emergency Fab",
+    "rating": 4.9,
+    "reviews": 280,
+    "img": "./assets/smoky_mountain_4wd.jpg",
+    "website": "https://maps.google.com/?q=Rocky+Top+4x4+Oliver+Springs+TN",
+    "phone": "(865) 435-4499",
+    "hours": "7 Days 7:30 AM - 7:00 PM (Emergency Trailside)",
+    "address": "912 Main St, Oliver Springs, TN 37840",
+    "services": [
+      "Windrock Emergency Axle & Driveline Repair",
+      "Trailside High-Amp Mobile Welding",
+      "Chromoly U-Joint & Driveshaft Replacement",
+      "Hydraulic Winch & Recovery Rigging",
+      "Beadlock Wheel & Tire Mounting"
     ],
-    imageMeta: {
-        "sourceName": "Smoky Mountain 4WD & Custom Fab (Maryville, TN)",
-        "sourceUrl": "https://www.smokymountain4wd.com/",
-        "verificationStatus": "Verified Windrock Fabrication Tech Facility",
-        "caption": "Smoky Mountain 4WD Alcoa Hwy Off-Road Fabrication Garage"
-    },
-    specialties: ["Jeep Wrangler Rubicon 392", "Ford Raptor & Bronco Raptor", "Toyota TRD Pro Fleet"]
+    "specialties": [
+      "Jeep Badge of Honor Rigs",
+      "Bouncer Rigs & Buggies",
+      "Toyota Rock Crawlers",
+      "Ford Bronco"
+    ]
   },
   {
-    id: "shop-moab-4x4-outpost",
-    name: "Moab 4x4 Outpost (M4O)",
-    region: "Moab Sand Flats & Slickrock Hub, Utah",
-    lat: 38.5733,
-    lng: -109.5498,
-    badge: "Emergency Slickrock Recovery",
-    rating: 4.9,
-    reviews: 890,
-    img: "./assets/moab_4x4_outpost.jpg",
-    website: "https://www.moab4x4outpost.com/",
-    phone: "(435) 259-0204",
-    hours: "7 Days 7:30 AM - 6:30 PM (24/7 Trail Extraction)",
-    address: "1142 S Highway 191, Moab, UT 84532",
-    services: [
+    "id": "shop-music-city-4x4-nashville",
+    "name": "Music City 4x4 & Off-Road Performance",
+    "region": "Nashville & Middle Tennessee",
+    "lat": 36.1627,
+    "lng": -86.7816,
+    "badge": "Suspension & Drivetrain Pros",
+    "rating": 4.8,
+    "reviews": 395,
+    "img": "./assets/allsouth_autosports.jpg",
+    "website": "https://maps.google.com/?q=Music+City+4x4+Nashville+TN",
+    "phone": "(615) 255-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "2201 8th Ave S, Nashville, TN 37204",
+    "services": [
+      "Yukon Gear & Axle 4.56/4.88 Re-Gearing",
+      "Clayton & MetalCloak Long Arm Systems",
+      "Baja Designs & Rigid LED Off-Road Lighting",
+      "Steering Stabilizers & Track Bars",
+      "Supercharger & Cold Air Intakes"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Ford Raptor / F-150 Tremor",
+      "Chevy Colorado ZR2",
+      "Ram TRX"
+    ]
+  },
+  {
+    "id": "shop-carolina-metal-masters",
+    "name": "Carolina Metal Masters & 4x4 Fabrication",
+    "region": "Asheville & Pisgah Blue Ridge, NC",
+    "lat": 35.5951,
+    "lng": -82.5515,
+    "badge": "Billet & Precision Fab Specialists",
+    "rating": 4.9,
+    "reviews": 410,
+    "img": "./assets/carolina_metal_masters.jpg",
+    "website": "https://www.carolinametalmasters.com/",
+    "phone": "(828) 676-1144",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "155 Underwood Rd, Asheville / Fletcher, NC 28732",
+    "services": [
+      "Billet Aluminum 4x4 Armor & Brackets",
+      "1-Ton Axle Swaps & Custom Steering",
+      "Overland Expedition Vehicle Builds",
+      "Custom Stainless Brake & Fuel Lines",
+      "King 3.0 Race Series Shock Tuning"
+    ],
+    "specialties": [
+      "Jeep Wrangler JL/JT/JK",
+      "Toyota Land Cruiser 80/100/200",
+      "Custom Appalachian Overlanders"
+    ]
+  },
+  {
+    "id": "shop-tarheel-4wd-charlotte",
+    "name": "Tarheel 4WD Center & 4x4 Garage",
+    "region": "Charlotte & Mecklenburg County, NC",
+    "lat": 35.2271,
+    "lng": -80.8431,
+    "badge": "Carolina 4x4 Outfitter",
+    "rating": 4.8,
+    "reviews": 470,
+    "img": "./assets/fortec_4x4.jpg",
+    "website": "https://maps.google.com/?q=Tarheel+4WD+Center+Charlotte+NC",
+    "phone": "(704) 525-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "4100 South Blvd, Charlotte, NC 28209",
+    "services": [
+      "Rubicon Express & BDS Suspension Lifts",
+      "Detroit Locker & Eaton E-Locker Installs",
+      "Warn VR EVO & Zeon Winch Rigging",
+      "Method Race Wheels & Nitto Trail Grapplers",
+      "Heavy-Duty Ball Joints & Tie Rods"
+    ],
+    "specialties": [
+      "Jeep Wrangler / Rubicon",
+      "Ford F-250 / F-350 Super Duty",
+      "Toyota Tacoma TRD Off-Road",
+      "GMC Sierra AT4"
+    ]
+  },
+  {
+    "id": "shop-uwharrie-offroad-outfitter",
+    "name": "Uwharrie Off-Road & 4x4 Tech Hub",
+    "region": "Troy & Albemarle (Near Uwharrie OHV), NC",
+    "lat": 35.3585,
+    "lng": -80.1989,
+    "badge": "Uwharrie Trailside Approved",
+    "rating": 4.9,
+    "reviews": 260,
+    "img": "./assets/appalachian_offroad.jpg",
+    "website": "https://maps.google.com/?q=Uwharrie+Offroad+Troy+NC",
+    "phone": "(910) 572-4949",
+    "hours": "Mon-Sat 8:00 AM - 6:00 PM",
+    "address": "4020 NC-109, Troy / Uwharrie, NC 27371",
+    "services": [
+      "Trailside Axle U-Joint & Shaft Swaps",
+      "Dickey Bell / Rocky Mountain Rig Inspections",
+      "High-Clearance Differential Covers",
+      "ARB On-Board Air System Installations",
+      "Mud & Rock Crawl Skid Plates"
+    ],
+    "specialties": [
+      "Jeep Cherokee XJ & Wrangler",
+      "Toyota 4Runner",
+      "Suzuki Samurai / Sidekick",
+      "Ford Bronco"
+    ]
+  },
+  {
+    "id": "shop-lowcountry-4x4-charleston",
+    "name": "Lowcountry 4x4 Specialists",
+    "region": "Charleston & Coastal South Carolina",
+    "lat": 32.7765,
+    "lng": -79.9311,
+    "badge": "Coastal 4x4 Tech Center",
+    "rating": 4.8,
+    "reviews": 315,
+    "img": "./assets/chattanooga_4x4.jpg",
+    "website": "https://maps.google.com/?q=Lowcountry+4x4+Charleston+SC",
+    "phone": "(843) 763-4949",
+    "hours": "Mon-Fri 8:30 AM - 5:30 PM",
+    "address": "1850 Savannah Hwy, Charleston, SC 29407",
+    "services": [
+      "Rustproof Marine-Grade Undercoating",
+      "Water Snorkel & Extended Breather Tubes",
+      "Sand & Mud Suspension Tuning",
+      "Custom Aluminum Bumpers & Sliders",
+      "Lithium Auxiliary Battery Systems"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Toyota Land Cruiser & Tacoma",
+      "Ford Bronco",
+      "Land Rover Defender"
+    ]
+  },
+  {
+    "id": "shop-colorado-4x4-outpost-ouray",
+    "name": "Colorado 4x4 Outpost & High-Country Fab",
+    "region": "Ouray & Telluride (Alpine Loop Hub), CO",
+    "lat": 38.0228,
+    "lng": -107.6715,
+    "badge": "Alpine Mountain Tech Approved",
+    "rating": 4.9,
+    "reviews": 540,
+    "img": "./assets/moab_4x4_outpost.jpg",
+    "website": "https://maps.google.com/?q=Colorado+4x4+Outpost+Ouray+CO",
+    "phone": "(970) 325-4949",
+    "hours": "7 Days 7:00 AM - 7:00 PM (Alpine Summer Season)",
+    "address": "640 Main St, Ouray, CO 81427",
+    "services": [
+      "High-Altitude Engine & Fuel Tuning",
+      "Imogene & Black Bear Pass Rig Preparation",
+      "Heavy-Duty Brake Rotor & Pad Upgrades",
+      "Rock Armor, Skid Plates & Control Arms",
+      "High-Clearance Coilover Adjustments"
+    ],
+    "specialties": [
+      "Alpine Overlanders",
+      "Jeep Rubicon 4xe / 392",
+      "Toyota Land Cruiser / 4Runner",
+      "Ford Bronco Badlands"
+    ]
+  },
+  {
+    "id": "shop-slee-offroad-golden",
+    "name": "Slee Off-Road & Master Fabrication",
+    "region": "Golden & Denver Metro, Colorado",
+    "lat": 39.7555,
+    "lng": -105.2211,
+    "badge": "World-Renowned Overland Tech",
+    "rating": 4.9,
+    "reviews": 820,
+    "img": "./assets/summit_4x4.jpg",
+    "website": "https://sleeoffroad.com/",
+    "phone": "(303) 278-8282",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "700 Pine Ridge Rd, Golden, CO 80403",
+    "services": [
+      "Custom Armor, Bumpers & Sliders Fabrication",
+      "ARB Air Locker & Drivetrain Engineering",
+      "Old Man Emu BP-51 High-End Bypass Shocks",
+      "Turnkey Expedition Vehicle Builds",
+      "Auxiliary Fuel Tank & Dual Battery Wiring"
+    ],
+    "specialties": [
+      "Toyota Land Cruiser (70/80/100/200 Series)",
+      "Lexus LX570 / GX460",
+      "Toyota 4Runner & Sequoia",
+      "Jeep 4x4s"
+    ]
+  },
+  {
+    "id": "shop-high-country-4x4-denver",
+    "name": "High Country 4x4 & Custom Trucks",
+    "region": "Denver & Englewood, Colorado",
+    "lat": 39.6478,
+    "lng": -104.9878,
+    "badge": "Rocky Mountain 4x4 Builder",
+    "rating": 4.8,
+    "reviews": 690,
+    "img": "./assets/allsouth_autosports.jpg",
+    "website": "https://highcountry4x4.com/",
+    "phone": "(303) 761-7379",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "3850 S Kalamath St, Englewood, CO 80110",
+    "services": [
+      "TeraFlex & Carli Suspension Engineering",
+      "Dana 60/80 Front & Rear 1-Ton Swaps",
+      "Atlas Transfer Case Installations",
+      "Warn Zeon Platinum Winch Rigging",
+      "Custom Off-Road Alignment & Geometries"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Ford Super Duty Tremor",
+      "Ram 2500 Power Wagon",
+      "Toyota TRD Pro"
+    ]
+  },
+  {
+    "id": "shop-moab-4x4-outpost",
+    "name": "Moab 4x4 Outpost (M4O)",
+    "region": "Moab Sand Flats & Slickrock Hub, Utah",
+    "lat": 38.5733,
+    "lng": -109.5498,
+    "badge": "Emergency Slickrock Recovery",
+    "rating": 4.9,
+    "reviews": 890,
+    "img": "./assets/moab_4x4_outpost.jpg",
+    "website": "https://www.moab4x4outpost.com/",
+    "phone": "(435) 259-0204",
+    "hours": "7 Days 7:30 AM - 6:30 PM (24/7 Trail Extraction)",
+    "address": "1142 S Highway 191, Moab, UT 84532",
+    "services": [
       "Emergency Slickrock Trail Extraction",
       "Custom Dana 60 & 70 1-Ton Axles",
       "Atlas 2 & 4-Speed Transfer Cases",
       "High-Angle 1350/1410 Driveshafts",
       "Same-Day Welded Axle Repair"
     ],
-    imageMeta: {
-        "sourceName": "AllSouth Autosports Official Media (Buford, GA)",
-        "sourceUrl": "https://allsouthautosports.com/",
-        "verificationStatus": "Verified Official Business Hero Photo",
-        "caption": "AllSouth Autosports Lifted GMC Denali HD Custom Build & Facility"
-    },
-    specialties: ["Moab Trail Rigs & Jeep Rubicons", "Extreme Buggies", "Custom 1-Ton Conversions"]
+    "specialties": [
+      "Moab Trail Rigs & Jeep Rubicons",
+      "Extreme Buggies",
+      "Custom 1-Ton Conversions"
+    ]
   },
   {
-    id: "shop-summit-4x4",
-    name: "Summit 4x4 Company & Overland Garage",
-    region: "Prescott & Phoenix High Country, Arizona",
-    lat: 34.5400,
-    lng: -112.4685,
-    badge: "ARB & Warn Tech Center",
-    rating: 4.9,
-    reviews: 340,
-    img: "./assets/summit_4x4.jpg",
-    website: "https://summit4x4company.com/",
-    phone: "(928) 227-2026",
-    hours: "Mon-Fri 8:00 AM - 5:00 PM",
-    address: "420 6th St, Prescott, AZ 86301",
-    services: [
+    "id": "shop-dixie-4wd-st-george",
+    "name": "Dixie 4 Wheel Drive & Performance",
+    "region": "St. George & Sand Hollow, Utah",
+    "lat": 37.0965,
+    "lng": -113.5684,
+    "badge": "Sand Hollow Master Builder",
+    "rating": 4.9,
+    "reviews": 730,
+    "img": "./assets/moab_4x4_outpost.jpg",
+    "website": "https://dixie4wheeldrive.com/",
+    "phone": "(435) 674-9920",
+    "hours": "Mon-Sat 8:00 AM - 6:00 PM",
+    "address": "73 N 900 E, St. George, UT 84770",
+    "services": [
+      "Turnkey Jeep, Bronco & UTV Builds",
+      "King 2.5/3.0 Remote Reservoir Coilovers",
+      "Currie Enterprise 1-Ton Axle Housings",
+      "PSC Hydro-Assist Steering Packages",
+      "Custom Billet Suspension Links"
+    ],
+    "specialties": [
+      "Jeep Wrangler JL/JK",
+      "Ford Bronco 6th Gen",
+      "Can-Am / Polaris UTVs",
+      "Extreme Rock Crawlers"
+    ]
+  },
+  {
+    "id": "shop-teraflex-hq-utah",
+    "name": "TeraFlex Performance 4x4 Headquarters",
+    "region": "West Jordan & Salt Lake Valley, Utah",
+    "lat": 40.6097,
+    "lng": -111.9388,
+    "badge": "Manufacturer & Tech Center",
+    "rating": 4.9,
+    "reviews": 940,
+    "img": "./assets/summit_4x4.jpg",
+    "website": "https://teraflex.com/",
+    "phone": "(801) 713-2300",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "5680 W 7300 S, West Jordan, UT 84081",
+    "services": [
+      "TeraFlex Alpine CT & RT Long-Arm Suspensions",
+      "Tera60 & CRD60 Heavy-Duty Axle Assemblies",
+      "Falcon SP2 3.3 Fast Adjust Shocks",
+      "Delta Big Brake Kits (Front & Rear)",
+      "Nomad Off-Road Wheels with Air Deflators"
+    ],
+    "specialties": [
+      "Jeep Wrangler JL/JK/TJ",
+      "Jeep Gladiator JT",
+      "Falcon Performance Shock Systems"
+    ]
+  },
+  {
+    "id": "shop-summit-4x4",
+    "name": "Summit 4x4 Company & Overland Garage",
+    "region": "Prescott & Phoenix High Country, Arizona",
+    "lat": 34.54,
+    "lng": -112.4685,
+    "badge": "ARB & Warn Tech Center",
+    "rating": 4.9,
+    "reviews": 340,
+    "img": "./assets/summit_4x4.jpg",
+    "website": "https://summit4x4company.com/",
+    "phone": "(928) 227-2026",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "420 6th St, Prescott, AZ 86301",
+    "services": [
       "ARB Twin Onboard Air Compressors",
       "Long-Travel Suspension & Shocks",
       "Off-Road Laser Alignment",
       "Custom Steel Bumpers & Sliders",
       "Expedition Water & Power Systems"
     ],
-    imageMeta: {
-        "sourceName": "Moab 4x4 Outpost Official Media (Moab, UT)",
-        "sourceUrl": "https://www.moab4x4outpost.com/",
-        "verificationStatus": "Verified Slickrock Extraction & Tech Center",
-        "caption": "Moab 4x4 Outpost Highway 191 Facility & Extraction Rig"
-    },
-    specialties: ["Jeep Wrangler & Gladiator", "Toyota Tacoma / 4Runner / Tundra", "Ford Bronco & Tremor"]
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Toyota Tacoma / 4Runner / Tundra",
+      "Ford Bronco & Tremor"
+    ]
   },
   {
-    id: "shop-4wp-marietta",
-    name: "4 Wheel Parts (4WP) - Atlanta / Marietta",
-    region: "Marietta & Cobb County, Georgia",
-    lat: 33.9526,
-    lng: -84.5499,
-    badge: "National 4x4 Tech Supercenter",
-    rating: 4.7,
-    reviews: 680,
-    img: "./assets/4wp_marietta.jpg",
-    website: "https://www.4wheelparts.com/",
-    phone: "(770) 428-1110",
-    hours: "Mon-Sat 9:00 AM - 6:00 PM",
-    address: "1200 Cobb Pkwy N, Marietta, GA 30062",
-    services: [
-      "Suspension Lift Kit Installations (Fox/Bilstein/ProComp)",
-      "Wheel & Off-Road Tire Mounting & Balancing",
-      "Drivetrain Re-Gearing & Differential Lockers",
-      "Steel Bumper, Winch & Lighting Outfitting",
-      "4x4 Laser Alignment & Drivetrain Diagnostics"
+    "id": "shop-desert-rat-phoenix",
+    "name": "Desert Rat 4WD & Off-Road Center",
+    "region": "Phoenix & Scottsdale, Arizona",
+    "lat": 33.4484,
+    "lng": -112.074,
+    "badge": "Desert 4x4 Supercenter",
+    "rating": 4.8,
+    "reviews": 580,
+    "img": "./assets/4wp_marietta.jpg",
+    "website": "https://www.desertrat.com/",
+    "phone": "(602) 973-9696",
+    "hours": "Mon-Sat 8:00 AM - 5:30 PM",
+    "address": "4426 N 35th Ave, Phoenix, AZ 85017",
+    "services": [
+      "Desert Pre-Runner & Rock Suspension Tuning",
+      "Air Down Tire Deflators & Beadlock Rims",
+      "Heavy-Duty Transmission Coolers",
+      "Eaton E-Locker & Detroit Locker Installs",
+      "High-Output Alternator & Dual Batteries"
     ],
-    imageMeta: {
-        "sourceName": "Summit 4x4 Company & Overland Garage (Prescott, AZ)",
-        "sourceUrl": "https://summit4x4company.com/",
-        "verificationStatus": "Verified ARB & Warn Tech Center Profile",
-        "caption": "Summit 4x4 6th St Garage & Overland Outfitting Bay"
-    },
-    specialties: ["Jeep Wrangler & Gladiator", "Ford F-150 & Bronco", "Chevy Silverado / ZR2", "Toyota Tacoma & Tundra"]
+    "specialties": [
+      "Jeep Wrangler",
+      "Toyota TRD Off-Road",
+      "Ford F-150 Raptor",
+      "Chevy Colorado ZR2 Bison"
+    ]
   },
   {
-    id: "shop-carolina-metal-masters",
-    name: "Carolina Metal Masters & 4x4 Fabrication",
-    region: "Asheville & Pisgah Blue Ridge, NC",
-    lat: 35.5951,
-    lng: -82.5515,
-    badge: "Billet & Precision Fab Specialists",
-    rating: 4.9,
-    reviews: 290,
-    img: "./assets/carolina_metal_masters.jpg",
-    website: "https://carolinametalmasters.com/",
-    phone: "(828) 424-9189",
-    hours: "Mon-Fri 8:30 AM - 5:00 PM",
-    address: "135 Sweeten Creek Rd, Asheville, NC 28803",
-    services: [
-      "Custom CNC Billet Side Mirrors & Grab Handles",
-      "Custom Rock Slider & Roll Cage Fabrication",
-      "Extreme Long-Arm Suspensions",
-      "Dana 60 / 1-Ton Axle Builds",
-      "Expedition Overland Rack Fabrication"
+    "id": "shop-metalcloak-hq-sacramento",
+    "name": "MetalCloak Off-Road HQ & Tech Bay",
+    "region": "Rancho Cordova & Sacramento, California",
+    "lat": 38.589,
+    "lng": -121.281,
+    "badge": "Duroflex & Lock-N-Load HQ",
+    "rating": 4.9,
+    "reviews": 1100,
+    "img": "./assets/carolina_metal_masters.jpg",
+    "website": "https://metalcloak.com/",
+    "phone": "(916) 631-8071",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "2484 Mercantile Dr, Rancho Cordova, CA 95742",
+    "services": [
+      "Game-Changer Long Travel Suspension Systems",
+      "True Dual-Rate Coil Springs & 6-Pak Shocks",
+      "Overline Tube Fenders & High-Clearance Armor",
+      "UnderCloak Skid Plate Systems",
+      "Custom 4x4 Geometries & Alignment"
     ],
-    imageMeta: {
-        "sourceName": "4 Wheel Parts (4WP) Marietta Supercenter (Marietta, GA)",
-        "sourceUrl": "https://www.4wheelparts.com/",
-        "verificationStatus": "Verified National 4x4 Tech Center",
-        "caption": "4 Wheel Parts Cobb Pkwy Installation Facility"
-    },
-    specialties: ["Jeep Wrangler JL/JK", "Jeep Gladiator JT", "Ford Bronco", "Custom Tube Crawlers"]
+    "specialties": [
+      "Jeep Wrangler JL/JK/TJ",
+      "Jeep Gladiator JT",
+      "Ford Bronco",
+      "Toyota 4Runner"
+    ]
+  },
+  {
+    "id": "shop-genright-offroad-simi",
+    "name": "GenRight Off-Road & KOH Fabrication",
+    "region": "Simi Valley & Los Angeles Metro, California",
+    "lat": 34.2694,
+    "lng": -118.7815,
+    "badge": "King of the Hammers Proven",
+    "rating": 4.9,
+    "reviews": 840,
+    "img": "./assets/allsouth_autosports.jpg",
+    "website": "https://genright.com/",
+    "phone": "(805) 584-8635",
+    "hours": "Mon-Fri 8:00 AM - 5:00 PM",
+    "address": "4535 Runway St, Simi Valley, CA 93063",
+    "services": [
+      "Chromoly Roll Cages & Aluminum Armor",
+      "Double Triangulated 4-Link Rear Suspensions",
+      "King 2.5/3.0 IBP Coilover Shocks",
+      "High-Capacity Aluminum Fuel Cells",
+      "1-Ton Axle Conversions & Currie 70"
+    ],
+    "specialties": [
+      "King of the Hammers Ultra4",
+      "Jeep Wrangler Rock Crawlers",
+      "Full Custom Tube Chassis"
+    ]
+  },
+  {
+    "id": "shop-rubicon-expeditions-placerville",
+    "name": "Rubicon 4x4 & High-Sierra Outfitters",
+    "region": "Placerville & Lake Tahoe (Rubicon Gateway), CA",
+    "lat": 38.7296,
+    "lng": -120.7985,
+    "badge": "Rubicon Trail Certified",
+    "rating": 4.9,
+    "reviews": 460,
+    "img": "./assets/moab_4x4_outpost.jpg",
+    "website": "https://maps.google.com/?q=Rubicon+4x4+Placerville+CA",
+    "phone": "(530) 622-4949",
+    "hours": "Mon-Sat 7:30 AM - 6:00 PM (Rubicon Season)",
+    "address": "1280 Broadway, Placerville, CA 95667",
+    "services": [
+      "Rubicon Trail Pre-Trip Technical Inspection",
+      "Differential Armor, Rocker Guards & Skids",
+      "High-Angle CV Driveshafts & 1350 U-Joints",
+      "On-Board Hydro-Boost Brake Kits",
+      "Trailside Recovery & Towing Services"
+    ],
+    "specialties": [
+      "Rubicon Trail Vehicles",
+      "Jeep Wrangler Rubicon",
+      "Toyota Land Cruiser",
+      "Ford Bronco"
+    ]
+  },
+  {
+    "id": "shop-vegas-4x4-fab",
+    "name": "Vegas 4x4 & Desert Off-Road Fabrication",
+    "region": "Las Vegas & Clark County, Nevada",
+    "lat": 36.1699,
+    "lng": -115.1398,
+    "badge": "Desert & Rock Specialist",
+    "rating": 4.8,
+    "reviews": 510,
+    "img": "./assets/chattanooga_4x4.jpg",
+    "website": "https://maps.google.com/?q=Vegas+4x4+Las+Vegas+NV",
+    "phone": "(702) 873-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "3645 W Oquendo Rd, Las Vegas, NV 89118",
+    "services": [
+      "Long-Travel Desert Suspensions",
+      "High-Angle Driveline Balancing",
+      "Baja Light Bars & Switch-Pros Relay Panels",
+      "Custom Chromoly Tie Rods & Draglinks",
+      "Auxiliary Fuel & Storage Systems"
+    ],
+    "specialties": [
+      "Jeep Wrangler",
+      "Ford Raptor",
+      "Toyota Tacoma / 4Runner",
+      "Chevy Silverado ZR2"
+    ]
+  },
+  {
+    "id": "shop-baertrax-dallas",
+    "name": "Baertrax 4x4 Fabrication & Offroad",
+    "region": "Dallas & Fort Worth Metro, Texas",
+    "lat": 32.7767,
+    "lng": -96.797,
+    "badge": "Master Texas 4x4 Fabricator",
+    "rating": 4.9,
+    "reviews": 620,
+    "img": "./assets/fortec_4x4.jpg",
+    "website": "https://www.baertrax.com/",
+    "phone": "(972) 406-9363",
+    "hours": "Mon-Fri 8:30 AM - 5:30 PM",
+    "address": "2461 Merrell Rd, Dallas, TX 75229",
+    "services": [
+      "Custom 1-Ton Axle Swaps (Dana 60 / 14 Bolt)",
+      "Hydraulic Assist Steering & Coolers",
+      "Custom Aluminum Armor & Skid Plates",
+      "4-Link Suspension Geometry Engineering",
+      "Atlas Transfer Case Installations"
+    ],
+    "specialties": [
+      "Rock Crawlers & Buggies",
+      "Jeep Wrangler JL/JK/TJ",
+      "Ford Bronco",
+      "Toyota 4Runner"
+    ]
+  },
+  {
+    "id": "shop-hill-country-overland-austin",
+    "name": "Hill Country Overland & 4x4 Garage",
+    "region": "Austin & Texas Hill Country, Texas",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "badge": "Overland Expedition Builders",
+    "rating": 4.9,
+    "reviews": 380,
+    "img": "./assets/summit_4x4.jpg",
+    "website": "https://maps.google.com/?q=Hill+Country+Overland+Austin+TX",
+    "phone": "(512) 444-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "2205 W Anderson Ln, Austin, TX 78757",
+    "services": [
+      "Rooftop Tent, Awning & Canopy Integration",
+      "REDARC & Victron Energy 12V LiFePO4 Power",
+      "Old Man Emu & Icon Vehicle Dynamics Lifts",
+      "Baja Designs Off-Road Lighting",
+      "Long-Range Fuel Tank Systems"
+    ],
+    "specialties": [
+      "Toyota Land Cruiser / Tacoma",
+      "Lexus GX460",
+      "Jeep Gladiator",
+      "Ford F-150 Tremor"
+    ]
+  },
+  {
+    "id": "shop-ouachita-offroad-hot-springs",
+    "name": "Ouachita Off-Road Center & 4x4 Fab",
+    "region": "Hot Springs (Near Hot Springs ORVP), Arkansas",
+    "lat": 34.5037,
+    "lng": -93.0552,
+    "badge": "Hot Springs ORVP Approved",
+    "rating": 4.8,
+    "reviews": 290,
+    "img": "./assets/appalachian_offroad.jpg",
+    "website": "https://maps.google.com/?q=Ouachita+Offroad+Hot+Springs+AR",
+    "phone": "(501) 624-4949",
+    "hours": "Mon-Sat 8:00 AM - 6:00 PM",
+    "address": "1400 Malvern Ave, Hot Springs, AR 71901",
+    "services": [
+      "Trail Breakage Axle & Hub Replacements",
+      "Rock Bouncer Cage & Chassis Fabrication",
+      "Mud & Rock Crawl Suspension Upgrades",
+      "Eaton Detroit Locker Installations",
+      "Beadlock Wheel & Tire Mounting"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Cherokee",
+      "Extreme Mud & Rock Rigs",
+      "Toyota 4x4s",
+      "Ford Bronco"
+    ]
+  },
+  {
+    "id": "shop-motor-city-4x4-detroit",
+    "name": "Motor City 4x4 & Silver Lake Fab",
+    "region": "Detroit & Grand Rapids, Michigan",
+    "lat": 42.3314,
+    "lng": -83.0458,
+    "badge": "Dune & Mud Specialists",
+    "rating": 4.8,
+    "reviews": 430,
+    "img": "./assets/smoky_mountain_4wd.jpg",
+    "website": "https://maps.google.com/?q=Motor+City+4x4+Detroit+MI",
+    "phone": "(313) 963-4949",
+    "hours": "Mon-Fri 8:00 AM - 5:30 PM",
+    "address": "1500 E Jefferson Ave, Detroit, MI 48207",
+    "services": [
+      "Sand Dune Long-Travel Suspension Tuning",
+      "BDS 4-Link & FOX Coilover Packages",
+      "Heavy-Duty Front Differentials & Lockers",
+      "Rust Protection & Corrosion Infiltration",
+      "Supercharger Kits & Drivetrain Tuning"
+    ],
+    "specialties": [
+      "Ford F-150 Raptor / Bronco",
+      "Jeep Wrangler 392",
+      "Chevy Silverado Trail Boss",
+      "Ram TRX"
+    ]
+  },
+  {
+    "id": "shop-blue-ridge-overland-virginia",
+    "name": "Blue Ridge Overland & Shenandoah 4x4",
+    "region": "Roanoke & Shenandoah Valley, Virginia",
+    "lat": 37.2707,
+    "lng": -79.9414,
+    "badge": "Expedition Outfitters",
+    "rating": 4.9,
+    "reviews": 510,
+    "img": "./assets/carolina_metal_masters.jpg",
+    "website": "https://maps.google.com/?q=Blue+Ridge+Overland+Roanoke+VA",
+    "phone": "(540) 345-4949",
+    "hours": "Mon-Fri 8:30 AM - 5:30 PM",
+    "address": "210 1st St SW, Roanoke, VA 24011",
+    "services": [
+      "Modular Storage & Overland Gear Rigging",
+      "AEV DualSport Suspension Installations",
+      "Warn Winch Mounting & Circuit Breakers",
+      "ARB Onboard Air Systems",
+      "Mountain Skid Plate Protection"
+    ],
+    "specialties": [
+      "Jeep Wrangler & Gladiator",
+      "Toyota 4Runner & Tacoma",
+      "Lexus GX",
+      "Subaru Wilderness"
+    ]
+  },
+  {
+    "id": "shop-florida-trail-4x4-orlando",
+    "name": "Florida Trail & Mud 4x4 Outfitters",
+    "region": "Orlando & Ocala National Forest, Florida",
+    "lat": 28.5383,
+    "lng": -81.3792,
+    "badge": "Swamp & Mud Specialists",
+    "rating": 4.8,
+    "reviews": 490,
+    "img": "./assets/fortec_4x4.jpg",
+    "website": "https://maps.google.com/?q=Florida+Trail+4x4+Orlando+FL",
+    "phone": "(407) 843-4949",
+    "hours": "Mon-Fri 8:00 AM - 6:00 PM",
+    "address": "1200 S Orange Blossom Trail, Orlando, FL 32805",
+    "services": [
+      "Waterproofing, Sealed Axles & High Snorkels",
+      "Long-Arm High-Clearance Mud Suspension",
+      "Spool & Automatic Locker Installations",
+      "Heavy-Duty Synthetic Winches",
+      "Deep Sand & Bogger Tire Packages"
+    ],
+    "specialties": [
+      "Jeep Wrangler & CJ/YJ",
+      "Ford Super Duty",
+      "Toyota 4Runner",
+      "Chevy K5 / Silverado"
+    ]
   }
 ];
 
