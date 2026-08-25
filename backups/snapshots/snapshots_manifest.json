@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.37.0_2026-08-25_11-05-30",
+    "version": "v2.37.0",
+    "timestamp": "2026-08-25T15:05:33.532Z",
+    "displayDate": "8/25/2026, 11:05:33 AM",
+    "description": "Make trail location address on main cards clickable direct links to Google Maps",
+    "zipFile": "v2.37.0_2026-08-25_11-05-30.zip",
+    "sizeMb": "30.43 MB",
+    "gitHash": "f4ee389"
+  },
+  {
     "id": "v2.36.0_2026-08-25_10-59-03",
     "version": "v2.36.0",
     "timestamp": "2026-08-25T14:59:06.859Z",
