@@ -12,7 +12,8 @@
     "snapshot": "node scripts/version_control.cjs snapshot",
     "rollback": "node scripts/version_control.cjs rollback",
     "history": "node scripts/version_control.cjs list",
-    "vc": "node scripts/version_control.cjs menu"
+    "vc": "node scripts/version_control.cjs menu",
+    "test": "node scripts/qa_50_states_audit.cjs"
   },
   "dependencies": {
     "@google/genai": "^1.52.0",

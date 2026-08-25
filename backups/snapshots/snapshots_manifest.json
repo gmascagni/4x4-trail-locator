@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.41.0_2026-08-25_11-49-15",
+    "version": "v2.41.0",
+    "timestamp": "2026-08-25T15:49:19.449Z",
+    "displayDate": "8/25/2026, 11:49:19 AM",
+    "description": "Integrate automated 50-state QA audit test suite and enrich all 50 US states to 169+ verified trails",
+    "zipFile": "v2.41.0_2026-08-25_11-49-15.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "5d8c397"
+  },
+  {
     "id": "v2.40.0_2026-08-25_11-41-34",
     "version": "v2.40.0",
     "timestamp": "2026-08-25T15:41:38.270Z",
