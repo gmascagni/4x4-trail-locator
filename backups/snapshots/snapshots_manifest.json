@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.15.0_2026-08-24_23-03-42",
+    "version": "v2.15.0",
+    "timestamp": "2026-08-25T03:03:45.453Z",
+    "displayDate": "8/24/2026, 11:03:45 PM",
+    "description": "Enforce static local 4x4 shop images and install dynamic regional geo-survey headers for trail cards",
+    "zipFile": "v2.15.0_2026-08-24_23-03-42.zip",
+    "sizeMb": "28.92 MB",
+    "gitHash": "e35972a"
+  },
+  {
     "id": "v2.14.0_2026-08-24_22-59-08",
     "version": "v2.14.0",
     "timestamp": "2026-08-25T02:59:11.622Z",
