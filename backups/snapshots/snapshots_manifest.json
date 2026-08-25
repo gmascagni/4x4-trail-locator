@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.42.0_2026-08-25_11-54-30",
+    "version": "v2.42.0",
+    "timestamp": "2026-08-25T15:54:34.063Z",
+    "displayDate": "8/25/2026, 11:54:34 AM",
+    "description": "Complete 180-trail 50-state roster with multi-trail coverage in every US state and automated QA verification",
+    "zipFile": "v2.42.0_2026-08-25_11-54-30.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "d896b79"
+  },
+  {
     "id": "v2.41.0_2026-08-25_11-49-15",
     "version": "v2.41.0",
     "timestamp": "2026-08-25T15:49:19.449Z",
