@@ -11,6 +11,7 @@
 <!-- Leaflet CSS & JS for Interactive Topo/Satellite Maps -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./assets/us_states_geojson.js"></script>
 
 <!-- Google Fonts: Montserrat, Inter & JetBrains Mono -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -8365,24 +8366,35 @@ function renderMapMarkers(filteredList = TRAILS, detectedState = null) {
   const rawQuery = searchQuery.trim().toLowerCase();
   const isSearchActive = rawQuery.length > 0;
 
-  if (detectedState && markerLatLongs.length > 0) {
-    // 1. STATE PERIMETER HIGHLIGHT: Draw perimeter bounding box / polygon enclosing the state's trail network
-    const bounds = L.latLngBounds(markerLatLongs);
-    statePerimeterLayer = L.rectangle(bounds.pad(0.18), {
-      color: '#0284c7',
-      fillColor: '#38bdf8',
-      fillOpacity: 0.08,
-      weight: 2.5,
-      dashArray: '6, 6'
-    }).addTo(map);
+  if (detectedState && typeof window !== 'undefined' && window.US_STATES_GEOJSON_DATA && window.US_STATES_GEOJSON_DATA.features) {
+    // 1. AUTHENTIC GEOGRAPHIC STATE BOUNDARY (DOTTED LINE AROUND TRUE STATE PERIMETER)
+    const stateFeature = window.US_STATES_GEOJSON_DATA.features.find(f => 
+      (f.properties && f.properties.name && f.properties.name.toLowerCase() === detectedState.name.toLowerCase()) ||
+      (f.id && f.id === detectedState.code)
+    );
 
-    statePerimeterLayer.bindTooltip(`📍 ${detectedState.name} 4x4 Perimeter (${filteredList.length} Trails)`, {
-      permanent: true,
-      direction: 'center',
-      className: 'custom-trail-tooltip'
-    });
+    if (stateFeature) {
+      statePerimeterLayer = L.geoJSON(stateFeature, {
+        style: {
+          color: '#0284c7',
+          fillColor: '#38bdf8',
+          fillOpacity: 0.08,
+          weight: 3,
+          dashArray: '7, 7' // Dotted line outlining the true geographic perimeter of the state!
+        }
+      }).addTo(map);
 
-    map.fitBounds(bounds.pad(0.25), { maxZoom: 11, animate: true });
+      statePerimeterLayer.bindTooltip(`📍 ${detectedState.name} State Perimeter (${filteredList.length} Trails)`, {
+        permanent: true,
+        direction: 'center',
+        className: 'custom-trail-tooltip'
+      });
+
+      map.fitBounds(statePerimeterLayer.getBounds(), { padding: [25, 25], maxZoom: 9, animate: true });
+    } else if (markerLatLongs.length > 0) {
+      const bounds = L.latLngBounds(markerLatLongs);
+      map.fitBounds(bounds.pad(0.2), { maxZoom: 10, animate: true });
+    }
   } else if (isSearchActive && markerLatLongs.length > 0) {
     // 2. SEARCH QUERY BOUNDS FIT
     const bounds = L.latLngBounds(markerLatLongs);

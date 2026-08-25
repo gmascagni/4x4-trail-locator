@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.36.0_2026-08-25_10-59-03",
+    "version": "v2.36.0",
+    "timestamp": "2026-08-25T14:59:06.859Z",
+    "displayDate": "8/25/2026, 10:59:06 AM",
+    "description": "Draw authentic geographic dotted state borders (GeoJSON) for all 50 states on Leaflet map",
+    "zipFile": "v2.36.0_2026-08-25_10-59-03.zip",
+    "sizeMb": "30.43 MB",
+    "gitHash": "9cf92c8"
+  },
+  {
     "id": "v2.35.0_2026-08-25_10-49-27",
     "version": "v2.35.0",
     "timestamp": "2026-08-25T14:49:31.660Z",
