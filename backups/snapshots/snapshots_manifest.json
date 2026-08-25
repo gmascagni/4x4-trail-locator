@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.47.0_2026-08-25_14-32-01",
+    "version": "v2.47.0",
+    "timestamp": "2026-08-25T18:32:07.314Z",
+    "displayDate": "8/25/2026, 2:32:07 PM",
+    "description": "Permanently replace external/shop photos with 100% local curated Jeep Wrangler 4x4 on trail assets",
+    "zipFile": "v2.47.0_2026-08-25_14-32-01.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "5227025"
+  },
+  {
     "id": "v2.46.0_2026-08-25_13-53-05",
     "version": "v2.46.0",
     "timestamp": "2026-08-25T17:53:08.998Z",
