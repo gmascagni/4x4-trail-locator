@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.39.0_2026-08-25_11-38-10",
+    "version": "v2.39.0",
+    "timestamp": "2026-08-25T15:38:14.457Z",
+    "displayDate": "8/25/2026, 11:38:14 AM",
+    "description": "Expand nationwide 50-state trail network with premier Arkansas, Texas, Kentucky, Missouri, Virginia, and Nevada trails",
+    "zipFile": "v2.39.0_2026-08-25_11-38-10.zip",
+    "sizeMb": "30.43 MB",
+    "gitHash": "c4fcf98"
+  },
+  {
     "id": "v2.38.0_2026-08-25_11-14-11",
     "version": "v2.38.0",
     "timestamp": "2026-08-25T15:14:14.707Z",
