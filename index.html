@@ -6044,7 +6044,28 @@ async function fetchTrailWeather(lat, lng) {
   }
 }
 
-// Async populate weather on cards
+// HELPER: Extract accurate Trail Location Area (City & State) for localized NOAA forecasts
+function getTrailAreaLocation(trail) {
+  if (trail.region) {
+    const parts = trail.region.split(',').map(p => p.trim());
+    if (parts.length >= 2) {
+      const state = parts[parts.length - 1].replace(/[^a-zA-Z]/g, '').slice(0, 2).toUpperCase() || 'GA';
+      const city = parts[parts.length - 2].replace(/County|National Forest|Chattahoochee|Ranger District/gi, '').trim() || parts[0];
+      return { city: city || 'Trail Area', state: state };
+    }
+  }
+  if (trail.stagingArea) {
+    const m = trail.stagingArea.match(/([a-zA-Zs]+),s*([A-Z]{2})/);
+    if (m) return { city: m[1].trim(), state: m[2].trim() };
+  }
+  return { city: 'Trail Site', state: 'US' };
+}
+
+function getNoaaAreaForecastUrl(trail) {
+  const area = getTrailAreaLocation(trail);
+  return `https://forecast.weather.gov/MapClick.php?lat=${trail.lat}&lon=${trail.lng}&unit=0&lg=english&CityName=${encodeURIComponent(area.city)}&state=${encodeURIComponent(area.state)}`;
+}
+
 async function loadCardLiveWeather(trail) {
   const weather = await fetchTrailWeather(trail.lat, trail.lng);
   const aiStatus = analyzeAITrailCondition(weather, trail);
@@ -6083,7 +6104,8 @@ async function loadCardLiveWeather(trail) {
   }
 
   if (tempEl) {
-    tempEl.innerHTML = `<i class="fa-solid ${weather.icon}" style="color:${weather.color};"></i> <strong>${weather.temp}°F</strong> ${weather.label} &bull; <i class="fa-solid fa-wind" style="font-size:10px; color:#64748b;"></i> ${weather.windSpeed} mph`;
+    const area = getTrailAreaLocation(trail);
+    tempEl.innerHTML = `<div style="font-size:10px; color:#64748b; margin-bottom:2px;"><i class="fa-solid fa-location-dot" style="color:#0284c7;"></i> ${area.city}, ${area.state} Trail Area Forecast:</div><div style="font-size:12px; font-weight:800; color:#0f172a;"><i class="fa-solid ${weather.icon}" style="color:${weather.color};"></i> <strong>${weather.temp}°F</strong> ${weather.label} &bull; <i class="fa-solid fa-wind" style="font-size:10px; color:#64748b;"></i> ${weather.windSpeed} mph</div>`;
   }
   if (statusEl) {
     statusEl.className = `ai-status-pill ${aiStatus.statusClass}`;
@@ -6412,9 +6434,9 @@ function renderTrails() {
                 <div id="weather-temp-${trail.id}">
                   <i class="fa-solid fa-spinner fa-spin" style="color:var(--amber-orange);"></i> <span>Loading Live Weather...</span>
                 </div>
-                <a href="https://forecast.weather.gov/MapClick.php?lat=${trail.lat}&lon=${trail.lng}" target="_blank" rel="noopener noreferrer" style="font-size:10px; font-weight:700; color:#0284c7; text-decoration:none; display:inline-flex; align-items:center; gap:3px;" title="Official NOAA National Weather Service Live Forecast for GPS coordinates">
-                  <i class="fa-solid fa-cloud-sun"></i> NOAA Live Weather ↗
-                </a>
+                <a href="${getNoaaAreaForecastUrl(trail)}" target="_blank" rel="noopener noreferrer" style="font-size:10.5px; font-weight:800; color:#0284c7; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:rgba(2,132,199,0.08); padding:3px 8px; border-radius:5px; border:1px solid rgba(2,132,199,0.25);" title="Official NOAA National Weather Service Station Forecast for ${getTrailAreaLocation(trail).city}, ${getTrailAreaLocation(trail).state}">
+      <i class="fa-solid fa-cloud-sun-rain"></i> NOAA: ${getTrailAreaLocation(trail).city}, ${getTrailAreaLocation(trail).state} ↗
+    </a>
               </div>
 
               <div id="ai-prob-${trail.id}" style="font-size:11px; border-top:1px dashed #cbd5e1; padding-top:4px; margin-top:4px;">
@@ -7264,9 +7286,9 @@ function openTrailSourceModal(trailId) {
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <a href="https://forecast.weather.gov/MapClick.php?lat=${trail.lat}&lon=${trail.lng}" target="_blank" rel="noopener noreferrer" style="background:rgba(2,132,199,0.25); color:#38bdf8; border:1px solid #0284c7; font-size:10px; font-weight:800; padding:4px 8px; border-radius:5px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Official NOAA National Weather Service Live Telemetry">
-            <i class="fa-solid fa-cloud-sun-rain"></i> NOAA Weather Source ↗
-          </a>
+          <a href="${getNoaaAreaForecastUrl(trail)}" target="_blank" rel="noopener noreferrer" style="background:rgba(2,132,199,0.25); color:#38bdf8; border:1px solid #0284c7; font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="Official NOAA National Weather Service Live Telemetry for ${getTrailAreaLocation(trail).city}, ${getTrailAreaLocation(trail).state}">
+      <i class="fa-solid fa-cloud-sun-rain"></i> NOAA Station: ${getTrailAreaLocation(trail).city}, ${getTrailAreaLocation(trail).state} ↗
+    </a>
           <div class="ai-status-pill ${aiStatus.statusClass}">
             <i class="fa-solid ${aiStatus.icon}"></i> ${aiStatus.statusBadge}
           </div>

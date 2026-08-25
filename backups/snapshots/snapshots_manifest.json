@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.27.0_2026-08-24_23-53-49",
+    "version": "v2.27.0",
+    "timestamp": "2026-08-25T03:53:53.042Z",
+    "displayDate": "8/24/2026, 11:53:53 PM",
+    "description": "Localize NOAA live weather links and telemetry displays specifically to trail mountain location area",
+    "zipFile": "v2.27.0_2026-08-24_23-53-49.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "c6da94d"
+  },
+  {
     "id": "v2.26.0_2026-08-24_23-51-04",
     "version": "v2.26.0",
     "timestamp": "2026-08-25T03:51:08.364Z",
