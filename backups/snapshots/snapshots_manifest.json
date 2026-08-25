@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.45.0_2026-08-25_13-24-08",
+    "version": "v2.45.0",
+    "timestamp": "2026-08-25T17:24:12.064Z",
+    "displayDate": "8/25/2026, 1:24:12 PM",
+    "description": "Assign stock Jeep Wrangler on trail photos to 100% of trail cards with automatic fallback",
+    "zipFile": "v2.45.0_2026-08-25_13-24-08.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "c7babcd"
+  },
+  {
     "id": "v2.44.0_2026-08-25_13-10-19",
     "version": "v2.44.0",
     "timestamp": "2026-08-25T17:10:23.886Z",
