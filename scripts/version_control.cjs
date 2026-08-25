@@ -38,7 +38,19 @@ function getTimestampId() {
   return `${y}-${m}-${d}_${hh}-${mm}-${ss}`;
 }
 
+function runPreflightQA() {
+  console.log('\n🔍 RUNNING MANDATORY PRE-FLIGHT 50-STATE QA AUDIT...');
+  try {
+    execSync('node "' + path.join(__dirname, 'qa_50_states_audit.cjs') + '"', { stdio: 'inherit' });
+    console.log('✅ PRE-FLIGHT QA AUDIT PASSED (100%)! Proceeding to create version snapshot...\n');
+  } catch (err) {
+    console.error('\n❌ PRE-FLIGHT QA AUDIT FAILED! Snapshot and release aborted to protect production.\n');
+    process.exit(1);
+  }
+}
+
 function createSnapshot(description = 'Manual Snapshot') {
+  runPreflightQA();
   const timestamp = getTimestampId();
   const manifest = loadManifest();
   const versionNum = `v2.${manifest.length + 4}.0`;

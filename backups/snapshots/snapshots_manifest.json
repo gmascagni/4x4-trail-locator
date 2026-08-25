@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.43.0_2026-08-25_12-55-07",
+    "version": "v2.43.0",
+    "timestamp": "2026-08-25T16:55:11.553Z",
+    "displayDate": "8/25/2026, 12:55:11 PM",
+    "description": "Enforce automated 50-state pre-flight QA gatekeeper before all production snapshots",
+    "zipFile": "v2.43.0_2026-08-25_12-55-07.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "8dc6cfe"
+  },
+  {
     "id": "v2.42.0_2026-08-25_11-54-30",
     "version": "v2.42.0",
     "timestamp": "2026-08-25T15:54:34.063Z",
