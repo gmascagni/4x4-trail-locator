@@ -6981,8 +6981,11 @@ function renderVideoLibrary() {
   container.innerHTML = `
     <div class="video-card">
       <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Tray Mountain & North Georgia 4x4 Trail Guide')">
-        <img src="./assets/north_ga_trail_map.jpg" class="video-thumb" alt="Tray Mountain Topo Map">
+        <img src="./assets/tray_mountain_3d_relief.jpg" class="video-thumb" alt="Tray Mountain 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
         <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#38bdf8; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(56,189,248,0.4);">
+          <i class="fa-solid fa-mountain"></i> 3D Elevation Relief: 4,430 ft
+        </div>
       </div>
       <div class="video-info">
         <div class="video-title">Tray Mountain Road: Helen to Hiawassee 4x4</div>
@@ -6992,8 +6995,11 @@ function renderVideoLibrary() {
 
     <div class="video-card">
       <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Windrock Park Trail 16 Hardcore Crawl')">
-        <img src="./assets/windrock_trail_map.jpg" class="video-thumb" alt="Windrock Park Topo Map">
+        <img src="./assets/windrock_3d_relief.jpg" class="video-thumb" alt="Windrock Park 3D Topo Ridge Map" onerror="this.src='./assets/windrock_trail_map.jpg'">
         <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#fbbf24; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(251,191,36,0.4);">
+          <i class="fa-solid fa-mountain"></i> 3D Ridge Relief: 3,534 ft
+        </div>
       </div>
       <div class="video-info">
         <div class="video-title">Windrock Park: Trail 16 (Jeep Badge of Honor)</div>
@@ -7003,12 +7009,57 @@ function renderVideoLibrary() {
 
     <div class="video-card">
       <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'The Georgia Traverse 390-Mile Overland')">
-        <img src="./assets/north_ga_trail_map.jpg" class="video-thumb" alt="Georgia Traverse Topo Map">
+        <img src="./assets/ga_traverse_3d_relief.jpg" class="video-thumb" alt="Georgia Traverse 390-Mile Ridge 3D Topo Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
         <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#22c55e; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(34,197,94,0.4);">
+          <i class="fa-solid fa-route"></i> 3D Trans-State Ridge: 390 Miles
+        </div>
       </div>
       <div class="video-info">
         <div class="video-title">The Georgia Traverse: 390-Mile Mountain Overland</div>
         <div style="font-size:11px; color:#64748b;">River Fords & Ridge Top Forest Service Tracks</div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Beasley Knob OHV Technical Red Clay Crawl')">
+        <img src="./assets/beasley_3d_relief.jpg" class="video-thumb" alt="Beasley Knob 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#ef4444; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(239,68,68,0.4);">
+          <i class="fa-solid fa-mountain"></i> 3D Peak Elevation: 3,248 ft
+        </div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Beasley Knob OHV: 8-Route Technical System</div>
+        <div style="font-size:11px; color:#64748b;">Blairsville GA • Red Clay & Rock Step Climbs</div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'Nimblewill Gap & High Shoals Scenic Forest Route')">
+        <img src="./assets/nimblewill_3d_relief.jpg" class="video-thumb" alt="Nimblewill Gap 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#38bdf8; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(56,189,248,0.4);">
+          <i class="fa-solid fa-water"></i> 3D Creek Valley: 2,150 ft
+        </div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Nimblewill Gap & High Shoals Forest Route</div>
+        <div style="font-size:11px; color:#64748b;">Dahlonega GA • Mountain Streams & Ridge Canopy</div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Moab Slickrock & Hell's Revenge 3D Experience')">
+        <img src="./assets/moab_3d_relief.jpg" class="video-thumb" alt="Moab 3D Slickrock Relief Map" onerror="this.src='./assets/western_topo_map.jpg'">
+        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#f97316; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(249,115,22,0.4);">
+          <i class="fa-solid fa-cube"></i> 3D Sandstone Domes: 4,700 ft
+        </div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">Moab Slickrock: Hell's Revenge & Fins</div>
+        <div style="font-size:11px; color:#64748b;">Moab UT • Red Sandstone Dome Climbing</div>
       </div>
     </div>
   `;

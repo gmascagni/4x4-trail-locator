@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.24.0_2026-08-24_23-43-51",
+    "version": "v2.24.0",
+    "timestamp": "2026-08-25T03:43:54.911Z",
+    "displayDate": "8/24/2026, 11:43:54 PM",
+    "description": "Integrate distinct authentic 3D topographic relief maps for every trail system in Video Library",
+    "zipFile": "v2.24.0_2026-08-24_23-43-51.zip",
+    "sizeMb": "30.30 MB",
+    "gitHash": "22137c0"
+  },
+  {
     "id": "v2.23.0_2026-08-24_23-39-55",
     "version": "v2.23.0",
     "timestamp": "2026-08-25T03:39:58.799Z",
