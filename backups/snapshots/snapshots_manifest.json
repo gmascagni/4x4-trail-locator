@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.10.0_2026-08-24_22-40-22",
+    "version": "v2.10.0",
+    "timestamp": "2026-08-25T02:40:26.027Z",
+    "displayDate": "8/24/2026, 10:40:26 PM",
+    "description": "Enforce Trail & Shop Image Accuracy Requirements with verified agency source records and provenance tags",
+    "zipFile": "v2.10.0_2026-08-24_22-40-22.zip",
+    "sizeMb": "28.92 MB",
+    "gitHash": "413b3b1"
+  },
+  {
     "id": "v2.9.0_2026-08-24_22-36-15",
     "version": "v2.9.0",
     "timestamp": "2026-08-25T02:36:18.551Z",
