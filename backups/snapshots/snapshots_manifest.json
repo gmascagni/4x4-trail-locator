@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.17.0_2026-08-24_23-11-26",
+    "version": "v2.17.0",
+    "timestamp": "2026-08-25T03:11:30.273Z",
+    "displayDate": "8/24/2026, 11:11:30 PM",
+    "description": "Universal 50-State Dynamic Engine: Expanded 88-trail nationwide catalog, dynamic GPS location resolution, state search queries, and USFS/BLM fallback discovery",
+    "zipFile": "v2.17.0_2026-08-24_23-11-26.zip",
+    "sizeMb": "28.93 MB",
+    "gitHash": "58dd2cd"
+  },
+  {
     "id": "v2.16.0_2026-08-24_23-06-13",
     "version": "v2.16.0",
     "timestamp": "2026-08-25T03:06:16.174Z",
