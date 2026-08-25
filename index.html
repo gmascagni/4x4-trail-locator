@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./assets/us_states_geojson.js"></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
 
 <!-- Google Fonts: Montserrat, Inter & JetBrains Mono -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1634,6 +1635,9 @@ footer {
         <button class="map-layer-btn active" id="btnLayerTopo" onclick="switchMapLayer('topo')"><i class="fa-solid fa-mountain"></i> Topo 3D</button>
         <button class="map-layer-btn" id="btnLayerSat" onclick="switchMapLayer('satellite')"><i class="fa-solid fa-satellite"></i> Sat</button>
         <button class="map-layer-btn" id="btnLayerRoads" onclick="switchMapLayer('roads')"><i class="fa-solid fa-road"></i> Roads</button>
+        <button class="map-layer-btn" id="btnToggleMvumGis" onclick="toggleUsfsMvumLayer()" title="Toggle Official USFS National Motorized Trail (MVUM) GIS Layer (8,000+ Federal Routes)" style="background:#0f172a; color:#4ade80; border:1.5px solid #166534; font-weight:800;">
+          <i class="fa-solid fa-tree"></i> USFS MVUM GIS <span id="mvumGisStatusIndicator" style="font-size:9px; background:rgba(74,222,128,0.2); color:#4ade80; padding:1px 5px; border-radius:3px; margin-left:4px;">OFF</span>
+        </button>
         <button class="map-layer-btn" id="btnToggleMapSize" onclick="toggleMapHeightExpand()" title="Toggle Compact / Expanded Map View" style="background:#0f172a; color:#fff; border-color:#334155;">
           <i class="fa-solid fa-up-right-and-down-left-from-center" id="iconMapExpand"></i> <span id="textMapExpand">Expand</span>
         </button>
@@ -10896,6 +10900,65 @@ function toggleMapHeightExpand() {
     setTimeout(() => {
       map.invalidateSize();
     }, 300);
+  }
+}
+
+
+// ── USFS NATIONAL MOTORIZED TRAIL MVUM GIS LAYER (8,000+ FEDERAL ROUTES) ──
+let usfsMvumLayer = null;
+let isUsfsMvumActive = false;
+
+function toggleUsfsMvumLayer() {
+  if (!map) return;
+  const btn = document.getElementById('btnToggleMvumGis');
+  const indicator = document.getElementById('mvumGisStatusIndicator');
+  
+  isUsfsMvumActive = !isUsfsMvumActive;
+  
+  if (isUsfsMvumActive) {
+    if (!usfsMvumLayer) {
+      if (typeof L.esri !== 'undefined' && L.esri.dynamicMapLayer) {
+        usfsMvumLayer = L.esri.dynamicMapLayer({
+          url: 'https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_TrailMotorized_01/MapServer',
+          opacity: 0.9,
+          useCors: false
+        });
+      } else {
+        usfsMvumLayer = L.tileLayer.wms('https://apps.fs.usda.gov/arcx/services/EDW/EDW_TrailMotorized_01/MapServer/WMSServer', {
+          layers: '0',
+          format: 'image/png',
+          transparent: true,
+          opacity: 0.9,
+          attribution: 'USDA Forest Service MVUM GIS'
+        });
+      }
+    }
+    
+    usfsMvumLayer.addTo(map);
+    if (btn) {
+      btn.style.background = 'linear-gradient(135deg, #166534, #15803d)';
+      btn.style.borderColor = '#4ade80';
+      btn.style.color = '#ffffff';
+    }
+    if (indicator) {
+      indicator.innerText = 'STREAMING LIVE';
+      indicator.style.background = '#22c55e';
+      indicator.style.color = '#052e16';
+    }
+  } else {
+    if (usfsMvumLayer && map.hasLayer(usfsMvumLayer)) {
+      map.removeLayer(usfsMvumLayer);
+    }
+    if (btn) {
+      btn.style.background = '#0f172a';
+      btn.style.borderColor = '#166534';
+      btn.style.color = '#4ade80';
+    }
+    if (indicator) {
+      indicator.innerText = 'OFF';
+      indicator.style.background = 'rgba(74,222,128,0.2)';
+      indicator.style.color = '#4ade80';
+    }
   }
 }
 

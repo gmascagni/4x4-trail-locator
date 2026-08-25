@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.44.0_2026-08-25_13-10-19",
+    "version": "v2.44.0",
+    "timestamp": "2026-08-25T17:10:23.886Z",
+    "displayDate": "8/25/2026, 1:10:23 PM",
+    "description": "Integrate official USFS Enterprise MVUM Motorized Trail GIS layer with interactive map streaming",
+    "zipFile": "v2.44.0_2026-08-25_13-10-19.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "fab1470"
+  },
+  {
     "id": "v2.43.0_2026-08-25_12-55-07",
     "version": "v2.43.0",
     "timestamp": "2026-08-25T16:55:11.553Z",
