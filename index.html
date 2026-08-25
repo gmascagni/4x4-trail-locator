@@ -6092,41 +6092,36 @@ function getRegionalGradient(trail) {
 }
 
 
-const AUTHENTIC_JEEP_WOODS_PHOTOS = [
-  "https://images-prod.trailsoffroad.com/trails/2188/trail_reviews/1650213174815_resized_20220409_143051.jpg",
-  "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg",
-  "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
-  "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
-  "https://images.squarespace-cdn.com/content/v1/5306da2de4b0ba3094b60642/1439911633652-O6NXHY55CDCPCS0UZ9A2/IMG_3758A.jpg?format=1500w",
-  "https://images-prod.trailsoffroad.com/trails/7804/trail_reviews/1704306905_Trail16-Waypoint16.2-800.jpg",
-  "https://cdn.shortpixel.ai/spai/q_lossy%2Bw_956%2Bto_auto%2Bret_img/paigemindsthegap.com/wp-content/uploads/2016/11/Tray-Mountain-Road-Trail.jpg",
-  "https://images.squarespace-cdn.com/content/v1/60a7bd44b247c6578ba36cc4/1715802489853-66J29FS6HME2WO3FAMY9/image-asset.jpeg",
+const AUTHENTIC_DEMO_JEEP_PHOTOS = [
   "https://www.dahlonega.org/imager/files_idss_com/C527/images/listings/iron-mountain---jeep-playground---logo_A3678993-5056-A36A-06E1BC9853F42064-a36786f95056a36_e45adf5f6bc0c5c2a30a39868f44eab6.jpg",
+  "https://images-prod.trailsoffroad.com/trails/2188/trail_reviews/1650213174815_resized_20220409_143051.jpg",
+  "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "https://www.bronco6g.com/forum/attachments/pxl_20220424_190150961-jpg.312988/",
-  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1516939884455-1445c8652f83?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=800&q=80"
+  "https://cdn.shortpixel.ai/spai/q_lossy%2Bw_956%2Bto_auto%2Bret_img/paigemindsthegap.com/wp-content/uploads/2016/11/Tray-Mountain-Road-Trail.jpg",
+  "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg",
+  "https://images-prod.trailsoffroad.com/trails/7804/trail_reviews/1704306905_Trail16-Waypoint16.2-800.jpg",
+  "https://images.squarespace-cdn.com/content/v1/60a7bd44b247c6578ba36cc4/1715802489853-66J29FS6HME2WO3FAMY9/image-asset.jpeg",
+  "https://images.squarespace-cdn.com/content/v1/5306da2de4b0ba3094b60642/1439911633652-O6NXHY55CDCPCS0UZ9A2/IMG_3758A.jpg?format=1500w",
+  "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
+  "https://images-prod.trailsoffroad.com/trails/2188/trail_reviews/1781479143_4d592b1d-9384-4771-8b8b-23f18a2689da-800.jpg",
+  "https://www.fs.usda.gov/sites/nfs/files/styles/large/public/2024-05/uwharrie-ohv.jpg",
+  "https://www.fs.usda.gov/sites/nfs/files/styles/large/public/2021-09/brown-mountain-ohv.jpg",
+  "https://www.adventureoffroadpark.com/images/trail-riding.jpg",
+  "https://www.tn.gov/content/dam/tn/twra/images/north-cumberland-ohv.jpg"
 ];
 const SPECIFIC_TRAIL_MAP = {
   "ga-whissenhunt-ohv": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
   "ga-nimblewill-gap": "https://images-prod.trailsoffroad.com/trails/2188/trail_reviews/1650213174815_resized_20220409_143051.jpg",
+  "ga-cooper-gap-double": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "ga-beasley-knob-93a": "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg",
   "ga-beasley-knob-blue-mtn": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
-  "ga-bell-mountain": "https://images.squarespace-cdn.com/content/v1/5306da2de4b0ba3094b60642/1439911633652-O6NXHY55CDCPCS0UZ9A2/IMG_3758A.jpg?format=1500w",
+  "ga-charlies-creek": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "ga-cashes-valley": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
-  "ga-charlies-creek": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80",
-  "ga-oakey-mountain": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
+  "ga-bell-mountain": "https://images.squarespace-cdn.com/content/v1/5306da2de4b0ba3094b60642/1439911633652-O6NXHY55CDCPCS0UZ9A2/IMG_3758A.jpg?format=1500w",
+  "ga-oakey-mountain": "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg",
+  "ga-tray-mountain": "https://cdn.shortpixel.ai/spai/q_lossy%2Bw_956%2Bto_auto%2Bret_img/paigemindsthegap.com/wp-content/uploads/2016/11/Tray-Mountain-Road-Trail.jpg",
   "ga-currahee-mountain": "https://cdn.shortpixel.ai/spai/q_lossy%2Bw_956%2Bto_auto%2Bret_img/paigemindsthegap.com/wp-content/uploads/2016/11/Tray-Mountain-Road-Trail.jpg",
   "ga-sarahs-creek": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
-  "ga-tray-mountain": "https://cdn.shortpixel.ai/spai/q_lossy%2Bw_956%2Bto_auto%2Bret_img/paigemindsthegap.com/wp-content/uploads/2016/11/Tray-Mountain-Road-Trail.jpg",
-  "ga-cooper-gap-double": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "ga-locust-stake": "https://www.bronco6g.com/forum/attachments/pxl_20220424_190150961-jpg.312988/",
   "ga-davenport-mountain": "https://images.squarespace-cdn.com/content/v1/5306da2de4b0ba3094b60642/1439911633652-O6NXHY55CDCPCS0UZ9A2/IMG_3758A.jpg?format=1500w",
   "ga-rocky-flats": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
@@ -6136,27 +6131,22 @@ const SPECIFIC_TRAIL_MAP = {
   "ga-traverse-expedition": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "tn-windrock-16": "https://images-prod.trailsoffroad.com/trails/7804/trail_reviews/1704306905_Trail16-Waypoint16.2-800.jpg",
   "tn-coalmont-ohv": "https://images.squarespace-cdn.com/content/v1/60a7bd44b247c6578ba36cc4/1715802489853-66J29FS6HME2WO3FAMY9/image-asset.jpeg",
-  "tn-adventure-offroad-park": "https://images-prod.trailsoffroad.com/trails/7804/trail_reviews/1704306905_Trail16-Waypoint16.2-800.jpg",
+  "tn-adventure-offroad-park": "https://www.adventureoffroadpark.com/images/trail-riding.jpg",
+  "tn-north-cumberland-ohv": "https://www.tn.gov/content/dam/tn/twra/images/north-cumberland-ohv.jpg",
   "tn-prentice-cooper": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
   "tn-royal-blue": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
-  "nc-uwharrie-dickey-bell": "https://images-prod.trailsoffroad.com/trails/2188/trail_reviews/1650213174815_resized_20220409_143051.jpg",
+  "nc-uwharrie-dickey-bell": "https://www.fs.usda.gov/sites/nfs/files/styles/large/public/2024-05/uwharrie-ohv.jpg",
+  "nc-brown-mountain": "https://www.fs.usda.gov/sites/nfs/files/styles/large/public/2021-09/brown-mountain-ohv.jpg",
   "nc-hurricane-creek-4wd": "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg",
-  "nc-brown-mountain": "https://photos.production.onxmaps.com/production-onxmaps/image/upload/c_limit%2Cf_auto%2Ch_1500%2Cq_auto%2Cw_1500/v1/public/8ac79af8-17f1-472b-8476-941611bcf47b.jpg",
-  "va-potts-mountain-jeep-trail": "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg"
+  "va-potts-mountain-jeep-trail": "https://images-prod.trailsoffroad.com/scout_routes/2335/hero_file_name/1691523116227_93f_-_connector-800.jpg",
+  "wv-hatfield-mccoy-bearwallow": "https://images-prod.trailsoffroad.com/trails/7804/trail_reviews/1704306905_Trail16-Waypoint16.2-800.jpg"
 };
 
 function getTrailCardPhoto(trail, index) {
   if (trail.id && SPECIFIC_TRAIL_MAP[trail.id]) return SPECIFIC_TRAIL_MAP[trail.id];
-  // Water Crossing / River Ford specific selection
-  const isWater = trail.hasWaterFeature || (trail.tags && trail.tags.some(t => t.toLowerCase().includes('water') || t.toLowerCase().includes('creek') || t.toLowerCase().includes('ford') || t.toLowerCase().includes('river')));
-  if (isWater) {
-    return (index % 2 === 0) ? 
-      "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" : 
-      "https://images.squarespace-cdn.com/content/v1/5eea4277008d2e7ccdc7b656/1592487956944-TQPN262WD167LOA1FR5K/image-asset.jpeg";
-  }
-  // Deterministic unique rotation across authentic Jeep & North GA woods photos only
-  const i = (index || 0) % AUTHENTIC_JEEP_WOODS_PHOTOS.length;
-  return AUTHENTIC_JEEP_WOODS_PHOTOS[i];
+  // Deterministic rotation strictly across the 15 authentic Jeep & North GA woods photos only
+  const i = Math.abs((trail.id || trail.name).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) + (index || 0)) % AUTHENTIC_DEMO_JEEP_PHOTOS.length;
+  return AUTHENTIC_DEMO_JEEP_PHOTOS[i];
 }
 
 function renderTrails() {
