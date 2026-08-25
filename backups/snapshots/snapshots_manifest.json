@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.11.0_2026-08-24_22-47-28",
+    "version": "v2.11.0",
+    "timestamp": "2026-08-25T02:47:31.200Z",
+    "displayDate": "8/24/2026, 10:47:31 PM",
+    "description": "Fix image accuracy, collapse gear into accordion, fix Official Details modal, and move trail sections to modal with card warning",
+    "zipFile": "v2.11.0_2026-08-24_22-47-28.zip",
+    "sizeMb": "28.92 MB",
+    "gitHash": "990f8d9"
+  },
+  {
     "id": "v2.10.0_2026-08-24_22-40-22",
     "version": "v2.10.0",
     "timestamp": "2026-08-25T02:40:26.027Z",
