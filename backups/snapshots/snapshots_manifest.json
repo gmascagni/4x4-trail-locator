@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.30.0_2026-08-25_00-36-03",
+    "version": "v2.30.0",
+    "timestamp": "2026-08-25T04:36:08.044Z",
+    "displayDate": "8/25/2026, 12:36:08 AM",
+    "description": "Replace broken iframe embed with interactive Overlanding Video Hub and tailored YouTube 1-click query cards",
+    "zipFile": "v2.30.0_2026-08-25_00-36-03.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "4b5f1ee"
+  },
+  {
     "id": "v2.29.0_2026-08-25_00-06-39",
     "version": "v2.29.0",
     "timestamp": "2026-08-25T04:06:43.517Z",
