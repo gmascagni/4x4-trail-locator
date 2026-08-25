@@ -537,10 +537,10 @@ header {
 }
 
 #mapContainer {
-  height: 480px;
+  height: 330px;
   width: 100%;
-  touch-action: pan-x pan-y !important;
   cursor: grab;
+  transition: height 0.3s ease;
 }
 
 #mapContainer:active {
@@ -1494,6 +1494,19 @@ footer {
   .hero h1 { font-size: 26px; }
   .trail-grid { grid-template-columns: 1fr; }
   .nav-links { display: none; }
+  #mapContainer {
+    height: 230px !important;
+    touch-action: pan-y !important;
+  }
+  .map-legend-bar {
+    padding: 8px 12px;
+    font-size: 10px;
+  }
+}
+@media(max-width: 480px) {
+  #mapContainer {
+    height: 200px !important;
+  }
 }
 </style>
 </head>
@@ -1617,8 +1630,11 @@ footer {
       <div class="map-title"><i class="fa-solid fa-map-location-dot" style="color: var(--amber-orange);"></i> Interactive 4x4 Expedition Map &bull; <span id="mapRadiusIndicator" style="font-size:12px; opacity:0.9;">All Available Routes</span></div>
       <div class="map-controls-group">
         <button class="map-layer-btn active" id="btnLayerTopo" onclick="switchMapLayer('topo')"><i class="fa-solid fa-mountain"></i> Topo 3D</button>
-        <button class="map-layer-btn" id="btnLayerSat" onclick="switchMapLayer('satellite')"><i class="fa-solid fa-satellite"></i> Satellite</button>
+        <button class="map-layer-btn" id="btnLayerSat" onclick="switchMapLayer('satellite')"><i class="fa-solid fa-satellite"></i> Sat</button>
         <button class="map-layer-btn" id="btnLayerRoads" onclick="switchMapLayer('roads')"><i class="fa-solid fa-road"></i> Roads</button>
+        <button class="map-layer-btn" id="btnToggleMapSize" onclick="toggleMapHeightExpand()" title="Toggle Compact / Expanded Map View" style="background:#0f172a; color:#fff; border-color:#334155;">
+          <i class="fa-solid fa-up-right-and-down-left-from-center" id="iconMapExpand"></i> <span id="textMapExpand">Expand</span>
+        </button>
       </div>
     </div>
     <div id="mapContainer"></div>
@@ -5652,7 +5668,7 @@ function initMap() {
     zoomControl: true,
     dragging: true,
     touchZoom: true,
-    scrollWheelZoom: true,
+    scrollWheelZoom: false,
     doubleClickZoom: true,
     boxZoom: true,
     keyboard: true,
@@ -5674,6 +5690,36 @@ function initMap() {
 }
 
 // SWITCH MAP LAYER
+
+// TOGGLE MAP COMPACT / EXPANDED HEIGHT
+let isMapExpanded = false;
+function toggleMapHeightExpand() {
+  const container = document.getElementById('mapContainer');
+  const btn = document.getElementById('btnToggleMapSize');
+  const icon = document.getElementById('iconMapExpand');
+  const text = document.getElementById('textMapExpand');
+  if (!container) return;
+  
+  isMapExpanded = !isMapExpanded;
+  if (isMapExpanded) {
+    container.style.setProperty('height', '520px', 'important');
+    if (btn) btn.style.background = 'var(--amber-orange)';
+    if (icon) icon.className = 'fa-solid fa-down-left-and-up-right-to-center';
+    if (text) text.innerText = 'Compact';
+  } else {
+    container.style.removeProperty('height');
+    if (btn) btn.style.background = '#0f172a';
+    if (icon) icon.className = 'fa-solid fa-up-right-and-down-left-from-center';
+    if (text) text.innerText = 'Expand';
+  }
+  
+  if (map) {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+  }
+}
+
 function switchMapLayer(type) {
   if (!map) return;
   if (currentTileLayer) map.removeLayer(currentTileLayer);

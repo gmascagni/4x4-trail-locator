@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.28.0_2026-08-24_23-57-38",
+    "version": "v2.28.0",
+    "timestamp": "2026-08-25T03:57:42.643Z",
+    "displayDate": "8/24/2026, 11:57:42 PM",
+    "description": "Shrink map height on mobile and desktop, fix touch scrolling interference, and add expand/compact toggle",
+    "zipFile": "v2.28.0_2026-08-24_23-57-38.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "c7830c4"
+  },
+  {
     "id": "v2.27.0_2026-08-24_23-53-49",
     "version": "v2.27.0",
     "timestamp": "2026-08-25T03:53:53.042Z",
