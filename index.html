@@ -6497,6 +6497,7 @@ function renderTrails() {
 
   renderMapMarkers(filtered);
   renderShops();
+  renderVideoLibrary();
 }
 
 // RENDER MAP MARKERS WITH HOVER TOOLTIP BUBBLE HELP & RICH POPUPS
@@ -6974,95 +6975,149 @@ function toggleVideoLibrarySection() {
   }
 }
 
-// VIDEO LIBRARY RENDER
+// EXPEDITION & 3D RELIEF VIDEO DATABASE (DYNAMICALLY FILTERED BY GPS & RADIUS)
+const EXPEDITION_VIDEOS = [
+  {
+    id: "vid-tray-mountain",
+    title: "Tray Mountain Road: Helen to Hiawassee 4x4",
+    subtitle: "North Georgia Mountains • Blue Ridge Gap Overlooks",
+    region: "Helen & Hiawassee, North Georgia",
+    lat: 34.7262,
+    lng: -83.7896,
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
+    modalTitle: "Tray Mountain & North Georgia 4x4 Trail Guide",
+    img: "./assets/tray_mountain_3d_relief.jpg",
+    elevationTag: "3D Elevation Relief: 4,430 ft",
+    elevationColor: "#38bdf8",
+    isOverland: false
+  },
+  {
+    id: "vid-windrock-16",
+    title: "Windrock Park: Trail 16 (Jeep Badge of Honor)",
+    subtitle: "Oliver Springs TN • Wet Limestone Ledge Crawling",
+    region: "Oliver Springs, Tennessee",
+    lat: 36.0244,
+    lng: -84.3502,
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
+    modalTitle: "Windrock Park Trail 16 Hardcore Crawl",
+    img: "./assets/windrock_3d_relief.jpg",
+    elevationTag: "3D Ridge Relief: 3,534 ft",
+    elevationColor: "#fbbf24",
+    isOverland: false
+  },
+  {
+    id: "vid-ga-traverse",
+    title: "The Georgia Traverse: 390-Mile Mountain Overland",
+    subtitle: "River Fords & Ridge Top Forest Service Tracks",
+    region: "Trans-Georgia Appalachian Divide",
+    lat: 34.8500,
+    lng: -84.1000,
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+    modalTitle: "The Georgia Traverse 390-Mile Overland Expedition",
+    img: "./assets/ga_traverse_3d_relief.jpg",
+    elevationTag: "3D Trans-State Ridge: 390 Miles",
+    elevationColor: "#22c55e",
+    isOverland: true
+  },
+  {
+    id: "vid-beasley-knob",
+    title: "Beasley Knob OHV: 8-Route Technical System",
+    subtitle: "Blairsville GA • Red Clay & Rock Step Climbs",
+    region: "Blairsville & Chattahoochee NF, GA",
+    lat: 34.8964,
+    lng: -83.9077,
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
+    modalTitle: "Beasley Knob OHV Technical Red Clay Crawl",
+    img: "./assets/beasley_3d_relief.jpg",
+    elevationTag: "3D Peak Elevation: 3,248 ft",
+    elevationColor: "#ef4444",
+    isOverland: false
+  },
+  {
+    id: "vid-nimblewill-gap",
+    title: "Nimblewill Gap & High Shoals Forest Route",
+    subtitle: "Dahlonega GA • Mountain Streams & Ridge Canopy",
+    region: "Dahlonega & Amicalola Basin, GA",
+    lat: 34.5892,
+    lng: -84.1753,
+    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
+    modalTitle: "Nimblewill Gap & High Shoals Scenic Forest Route",
+    img: "./assets/nimblewill_3d_relief.jpg",
+    elevationTag: "3D Creek Valley: 2,150 ft",
+    elevationColor: "#38bdf8",
+    isOverland: false
+  },
+  {
+    id: "vid-moab-slickrock",
+    title: "Moab Slickrock: Hell's Revenge & Fins",
+    subtitle: "Moab UT • Red Sandstone Dome Climbing",
+    region: "Sand Flats Recreation Area, Moab UT",
+    lat: 38.5733,
+    lng: -109.5498,
+    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
+    modalTitle: "Moab Slickrock & Hell's Revenge 3D Experience",
+    img: "./assets/moab_3d_relief.jpg",
+    elevationTag: "3D Sandstone Domes: 4,700 ft",
+    elevationColor: "#f97316",
+    isOverland: false
+  }
+];
+
+// DYNAMIC VIDEO LIBRARY RENDER (STRICTLY GPS & RADIUS FILTERED)
 function renderVideoLibrary() {
   const container = document.getElementById('videoGridContainer');
+  const countBadge = document.getElementById('videoCountBadge');
   if (!container) return;
-  container.innerHTML = `
-    <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Tray Mountain & North Georgia 4x4 Trail Guide')">
-        <img src="./assets/tray_mountain_3d_relief.jpg" class="video-thumb" alt="Tray Mountain 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
-        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#38bdf8; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(56,189,248,0.4);">
-          <i class="fa-solid fa-mountain"></i> 3D Elevation Relief: 4,430 ft
-        </div>
-      </div>
-      <div class="video-info">
-        <div class="video-title">Tray Mountain Road: Helen to Hiawassee 4x4</div>
-        <div style="font-size:11px; color:#64748b;">North Georgia Mountains • Blue Ridge Gap Overlooks</div>
-      </div>
-    </div>
 
-    <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Windrock Park Trail 16 Hardcore Crawl')">
-        <img src="./assets/windrock_3d_relief.jpg" class="video-thumb" alt="Windrock Park 3D Topo Ridge Map" onerror="this.src='./assets/windrock_trail_map.jpg'">
-        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#fbbf24; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(251,191,36,0.4);">
-          <i class="fa-solid fa-mountain"></i> 3D Ridge Relief: 3,534 ft
-        </div>
-      </div>
-      <div class="video-info">
-        <div class="video-title">Windrock Park: Trail 16 (Jeep Badge of Honor)</div>
-        <div style="font-size:11px; color:#64748b;">Oliver Springs TN • Wet Limestone Ledge Crawling</div>
-      </div>
-    </div>
+  const currentLat = userLat || 34.7000;
+  const currentLng = userLng || -84.0000;
 
-    <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'The Georgia Traverse 390-Mile Overland')">
-        <img src="./assets/ga_traverse_3d_relief.jpg" class="video-thumb" alt="Georgia Traverse 390-Mile Ridge 3D Topo Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
-        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#22c55e; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(34,197,94,0.4);">
-          <i class="fa-solid fa-route"></i> 3D Trans-State Ridge: 390 Miles
-        </div>
-      </div>
-      <div class="video-info">
-        <div class="video-title">The Georgia Traverse: 390-Mile Mountain Overland</div>
-        <div style="font-size:11px; color:#64748b;">River Fords & Ridge Top Forest Service Tracks</div>
-      </div>
-    </div>
+  // Calculate distance for all videos from user's active GPS position
+  const videosWithDist = EXPEDITION_VIDEOS.map(v => {
+    const d = calculateDistanceInMiles(currentLat, currentLng, v.lat, v.lng);
+    return {
+      ...v,
+      driveMiles: d.miles,
+      driveHours: d.hours
+    };
+  });
 
-    <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Beasley Knob OHV Technical Red Clay Crawl')">
-        <img src="./assets/beasley_3d_relief.jpg" class="video-thumb" alt="Beasley Knob 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
-        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#ef4444; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(239,68,68,0.4);">
-          <i class="fa-solid fa-mountain"></i> 3D Peak Elevation: 3,248 ft
-        </div>
-      </div>
-      <div class="video-info">
-        <div class="video-title">Beasley Knob OHV: 8-Route Technical System</div>
-        <div style="font-size:11px; color:#64748b;">Blairsville GA • Red Clay & Rock Step Climbs</div>
-      </div>
-    </div>
+  // Sort by closest distance to user's GPS
+  videosWithDist.sort((a, b) => a.driveMiles - b.driveMiles);
 
-    <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'Nimblewill Gap & High Shoals Scenic Forest Route')">
-        <img src="./assets/nimblewill_3d_relief.jpg" class="video-thumb" alt="Nimblewill Gap 3D Topo Relief Map" onerror="this.src='./assets/north_ga_trail_map.jpg'">
-        <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#38bdf8; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(56,189,248,0.4);">
-          <i class="fa-solid fa-water"></i> 3D Creek Valley: 2,150 ft
-        </div>
-      </div>
-      <div class="video-info">
-        <div class="video-title">Nimblewill Gap & High Shoals Forest Route</div>
-        <div style="font-size:11px; color:#64748b;">Dahlonega GA • Mountain Streams & Ridge Canopy</div>
-      </div>
-    </div>
+  // Filter strictly by activeRadiusMiles
+  let displayVideos = videosWithDist.filter(v => v.driveMiles <= activeRadiusMiles);
 
+  // If none within tight radius, show closest regional 3
+  const isFallback = (displayVideos.length === 0);
+  if (isFallback) {
+    displayVideos = videosWithDist.slice(0, 3);
+  }
+
+  if (countBadge) {
+    countBadge.innerText = isFallback ? 
+      ('Nearest Regional Expeditions (' + displayVideos.length + ' Available)') : 
+      (displayVideos.length + ' Expeditions within ' + (activeRadiusMiles < 9000 ? activeRadiusMiles + ' mi' : 'All Distances'));
+  }
+
+  container.innerHTML = displayVideos.map(v => `
     <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Moab Slickrock & Hell's Revenge 3D Experience')">
-        <img src="./assets/moab_3d_relief.jpg" class="video-thumb" alt="Moab 3D Slickrock Relief Map" onerror="this.src='./assets/western_topo_map.jpg'">
+      <div class="video-thumb-wrap" onclick="openVideoModal('${v.videoUrl}', '${v.modalTitle.replace(/'/g, "\\'")}')">
+        <img src="${v.img}" class="video-thumb" alt="${v.title}" onerror="this.src='./assets/north_ga_trail_map.jpg'">
         <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
-        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.85); color:#f97316; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(249,115,22,0.4);">
-          <i class="fa-solid fa-cube"></i> 3D Sandstone Domes: 4,700 ft
+        <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.88); color:${v.elevationColor}; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid ${v.elevationColor}44; backdrop-filter:blur(4px);">
+          <i class="fa-solid fa-mountain"></i> ${v.elevationTag}
+        </div>
+        <div style="position:absolute; top:8px; right:8px; background:rgba(15,23,42,0.85); color:#f8fafc; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(255,255,255,0.2); backdrop-filter:blur(4px);">
+          📍 ${v.driveMiles} mi away
         </div>
       </div>
       <div class="video-info">
-        <div class="video-title">Moab Slickrock: Hell's Revenge & Fins</div>
-        <div style="font-size:11px; color:#64748b;">Moab UT • Red Sandstone Dome Climbing</div>
+        <div class="video-title">${v.title}</div>
+        <div style="font-size:11px; color:#64748b;">${v.subtitle}</div>
       </div>
     </div>
-  `;
+  `).join('');
 }
 
 // CURATED TRAIL VIDEO MODAL CONTROLLER

@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.25.0_2026-08-24_23-49-04",
+    "version": "v2.25.0",
+    "timestamp": "2026-08-25T03:49:07.855Z",
+    "displayDate": "8/24/2026, 11:49:07 PM",
+    "description": "Make Video Library & Overlanding Expeditions dynamically filtered by GPS coordinates and radius",
+    "zipFile": "v2.25.0_2026-08-24_23-49-04.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "b331ff6"
+  },
+  {
     "id": "v2.24.0_2026-08-24_23-43-51",
     "version": "v2.24.0",
     "timestamp": "2026-08-25T03:43:54.911Z",
