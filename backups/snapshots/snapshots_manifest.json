@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.35.0_2026-08-25_10-49-27",
+    "version": "v2.35.0",
+    "timestamp": "2026-08-25T14:49:31.660Z",
+    "displayDate": "8/25/2026, 10:49:31 AM",
+    "description": "Overhaul 50-state search filtering, dynamic state map perimeter outline, and real-time GPS distance on all cards",
+    "zipFile": "v2.35.0_2026-08-25_10-49-27.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "c146890"
+  },
+  {
     "id": "v2.34.0_2026-08-25_00-53-15",
     "version": "v2.34.0",
     "timestamp": "2026-08-25T04:53:19.095Z",
