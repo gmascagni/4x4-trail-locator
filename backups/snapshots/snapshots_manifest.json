@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.23.0_2026-08-24_23-39-55",
+    "version": "v2.23.0",
+    "timestamp": "2026-08-25T03:39:58.799Z",
+    "displayDate": "8/24/2026, 11:39:58 PM",
+    "description": "Position search bar directly under Locate Trails Near Me with prominent click callouts",
+    "zipFile": "v2.23.0_2026-08-24_23-39-55.zip",
+    "sizeMb": "28.93 MB",
+    "gitHash": "240eba9"
+  },
+  {
     "id": "v2.22.0_2026-08-24_23-38-10",
     "version": "v2.22.0",
     "timestamp": "2026-08-25T03:38:13.342Z",

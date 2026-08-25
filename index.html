@@ -1531,18 +1531,41 @@ footer {
     <p>Built for the weekend warrior and seasoned overlander seeking their next dirt escape. Instantly discover nearby scenic mountain gaps, river crossings, waterfall trails, rock crawling passes, and remote dispersed camping within driving distance of your garage.</p>
     
     <div class="search-box-card">
-      <!-- BIG PRIMARY LOCATE BUTTON -->
-      <div class="search-primary-action">
-        <button class="btn-gps-main" id="btnFindNearMe" onclick="getUserGPSLocation()">
-          <span id="btnGpsMainText" style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-            <img src="./assets/favicon.svg" style="width:22px; height:22px; display:inline-block; vertical-align:middle; border-radius:4px;" alt="Jeep Grille"> LOCATE TRAILS NEAR ME
+      <!-- 1. BIG PRIMARY LOCATE BUTTON WITH UNMISTAKABLE CLICK CALLOUT -->
+      <div class="search-primary-action" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <button class="btn-gps-main" id="btnFindNearMe" onclick="getUserGPSLocation()" title="Click to auto-locate trails nearest your GPS coordinates">
+          <span id="btnGpsMainText" style="display:inline-flex; align-items:center; justify-content:center; gap:10px;">
+            <i class="fa-solid fa-location-crosshairs fa-beat" style="font-size:22px; color:#fff;"></i>
+            <span>LOCATE TRAILS NEAR ME</span>
+            <span style="background:rgba(255,255,255,0.22); font-size:11px; padding:3px 10px; border-radius:20px; text-transform:none; font-weight:800; letter-spacing:normal; border:1px solid rgba(255,255,255,0.35);">
+              👉 CLICK TO SCAN GPS
+            </span>
           </span>
         </button>
+        <div style="font-size:12px; color:#64748b; font-weight:600; text-align:center;">
+          <i class="fa-solid fa-circle-info" style="color:var(--amber-orange);"></i> <strong>Click the button above</strong> to automatically rank trails and 4x4 shops by distance from your current GPS position.
+        </div>
       </div>
 
-      <!-- FILTER CONTROLS (RADIUS 30/60/90, DIFFICULTY, OVERLANDING) -->
-      <div class="filters-container">
-        <!-- ROW 1: EXPEDITION CATEGORY & SEARCH -->
+      <!-- 2. SEARCH AREA DIRECTLY UNDER LOCATE TRAILS NEAR ME -->
+      <div style="margin: 16px 0 16px 0; width: 100%;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:4px;">
+          <span style="font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--amber-orange);"></i> Or Search Trails Manually Across All 50 States:
+          </span>
+          <span style="font-size:11px; color:#64748b;">Type & press <strong>Enter</strong> or click Search</span>
+        </div>
+        <div style="display:flex; background:#f8fafc; border:2px solid #cbd5e1; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:border-color 0.2s;">
+          <input type="text" id="searchInput" placeholder="Search by trail name, state, city, or feature (e.g. Colorado, Moab, Georgia, Water crossings, Rubicon...)" oninput="onSearchInput()" onkeydown="if(event.key === 'Enter') onSearchIconClick()" style="flex:1; border:none; padding:13px 16px; font-size:14px; outline:none; background:transparent; font-family:inherit; color:#1e293b;">
+          <button type="button" onclick="onSearchIconClick()" style="background:linear-gradient(135deg, var(--amber-orange), #c2410c); color:#fff; border:none; padding:0 24px; font-weight:800; font-size:13.5px; cursor:pointer; display:flex; align-items:center; gap:7px; transition:opacity 0.2s;">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. FILTER CONTROLS (CATEGORY & RADIUS) -->
+      <div class="filters-container" style="padding-top:12px; border-top:1px solid #e2e8f0;">
+        <!-- ROW 1: EXPEDITION CATEGORY -->
         <div class="filter-row-item">
           <div class="filter-group">
             <span class="filter-label"><i class="fa-solid fa-compass" style="color:var(--amber-orange);"></i> Category:</span>
@@ -1553,14 +1576,6 @@ footer {
               <button class="pill-btn active-green" id="btnCatDay" onclick="selectRouteCategory('day', this)"><i class="fa-solid fa-mountain"></i> Technical Day Trails</button>
               <button class="pill-btn" id="btnCatWater" onclick="selectRouteCategory('water', this)"><i class="fa-solid fa-water" style="color:#38bdf8;"></i> Water Features & Falls</button>
             </div>
-          </div>
-
-          <!-- SEARCH INPUT -->
-          <div class="search-input-wrap">
-            <button class="search-icon-btn" onclick="onSearchIconClick()" title="Execute Trail Search">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-            <input type="text" id="searchInput" placeholder="Search any US State (Colorado, Utah, California, Texas, North Carolina, Georgia, Moab...)" oninput="onSearchInput()" onkeydown="if(event.key === 'Enter') onSearchIconClick()">
           </div>
         </div>
 
@@ -1578,7 +1593,7 @@ footer {
         </div>
       </div>
 
-      <!-- DIFFICULTY SECTION PLACED UNDER THE DOTTED LINE -->
+      <!-- 4. DIFFICULTY SECTION PLACED UNDER THE DOTTED LINE -->
       <div style="margin-top: 14px; padding-top: 14px; border-top: 1.5px dashed #cbd5e1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;">
         <span class="filter-label" style="margin-bottom:0; font-size:12px; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-gauge-high" style="color:var(--amber-orange);"></i> Difficulty:</span>
         <div class="pill-group" style="margin-bottom:0;">
