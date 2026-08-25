@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.18.0_2026-08-24_23-14-12",
+    "version": "v2.18.0",
+    "timestamp": "2026-08-25T03:14:15.634Z",
+    "displayDate": "8/24/2026, 11:14:15 PM",
+    "description": "Integrate authentic high-res trail photography and rich card image headers from reference demo",
+    "zipFile": "v2.18.0_2026-08-24_23-14-12.zip",
+    "sizeMb": "28.93 MB",
+    "gitHash": "fe7f735"
+  },
+  {
     "id": "v2.17.0_2026-08-24_23-11-26",
     "version": "v2.17.0",
     "timestamp": "2026-08-25T03:11:30.273Z",
