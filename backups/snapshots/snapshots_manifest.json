@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.46.0_2026-08-25_13-53-05",
+    "version": "v2.46.0",
+    "timestamp": "2026-08-25T17:53:08.998Z",
+    "displayDate": "8/25/2026, 1:53:08 PM",
+    "description": "Comprehensive audit & fix: remove trail duplicates, curate 100% authentic Jeep 4x4 trail photos, fix NOAA location parsing",
+    "zipFile": "v2.46.0_2026-08-25_13-53-05.zip",
+    "sizeMb": "30.45 MB",
+    "gitHash": "1df5f17"
+  },
+  {
     "id": "v2.45.0_2026-08-25_13-24-08",
     "version": "v2.45.0",
     "timestamp": "2026-08-25T17:24:12.064Z",
