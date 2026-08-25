@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.40.0_2026-08-25_11-41-34",
+    "version": "v2.40.0",
+    "timestamp": "2026-08-25T15:41:38.270Z",
+    "displayDate": "8/25/2026, 11:41:38 AM",
+    "description": "Overhaul complete 50-state repository with 140+ verified USFS, BLM, state forest, OHV park, and overland 4x4 trails",
+    "zipFile": "v2.40.0_2026-08-25_11-41-34.zip",
+    "sizeMb": "30.44 MB",
+    "gitHash": "fba16ae"
+  },
+  {
     "id": "v2.39.0_2026-08-25_11-38-10",
     "version": "v2.39.0",
     "timestamp": "2026-08-25T15:38:14.457Z",
