@@ -2338,17 +2338,34 @@ footer {
 
 <!-- VIDEO MODAL -->
 <div class="modal-overlay" id="videoModal" onclick="closeModalOnBackdrop(event)">
-  <div class="modal-content" style="max-width: 840px;">
+  <div class="modal-content" style="max-width: 860px;">
     <button class="modal-close-btn" onclick="closeVideoModal()"><i class="fa-solid fa-xmark"></i></button>
-    <div style="padding: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-        <h3 id="videoModalTitle" style="font-size: 18px; margin: 0; color: var(--forest-dark);">Video Tutorial</h3>
-        <a id="videoDirectSearchLink" href="#" target="_blank" style="font-size: 12px; font-weight: 800; color: #ea580c; text-decoration: none; display: flex; align-items: center; gap: 4px; background: #fff7ed; padding: 4px 10px; border-radius: 6px; border: 1px solid #ffedd5;">
-          <i class="fa-brands fa-youtube" style="color:#ef4444;"></i> Search More on YouTube ↗
-        </a>
+    <div style="padding: 22px;">
+      <div style="margin-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <span id="videoModalRegion" style="font-size:11px; font-weight:800; color:#ea580c; text-transform:uppercase; letter-spacing:0.5px;">Trail Video & Overlanding Hub</span>
+            <h3 id="videoModalTitle" style="font-size: 20px; font-weight:900; margin: 3px 0 0 0; color: var(--forest-dark);">Tray Mountain Road 4x4</h3>
+          </div>
+          <a id="videoDirectSearchLink" href="#" target="_blank" rel="noopener noreferrer" style="font-size: 12.5px; font-weight: 800; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #ef4444, #b91c1c); padding: 8px 14px; border-radius: 8px; box-shadow:0 2px 8px rgba(239,68,68,0.35);">
+            <i class="fa-brands fa-youtube"></i> Open Full YouTube Results ↗
+          </a>
+        </div>
       </div>
-      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000;">
+
+      <!-- EMBEDDED REAL TRAIL WALKTHROUGH PLAYER -->
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
         <iframe id="videoIframe" src="" style="position: absolute; top:0; left:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <!-- DYNAMIC TAILORED SEARCH TOPICS FOR THIS TRAIL -->
+      <div style="margin-top: 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
+        <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-filter" style="color:var(--amber-orange);"></i> Specific Overlanding & Video Query Filters for this Route:
+        </div>
+        <div id="videoQueryFilters" style="display:flex; flex-wrap:wrap; gap:6px;">
+          <!-- Injected dynamically -->
+        </div>
       </div>
     </div>
   </div>
@@ -6975,7 +6992,7 @@ function toggleVideoLibrarySection() {
   }
 }
 
-// EXPEDITION & 3D RELIEF VIDEO DATABASE (DYNAMICALLY FILTERED BY GPS & RADIUS)
+// EXPEDITION & 3D RELIEF VIDEO DATABASE (DYNAMICALLY FILTERED BY GPS & EXACT YOUTUBE SEARCH ALGORITHM)
 const EXPEDITION_VIDEOS = [
   {
     id: "vid-tray-mountain",
@@ -6984,12 +7001,12 @@ const EXPEDITION_VIDEOS = [
     region: "Helen & Hiawassee, North Georgia",
     lat: 34.7262,
     lng: -83.7896,
-    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
-    modalTitle: "Tray Mountain & North Georgia 4x4 Trail Guide",
+    searchQuery: "Tray Mountain Road Georgia 4x4 overlanding trail ride walkthrough",
+    modalTitle: "Tray Mountain Road: Helen to Hiawassee 4x4 Overlanding",
     img: "./assets/tray_mountain_3d_relief.jpg",
     elevationTag: "3D Elevation Relief: 4,430 ft",
     elevationColor: "#38bdf8",
-    isOverland: false
+    isOverland: true
   },
   {
     id: "vid-windrock-16",
@@ -6998,8 +7015,8 @@ const EXPEDITION_VIDEOS = [
     region: "Oliver Springs, Tennessee",
     lat: 36.0244,
     lng: -84.3502,
-    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
-    modalTitle: "Windrock Park Trail 16 Hardcore Crawl",
+    searchQuery: "Windrock Park Trail 16 Jeep Badge of Honor rock crawl",
+    modalTitle: "Windrock Park: Trail 16 Rock Crawl & Badge of Honor",
     img: "./assets/windrock_3d_relief.jpg",
     elevationTag: "3D Ridge Relief: 3,534 ft",
     elevationColor: "#fbbf24",
@@ -7012,8 +7029,8 @@ const EXPEDITION_VIDEOS = [
     region: "Trans-Georgia Appalachian Divide",
     lat: 34.8500,
     lng: -84.1000,
-    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
-    modalTitle: "The Georgia Traverse 390-Mile Overland Expedition",
+    searchQuery: "The Georgia Traverse 390 mile overlanding expedition documentary",
+    modalTitle: "The Georgia Traverse: 390-Mile Mountain Expedition",
     img: "./assets/ga_traverse_3d_relief.jpg",
     elevationTag: "3D Trans-State Ridge: 390 Miles",
     elevationColor: "#22c55e",
@@ -7026,8 +7043,8 @@ const EXPEDITION_VIDEOS = [
     region: "Blairsville & Chattahoochee NF, GA",
     lat: 34.8964,
     lng: -83.9077,
-    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
-    modalTitle: "Beasley Knob OHV Technical Red Clay Crawl",
+    searchQuery: "Beasley Knob OHV Trail 93A 93B Blairsville GA 4x4 trail ride",
+    modalTitle: "Beasley Knob OHV: 8-Route Technical System",
     img: "./assets/beasley_3d_relief.jpg",
     elevationTag: "3D Peak Elevation: 3,248 ft",
     elevationColor: "#ef4444",
@@ -7040,12 +7057,12 @@ const EXPEDITION_VIDEOS = [
     region: "Dahlonega & Amicalola Basin, GA",
     lat: 34.5892,
     lng: -84.1753,
-    videoUrl: "https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ",
-    modalTitle: "Nimblewill Gap & High Shoals Scenic Forest Route",
+    searchQuery: "Nimblewill Gap High Shoals road Dahlonega GA 4x4 overlanding",
+    modalTitle: "Nimblewill Gap & High Shoals Forest Route",
     img: "./assets/nimblewill_3d_relief.jpg",
     elevationTag: "3D Creek Valley: 2,150 ft",
     elevationColor: "#38bdf8",
-    isOverland: false
+    isOverland: true
   },
   {
     id: "vid-moab-slickrock",
@@ -7054,8 +7071,8 @@ const EXPEDITION_VIDEOS = [
     region: "Sand Flats Recreation Area, Moab UT",
     lat: 38.5733,
     lng: -109.5498,
-    videoUrl: "https://www.youtube-nocookie.com/embed/7pbSmOAqLeg",
-    modalTitle: "Moab Slickrock & Hell's Revenge 3D Experience",
+    searchQuery: "Moab Hells Revenge Fins and Things Jeep off road overlanding",
+    modalTitle: "Moab Slickrock: Hell's Revenge & Fins Overlanding",
     img: "./assets/moab_3d_relief.jpg",
     elevationTag: "3D Sandstone Domes: 4,700 ft",
     elevationColor: "#f97316",
@@ -7102,7 +7119,7 @@ function renderVideoLibrary() {
 
   container.innerHTML = displayVideos.map(v => `
     <div class="video-card">
-      <div class="video-thumb-wrap" onclick="openVideoModal('${v.videoUrl}', '${v.modalTitle.replace(/'/g, "\\'")}')">
+      <div class="video-thumb-wrap" onclick="openTrailSpecificVideoModal('${v.id}')">
         <img src="${v.img}" class="video-thumb" alt="${v.title}" onerror="this.src='./assets/north_ga_trail_map.jpg'">
         <div class="video-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
         <div style="position:absolute; bottom:8px; left:8px; background:rgba(15,23,42,0.88); color:${v.elevationColor}; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid ${v.elevationColor}44; backdrop-filter:blur(4px);">
@@ -7112,12 +7129,61 @@ function renderVideoLibrary() {
           📍 ${v.driveMiles} mi away
         </div>
       </div>
-      <div class="video-info">
+      <div class="video-info" style="cursor:pointer;" onclick="openTrailSpecificVideoModal('${v.id}')">
         <div class="video-title">${v.title}</div>
-        <div style="font-size:11px; color:#64748b;">${v.subtitle}</div>
+        <div style="font-size:11px; color:#64748b; margin-top:2px;">${v.subtitle}</div>
+        <div style="margin-top:6px; font-size:10.5px; color:#ea580c; font-weight:800; display:flex; align-items:center; gap:4px;">
+          <i class="fa-brands fa-youtube"></i> Click to search real-time videos ↗
+        </div>
       </div>
     </div>
   `).join('');
+}
+
+// OPEN DYNAMIC TRAIL-SPECIFIC VIDEO HUB & EXACT YOUTUBE SEARCH
+function openTrailSpecificVideoModal(videoId) {
+  const v = EXPEDITION_VIDEOS.find(item => item.id === videoId);
+  if (!v) return;
+
+  const modal = document.getElementById('videoModal');
+  const titleEl = document.getElementById('videoModalTitle');
+  const regionEl = document.getElementById('videoModalRegion');
+  const linkEl = document.getElementById('videoDirectSearchLink');
+  const filtersEl = document.getElementById('videoQueryFilters');
+  const iframe = document.getElementById('videoIframe');
+
+  if (titleEl) titleEl.innerText = v.title;
+  if (regionEl) regionEl.innerText = v.region;
+  
+  const baseQuery = encodeURIComponent(v.searchQuery);
+  const directYoutubeUrl = 'https://www.youtube.com/results?search_query=' + baseQuery;
+
+  if (linkEl) {
+    linkEl.href = directYoutubeUrl;
+  }
+
+  // Load YouTube Search Embed or Direct Fallback
+  if (iframe) {
+    // Open dynamic YouTube embed search query
+    iframe.src = 'https://www.youtube.com/embed?listType=search&list=' + baseQuery;
+  }
+
+  // Inject tailored overlanding sub-topic search chips
+  if (filtersEl) {
+    const topics = [
+      { label: '🎬 Full Overlanding Documentary', q: v.title + ' overland camping trip full video' },
+      { label: '🚙 Rig POV Trail Ride', q: v.title + ' driver POV trail ride 4k' },
+      { label: '🧰 Obstacle & Recovery Guide', q: v.title + ' rock crawling mud recovery guide' },
+      { label: '🏕️ Best Campsites & River Fords', q: v.title + ' dispersed camping water crossings' }
+    ];
+    filtersEl.innerHTML = topics.map(t => `
+      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(t.q)}" target="_blank" rel="noopener noreferrer" style="background:#ffffff; border:1px solid #cbd5e1; color:#1e293b; font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.color='#ea580c';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#1e293b';">
+        ${t.label} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i>
+      </a>
+    `).join('');
+  }
+
+  if (modal) modal.style.display = 'flex';
 }
 
 // CURATED TRAIL VIDEO MODAL CONTROLLER
