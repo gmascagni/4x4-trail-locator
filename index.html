@@ -5241,13 +5241,19 @@ function renderShops() {
   const locationLabel = document.getElementById('shopsLocationLabel');
   if (!container) return;
 
+  const currentLat = userLat || 34.7000;
+  const currentLng = userLng || -84.0000;
+
   if (locationLabel) {
-    locationLabel.innerText = isGpsActive ? 'Current Live GPS' : 'North Georgia Search Center';
+    locationLabel.innerText = isGpsActive ? `Live GPS (${currentLat.toFixed(2)}, ${currentLng.toFixed(2)})` : 'Default North Georgia Hub';
   }
 
-  // Calculate distance for each shop
+  // Dynamic Google Places Search Link for user's real-time coordinates
+  const googlePlacesUrl = `https://www.google.com/maps/search/4x4+off+road+repair+and+outfitters/@${currentLat},${currentLng},11z`;
+
+  // Calculate distance for all nationwide shops
   const shopsWithDist = SHOPS.map(shop => {
-    const d = calculateDistanceInMiles(userLat, userLng, shop.lat, shop.lng);
+    const d = calculateDistanceInMiles(currentLat, currentLng, shop.lat, shop.lng);
     return {
       ...shop,
       driveMiles: d.miles,
@@ -5258,26 +5264,47 @@ function renderShops() {
   // Sort by closest distance
   shopsWithDist.sort((a, b) => a.driveMiles - b.driveMiles);
 
-  // Filter by active radius if applicable
-  let displayShops = shopsWithDist;
-  if (activeRadiusMiles < 9000) {
-    displayShops = shopsWithDist.filter(s => s.driveMiles <= activeRadiusMiles);
-    if (displayShops.length === 0) {
-      displayShops = shopsWithDist.slice(0, 3);
-    }
+  // Filter within radius, or fallback to the nearest shops if traveling out of state
+  let displayShops = shopsWithDist.filter(s => s.driveMiles <= activeRadiusMiles);
+  
+  // If user is in a state with no hardcoded shop within radius, display closest 3 vetted hubs + live search card
+  const isOutOfStateBackcountry = (displayShops.length === 0);
+  if (isOutOfStateBackcountry) {
+    displayShops = shopsWithDist.slice(0, 3);
   }
 
   if (countBadge) {
-    countBadge.innerText = `${displayShops.length} 4x4 Shops Found (${activeRadiusMiles < 9000 ? activeRadiusMiles + ' mi radius' : 'All Proximities'})`;
+    countBadge.innerText = isOutOfStateBackcountry ? 
+      `Live GPS Active (${displayShops[0].driveMiles} mi to nearest regional hub)` : 
+      `${displayShops.length} 4x4 Shops Found (${activeRadiusMiles < 9000 ? activeRadiusMiles + ' mi radius' : 'All Distances'})`;
   }
 
-  container.innerHTML = displayShops.map(shop => `
+  // DYNAMIC GPS RADAR HEADER (Works anywhere in the USA)
+  const radarHeaderHtml = `
+    <div style="grid-column: 1/-1; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1.5px solid #ea580c; border-radius: 12px; padding: 16px 20px; margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+      <div>
+        <div style="font-size: 14px; font-weight: 900; color: #f8fafc; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-radar fa-spin" style="color: #ea580c;"></i> Universal GPS 4x4 Shop Radar (Active in All 50 States)
+        </div>
+        <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 3px;">
+          Target Coordinates: <strong style="color: #38bdf8;">${currentLat.toFixed(4)}, ${currentLng.toFixed(4)}</strong> &bull; Need emergency trail repair, welding, re-gearing, or winches anywhere you travel?
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="${googlePlacesUrl}" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, #ea580c, #c2410c); color: #fff; text-decoration: none; padding: 9px 16px; border-radius: 8px; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(234,88,12,0.4);">
+          <i class="fa-solid fa-location-crosshairs"></i> Find Local 4x4 Garages Near My GPS ↗
+        </a>
+      </div>
+    </div>
+  `;
+
+  const cardsHtml = displayShops.map(shop => `
     <div class="shop-card">
       <div class="shop-img-wrap">
-        <img src="${shop.img}" class="shop-img" alt="${shop.name}">
+        <img src="${shop.img}" class="shop-img" alt="${shop.name}" onerror="this.src='./assets/fortec_4x4.jpg'">
         <div class="shop-badge-verified"><i class="fa-solid fa-circle-check"></i> ${shop.badge}</div>
         <div style="position:absolute; top:8px; right:8px; background:rgba(15,23,42,0.85); color:#22c55e; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:4px; border:1px solid rgba(34,197,94,0.4); backdrop-filter:blur(4px);">
-          <i class="fa-solid fa-building-circle-check"></i> Verified Business Photo
+          <i class="fa-solid fa-building-circle-check"></i> Verified Business
         </div>
         <div class="shop-rating-tag"><i class="fa-solid fa-star" style="color:#f59e0b;"></i> ${shop.rating} (${shop.reviews})</div>
         <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.2);">
@@ -5318,6 +5345,8 @@ function renderShops() {
       </div>
     </div>
   `).join('');
+
+  container.innerHTML = radarHeaderHtml + cardsHtml;
 }
 
 // RENDER TRAILS & MAP MARKERS
