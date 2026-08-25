@@ -6953,6 +6953,21 @@ function getTrailCardPhoto(trail, index) {
   return AUTHENTIC_DEMO_JEEP_PHOTOS[i];
 }
 
+
+// HELPER: Check if trail has water crossings or river fords
+function hasTrailWaterCrossing(trail) {
+  if (trail.hasWaterCrossing || trail.hasWaterFeature) return true;
+  const name = (trail.name || '').toLowerCase();
+  const tags = (trail.tags || []).join(' ').toLowerCase();
+  const desc = (trail.description || '').toLowerCase();
+  const region = (trail.region || '').toLowerCase();
+
+  return name.includes('creek') || name.includes('river') || name.includes('cashes valley') ||
+         name.includes('charlie') || name.includes('traverse') || name.includes('hurricane') ||
+         tags.includes('water') || tags.includes('creek') || tags.includes('ford') || tags.includes('river') ||
+         desc.includes('water crossing') || desc.includes('creek crossing') || desc.includes('river ford');
+}
+
 function renderTrails() {
   const grid = document.getElementById('trailGridContainer');
   if (!grid) return;
@@ -7067,7 +7082,14 @@ function renderTrails() {
             </div>
           </div>
           <div class="trail-card-body">
-            <div class="trail-card-region">${trail.region}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; margin-bottom:2px;">
+              <div class="trail-card-region">${trail.region}</div>
+              ${hasTrailWaterCrossing(trail) ? `
+                <span style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:4px;">
+                  <i class="fa-solid fa-water"></i> Creek Fords On Route
+                </span>
+              ` : ''}
+            </div>
             <h3 class="trail-card-title">${trail.name}</h3>
             <div class="specs-grid-mini">
               <div><span>LENGTH</span><strong>${trail.lengthMiles} mi</strong></div>
@@ -7131,10 +7153,15 @@ function renderTrails() {
         <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 40%, rgba(5,13,9,0.85) 100%);"></div>
         
         <!-- Distance / GPS Proximity Pill (Top Left) -->
-        <div style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; gap:6px;">
+        <div style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
           <span style="background:${diff.bg}; color:${diff.color || '#fff'}; font-size:11px; font-weight:900; padding:4px 10px; border-radius:20px; box-shadow:0 2px 6px rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.2);">
             ${trail.difficultyScale}/10 ${diff.text}
           </span>
+          ${hasTrailWaterCrossing(trail) ? `
+            <span style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#ffffff; font-size:10.5px; font-weight:900; padding:4px 10px; border-radius:20px; box-shadow:0 2px 8px rgba(2,132,199,0.5); border:1px solid rgba(255,255,255,0.4); display:inline-flex; align-items:center; gap:5px; text-shadow:0 1px 2px rgba(0,0,0,0.4);">
+              <i class="fa-solid fa-water"></i> WATER CROSSING
+            </span>
+          ` : ''}
         </div>
 
         <!-- Video Guide Pill (Top Right) -->

@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.33.0_2026-08-25_00-49-40",
+    "version": "v2.33.0",
+    "timestamp": "2026-08-25T04:49:44.019Z",
+    "displayDate": "8/25/2026, 12:49:44 AM",
+    "description": "Display prominent Water Crossing badges on trail cards with river and creek fords",
+    "zipFile": "v2.33.0_2026-08-25_00-49-40.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "9631cdd"
+  },
+  {
     "id": "v2.32.0_2026-08-25_00-46-21",
     "version": "v2.32.0",
     "timestamp": "2026-08-25T04:46:25.226Z",
