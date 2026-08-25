@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.29.0_2026-08-25_00-06-39",
+    "version": "v2.29.0",
+    "timestamp": "2026-08-25T04:06:43.517Z",
+    "displayDate": "8/25/2026, 12:06:43 AM",
+    "description": "Add field-tested Pro Tips and Tricks to both Overlanding and Recovery Gear sections",
+    "zipFile": "v2.29.0_2026-08-25_00-06-39.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "a8d8c33"
+  },
+  {
     "id": "v2.28.0_2026-08-24_23-57-38",
     "version": "v2.28.0",
     "timestamp": "2026-08-25T03:57:42.643Z",
