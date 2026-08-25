@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.22.0_2026-08-24_23-38-10",
+    "version": "v2.22.0",
+    "timestamp": "2026-08-25T03:38:13.342Z",
+    "displayDate": "8/24/2026, 11:38:13 PM",
+    "description": "Remove upper left mileage badge from every trail card",
+    "zipFile": "v2.22.0_2026-08-24_23-38-10.zip",
+    "sizeMb": "28.93 MB",
+    "gitHash": "a6999a6"
+  },
+  {
     "id": "v2.21.0_2026-08-24_23-36-34",
     "version": "v2.21.0",
     "timestamp": "2026-08-25T03:36:37.786Z",
