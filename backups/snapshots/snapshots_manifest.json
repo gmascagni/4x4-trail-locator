@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.31.0_2026-08-25_00-38-31",
+    "version": "v2.31.0",
+    "timestamp": "2026-08-25T04:38:35.346Z",
+    "displayDate": "8/25/2026, 12:38:35 AM",
+    "description": "Fix all static Amazon and URI links to ensure proper URL encoding",
+    "zipFile": "v2.31.0_2026-08-25_00-38-31.zip",
+    "sizeMb": "30.31 MB",
+    "gitHash": "45173ec"
+  },
+  {
     "id": "v2.30.0_2026-08-25_00-36-03",
     "version": "v2.30.0",
     "timestamp": "2026-08-25T04:36:08.044Z",
