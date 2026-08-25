@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <title>4x4 TrailFinder &bull; Jeep Off-Road & Overlanding Trail Locator</title>
 
 <!-- Custom 4x4 Jeep Grille & Trail Locator Favicon -->
@@ -52,6 +52,120 @@
   --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   --shadow-glow: 0 0 20px rgba(234, 88, 12, 0.35);
 }
+
+/* ── FLUID RESOLUTION & DISPLAY SCALING SYSTEM ── */
+:root {
+  --ui-scale: 1.0;
+  --fluid-h1: clamp(1.75rem, 1.2rem + 2.4vw, 3.2rem);
+  --fluid-h2: clamp(1.35rem, 1.0rem + 1.6vw, 2.2rem);
+  --fluid-h3: clamp(1.1rem, 0.92rem + 0.8vw, 1.55rem);
+  --fluid-body: clamp(0.85rem, 0.8rem + 0.3vw, 1.05rem);
+  --fluid-container: min(96vw, 1680px);
+  --fluid-pad-container: clamp(12px, 2vw, 32px);
+  --fluid-pad-card: clamp(12px, 1.2vw + 6px, 22px);
+  --fluid-gap: clamp(12px, 1.5vw, 26px);
+  --fluid-grid-min: clamp(290px, 26vw, 420px);
+}
+
+html {
+  font-size: calc(16px * var(--ui-scale));
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-size: var(--fluid-body);
+}
+
+/* Fluid responsive containers */
+.nav-container,
+.main-wrapper,
+.footer-content {
+  max-width: var(--fluid-container) !important;
+  padding-left: var(--fluid-pad-container) !important;
+  padding-right: var(--fluid-pad-container) !important;
+}
+
+/* Fluid Hero & Headings */
+.hero-title {
+  font-size: var(--fluid-h1) !important;
+  line-height: 1.15 !important;
+}
+.hero-desc {
+  font-size: clamp(0.9rem, 0.82rem + 0.4vw, 1.15rem) !important;
+  max-width: min(90vw, 920px) !important;
+}
+
+/* Fluid Search Card & Pills */
+.hero-search-card {
+  max-width: min(94vw, 1100px) !important;
+  padding: var(--fluid-pad-card) !important;
+}
+
+/* Fluid Multi-Column Trail Grid */
+.trail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(var(--fluid-grid-min), 1fr)) !important;
+  gap: var(--fluid-gap) !important;
+}
+
+/* High-DPI Crisp Image Rendering */
+.trail-card-img,
+.shop-img,
+.video-thumb {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Fluid Map Viewport */
+#mapContainer {
+  width: 100% !important;
+  min-height: clamp(380px, 50vh, 650px) !important;
+  height: clamp(380px, 50vh, 650px) !important;
+  border-radius: var(--radius-md);
+}
+
+/* Fluid Scaling Control HUD in Nav */
+.display-scale-widget {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #334155;
+}
+.scale-btn {
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scale-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.scale-btn.active {
+  background: var(--amber-orange);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(234,88,12,0.3);
+}
+
+@media (max-width: 900px) {
+  .display-scale-widget {
+    display: none;
+  }
+}
+
 
 * {
   box-sizing: border-box;
@@ -6265,6 +6379,42 @@ function closeVideoModal() {
   document.getElementById('videoModal').style.display = 'none';
 }
 
+
+
+// FLUID DISPLAY SCALING CONTROLLER
+function setDisplayScale(scale, btn) {
+  document.documentElement.style.setProperty('--ui-scale', scale);
+  if (typeof localStorage !== 'undefined') localStorage.setItem('4x4_display_scale', scale);
+  
+  if (btn) {
+    btn.parentElement.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Smoothly trigger map re-render and re-centering
+  if (map) {
+    setTimeout(() => {
+      map.invalidateSize({ pan: false });
+    }, 150);
+  }
+}
+
+// Restore saved scale on boot
+(function initSavedDisplayScale() {
+  const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('4x4_display_scale') : null;
+  if (saved) {
+    const scale = parseFloat(saved);
+    document.documentElement.style.setProperty('--ui-scale', scale);
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.scale-btn').forEach(b => {
+        if (b.innerText.includes(Math.round(scale * 100) + '%')) {
+          b.parentElement.querySelectorAll('.scale-btn').forEach(btn => btn.classList.remove('active'));
+          b.classList.add('active');
+        }
+      });
+    });
+  }
+})();
 
 function openVcModal() {
   const m = document.getElementById('vcModal');

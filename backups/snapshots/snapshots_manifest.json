@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.9.0_2026-08-24_22-36-15",
+    "version": "v2.9.0",
+    "timestamp": "2026-08-25T02:36:18.551Z",
+    "displayDate": "8/24/2026, 10:36:18 PM",
+    "description": "Install Fluid Resolution & Display Scaling with dynamic clamp typography, high-DPI retina maps, and rig display HUD",
+    "zipFile": "v2.9.0_2026-08-24_22-36-15.zip",
+    "sizeMb": "28.92 MB",
+    "gitHash": "d4182a7"
+  },
+  {
     "id": "v2.8.0_2026-08-24_22-21-12",
     "version": "v2.8.0",
     "timestamp": "2026-08-25T02:21:17.753Z",
