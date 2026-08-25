@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.19.0_2026-08-24_23-17-37",
+    "version": "v2.19.0",
+    "timestamp": "2026-08-25T03:17:40.308Z",
+    "displayDate": "8/24/2026, 11:17:40 PM",
+    "description": "Assign distinct authentic off-road photographs across all trail cards with zero duplicate photos",
+    "zipFile": "v2.19.0_2026-08-24_23-17-37.zip",
+    "sizeMb": "28.93 MB",
+    "gitHash": "c332dda"
+  },
+  {
     "id": "v2.18.0_2026-08-24_23-14-12",
     "version": "v2.18.0",
     "timestamp": "2026-08-25T03:14:15.634Z",
