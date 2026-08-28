@@ -1,4 +1,4 @@
-﻿# 🚙 4x4 TrailFinder & Overlanding Expedition Locator
+# 🚙 4x4 TrailFinder & Overlanding Expedition Locator
 
 An interactive, high-performance web application designed for off-road enthusiasts, Jeep Badge of Honor explorers, and overlanders to locate and explore 4x4 trails, technical rock crawling parks, and certified fabrication garages across the United States.
 
@@ -11,7 +11,7 @@ An interactive, high-performance web application designed for off-road enthusias
 - **⭐ 37+ Jeep Badge of Honor Trails**: Certified Badge of Honor routes across 18 states (Beasley Knob, Windrock 16, Hell\'s Revenge, Rubicon Trail, Black Bear Pass, etc.).
 - **🏔️ 3D Topographic Elevation & Relief Maps**: High-definition terrain route captures for Georgia, Tennessee, North Carolina, and Western canyon trails.
 - **📋 Official Park & USFS Details Modal**: Direct phone hotlines, fee breakdowns (Day/Annual passes), managing agency info, staging lot coordinates, and seasonal closure dates.
-- **🎥 Curated 4x4 Walkthrough Video Guide**: Embedded authentic trail runs with one-click direct YouTube search query links.
+- **🎥 4x4 Wheeling Tutorials & Recovery Guide**: 12 interactive step-by-step video guides covering kinetic snatch rigging, tire deflation, GMRS comms, jacking safety, and wilderness trauma first aid.
 - **🎒 Bug-Out & Survival Gear Checklist**: Interactive gear management for Day Trips, Multi-Day Overlanding Expeditions, and Heavy Recovery Gear.
 - **🔧 4x4 Off-Road Shops & Fabrication Garages**: Dynamic proximity locator for top regional 4x4 build garages (FORTEC 4x4 Roswell, Appalachian Offroad, Smoky Mountain 4WD, Allsouth Autosports, 4WP).
 - **📐 Real-Time Tactical 4x4 Inclinometer & Air-Down Calculator**: Visual pitch and roll sensor HUD with terrain tire PSI recommendations.
