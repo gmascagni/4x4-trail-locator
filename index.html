@@ -18,11 +18,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-
 <!-- FontAwesome 6 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+* {
+  overflow-anchor: none;
+}
+
 :root {
   --bg-main: #f4f6f0;
   --card-bg: #ffffff;
@@ -71,7 +74,6 @@
 
 html {
   font-size: calc(16px * var(--ui-scale));
-  scroll-behavior: smooth;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -707,7 +709,6 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  scroll-margin-top: 100px;
 }
 
 .trail-card:hover {
@@ -1096,6 +1097,57 @@ header {
   color: var(--text-muted);
   line-height: 1.5;
   margin-bottom: 12px;
+}
+
+/* RECOVERY TUTORIAL CARD & CHIP STYLES */
+.tutorial-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.tutorial-chip-btn:hover {
+  border-color: var(--amber-orange);
+  color: var(--amber-orange);
+  background: #fff7ed;
+}
+
+.tutorial-chip-btn.active {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  color: #ffffff;
+}
+
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 18px;
+}
+
+.tutorial-card {
+  background: #ffffff;
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.tutorial-card:hover {
+  border-color: var(--amber-orange);
+  transform: translateY(-2px);
 }
 
 /* VIDEO LIBRARY */
@@ -1527,8 +1579,8 @@ footer {
 
 <!-- TOP NAV -->
 <header>
-  <div class="nav-container" style="justify-content: center;">
-    <a href="#" class="logo">
+  <div class="nav-container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+    <a href="javascript:void(0)" onclick="if(typeof window.scrollTo==='function') window.scrollTo({top:0,left:0,behavior:'smooth'});" class="logo">
       <div class="logo-icon" style="background:transparent; padding:0; overflow:hidden; border:none; display:flex; align-items:center; justify-content:center;">
         <img src="./assets/favicon.svg" style="width:38px; height:38px; display:block; border-radius:8px;" alt="Jeep Grille 4x4 Logo">
       </div>
@@ -1536,6 +1588,14 @@ footer {
         <span class="logo-title">4x4 <span>TrailFinder</span></span>
       </div>
     </a>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <button type="button" onclick="jumpToRecoveryTutorials('all')" style="background:linear-gradient(135deg, #ea580c, #c2410c); color:#ffffff; border:none; padding:7px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(234,88,12,0.35);">
+        <i class="fa-solid fa-circle-play"></i> Recovery Videos & Tutorials
+      </button>
+      <button type="button" onclick="jumpToRecoveryChecklist()" style="background:#0f172a; color:#f8fafc; border:1px solid #334155; padding:7px 12px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-shield-halved" style="color:var(--amber-orange);"></i> Gear Checklist
+      </button>
+    </div>
   </div>
 </header>
 
@@ -1559,17 +1619,17 @@ footer {
           </span>
         </button>
         <div style="font-size:12px; color:#64748b; font-weight:600; text-align:center;">
-          <i class="fa-solid fa-circle-info" style="color:var(--amber-orange);"></i> <strong>Click the button above</strong> to automatically rank trails and 4x4 shops by distance from your current GPS position.
+          <i class="fa-solid fa-circle-info" style="color:var(--amber-orange);"></i> <strong>Click the button above</strong> to automatically find trails from your current GPS position.
         </div>
       </div>
 
       <!-- 2. SEARCH AREA DIRECTLY UNDER LOCATE TRAILS NEAR ME -->
       <div style="margin: 16px 0 16px 0; width: 100%;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:4px;">
-          <span style="font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+        <div style="display:flex; align-items:center; justify-content:center; margin-bottom:8px; flex-wrap:wrap; gap:6px; text-align:center;">
+          <span style="font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--text-muted); display:inline-flex; align-items:center; gap:6px;">
             <i class="fa-solid fa-magnifying-glass" style="color:var(--amber-orange);"></i> Or Search Trails Manually Across All 50 States:
           </span>
-          <span style="font-size:11px; color:#64748b;">Type & press <strong>Enter</strong> or click Search</span>
+          <span style="font-size:11px; color:#64748b;">(Type & press <strong>Enter</strong> or click Search)</span>
         </div>
         <div style="display:flex; background:#f8fafc; border:2px solid #cbd5e1; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06); transition:border-color 0.2s;">
           <input type="text" id="searchInput" placeholder="Search by trail name, state, city, or feature (e.g. Colorado, Moab, Georgia, Water crossings, Rubicon...)" oninput="onSearchInput()" onkeydown="if(event.key === 'Enter') onSearchIconClick()" style="flex:1; border:none; padding:13px 16px; font-size:14px; outline:none; background:transparent; font-family:inherit; color:#1e293b;">
@@ -1619,6 +1679,16 @@ footer {
           <button class="pill-btn" onclick="setDiffFilter('Hard', this)"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#eab308; margin-right:4px;"></span>Hard (7-8)</button>
           <button class="pill-btn" onclick="setDiffFilter('Extreme', this)"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#dc2626; margin-right:4px;"></span>Buggy (9-10)</button>
         </div>
+      </div>
+
+      <!-- QUICK ACCESS SHORTCUT BAR -->
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1.5px solid #e2e8f0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <button type="button" onclick="jumpToRecoveryTutorials('all')" style="background: linear-gradient(135deg, #ea580c, #c2410c); color:#ffffff; border:none; padding:8px 18px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 3px 10px rgba(234,88,12,0.35);">
+          <i class="fa-solid fa-circle-play"></i> Watch 12 Recovery Video Tutorials ↗
+        </button>
+        <button type="button" onclick="jumpToRecoveryChecklist()" style="background:#0f172a; color:#ffffff; border:1px solid #334155; padding:8px 16px; border-radius:8px; font-size:12.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:7px;">
+          <i class="fa-solid fa-shield-halved" style="color:var(--amber-orange);"></i> 6-Category Loadout Checklist
+        </button>
       </div>
     </div>
   </div>
@@ -1882,465 +1952,568 @@ footer {
     </div>
   </section>
 
-  <!-- COLLAPSIBLE RECOVERY GEAR & BUG-OUT GUIDE -->
+  <!-- COLLAPSIBLE RECOVERY GEAR & EMERGENCY BUG-OUT GUIDE -->
   <section style="margin-bottom: 40px;" id="recovery-gear">
     <div class="collapsible-bar" onclick="toggleRecoveryGearSection()">
       <div class="collapsible-title">
         <i class="fa-solid fa-shield-halved" style="color: var(--amber-orange); font-size: 20px;"></i>
         <div>
-          <span>RECOVERY GEAR & EMERGENCY BUG-OUT SAFETY GUIDE</span>
-          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Self-extraction tools, breakdown survival essentials, how-to video guides & gear links</div>
+          <span>STANDARD TRAIL RECOVERY GEAR & EMERGENCY BUG-OUT GUIDE</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Mandatory 6-category checklist, detailed equipment specs & interactive video tutorials for every piece of gear</div>
         </div>
       </div>
-      <div class="collapsible-icon" id="recoveryToggleIcon">
+      <div class="collapsible-icon" id="recoveryToggleIcon" style="transform: rotate(180deg);">
         <i class="fa-solid fa-chevron-down"></i>
       </div>
     </div>
 
-    <div id="recoveryGearBody" style="display: none; margin-top: 16px;">
-      <!-- AMAZON ASSOCIATES COMPLIANCE NOTICE -->
-      <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:12px; color:#92400e; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <i class="fa-brands fa-amazon" style="color:#f59e0b; font-size:18px;"></i>
-          <span><strong>Amazon Affiliate Disclosure:</strong> As an Amazon Associate I earn from qualifying purchases. Clicking any gear link supports 4x4 TrailFinder at zero additional cost to you.</span>
-        </div>
-        <span style="background:#fef3c7; border:1px solid #fcd34d; color:#78350f; font-weight:800; font-size:10px; padding:2px 8px; border-radius:4px;">TAG: thebrewapp13-20</span>
-      </div>
-      <!-- SURVIVAL & RECOVERY TABS -->
+    <div id="recoveryGearBody" style="display: block; margin-top: 16px;">
+      <!-- SUB-NAVIGATION TABS -->
       <div class="bugout-nav-tabs">
-        <button class="bugout-tab-btn active" id="tabBtnDay" onclick="switchBugoutTab('day', this)">
-          <i class="fa-solid fa-person-hiking" style="color:var(--amber-orange); margin-right:4px;"></i> Day-Trip Trail Checklist
+        <button type="button" class="bugout-tab-btn active" id="tabBtnChecklist" onclick="switchRecoveryGuideTab('checklist', this)">
+          <i class="fa-solid fa-clipboard-check" style="color:var(--amber-orange);"></i> 1. Standard Gear Checklist
         </button>
-        <button class="bugout-tab-btn" id="tabBtnOvernight" onclick="switchBugoutTab('overnight', this)">
-          <i class="fa-solid fa-campground" style="color:var(--amber-orange); margin-right:4px;"></i> Overnight & Bug-Out Pack
+        <button type="button" class="bugout-tab-btn" id="tabBtnTutorials" onclick="switchRecoveryGuideTab('tutorials', this)">
+          <i class="fa-solid fa-circle-play" style="color:var(--amber-orange);"></i> 2. Video Tutorials Hub (12 Guides)
         </button>
-        <button class="bugout-tab-btn" id="tabBtnRecovery" onclick="switchBugoutTab('recovery', this)">
-          <i class="fa-solid fa-truck-pickup" style="color:var(--amber-orange); margin-right:4px;"></i> Heavy Vehicle Recovery Gear
+        <button type="button" class="bugout-tab-btn" id="tabBtnSafety" onclick="switchRecoveryGuideTab('safety', this)">
+          <i class="fa-solid fa-triangle-exclamation" style="color:var(--amber-orange);"></i> 3. Extraction Safety Protocols
         </button>
       </div>
 
-      <!-- TAB 1: DAY TRIP CHECKLIST -->
-      <div id="bugoutDayTab" style="display: block;">
-        <!-- COMMS & POWER -->
+      <!-- TAB 1: FULL 6-CATEGORY STANDARD CHECKLIST -->
+      <div id="recoveryTabChecklist" style="display: block;">
+        <!-- STATUS BANNER & QUICK ACTIONS -->
+        <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:10px; padding:12px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:700; color:#0f172a;">
+            <i class="fa-solid fa-shield-halved" style="color:var(--amber-orange); font-size:16px;"></i>
+            <span>Standard Mandatory 4x4 Loadout — Required on all trails regardless of difficulty rating</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" onclick="document.querySelectorAll('#recoveryTabChecklist input[type=checkbox]').forEach(c => c.checked = true)" style="background:#0f172a; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+              <i class="fa-solid fa-check-double"></i> Check All
+            </button>
+            <button type="button" onclick="document.querySelectorAll('#recoveryTabChecklist input[type=checkbox]').forEach(c => c.checked = false)" style="background:#e2e8f0; color:#334155; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. RECOVERY GEAR -->
         <div class="bugout-category-box">
           <div class="bugout-cat-header">
-            <i class="fa-solid fa-walkie-talkie"></i>
-            <h4>1. Emergency Radio, Comms & Battery Power</h4>
-            <span>Trail Comms & Navigation</span>
+            <i class="fa-solid fa-truck-pickup"></i>
+            <h4>1. Recovery Gear</h4>
+            <span>Kinetic Snatch & Winch Anchoring</span>
           </div>
           <div class="checklist-grid">
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Handheld GMRS / FRS 2-Way Radios</strong>
-                <a href="https://www.amazon.com/s?k=GMRS%20handheld%20two%20way%20radio%205W%20waterproof%20pair&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Preset to CB Ch 4 / GMRS Ch 16 for convoy & emergency spotters.</span>
-                <span class="item-spec">Pair (5W Power)</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Kinetic recovery strap (snatch strap)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-kinetic-strap')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Smooth kinetic energy stretch for dynamic snatch extractions without shock loading frame mounts.</span>
+                <span class="item-spec">30ft Dynamic Rope / Snatch Strap</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Spare Lithium Batteries (AA / AAA / 18650)</strong>
-                <a href="https://www.amazon.com/s?k=Energizer%20Ultimate%20Lithium%20AA%20AAA%20batteries&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Cold-resistant lithium cells for headlamps, GPS, and radio backups.</span>
-                <span class="item-spec">Pack of 8-12</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Two 3/4-inch bow shackles</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-bow-shackles')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Heavy-duty rated screw pin bow shackles for chassis anchor connections.</span>
+                <span class="item-spec">WLL 4.75-Ton Minimum</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>1,000+ Lumen Tactical Headlamp + Red Light</strong>
-                <a href="https://www.amazon.com/s?k=rechargeable%20tactical%20headlamp%201000%20lumen%20red%20light&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Hands-free trail recovery and nighttime mechanical repairs.</span>
-                <span class="item-spec">Rechargeable + Spare Cell</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Rated tree saver strap</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-tree-saver')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Wide non-stretch polyester webbing to protect live anchor trees and winch lines.</span>
+                <span class="item-spec">3" x 8-10ft (30,000+ lb Capacity)</span>
               </div>
             </label>
             <label class="checklist-item">
-              <input type="checkbox">
+              <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>10,000mAh Rugged USB Power Bank</strong>
-                <a href="https://www.amazon.com/s?k=rugged%20waterproof%20power%20bank%2010000mah%20camping&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Keeps smartphone, Gaia GPS, and trail maps powered all day.</span>
-                <span class="item-spec">Dual Fast-Charge USB</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Heavy-duty leather gloves</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-shovel-recovery')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Essential puncture & burn protection when handling synthetic or steel winch lines and shackles.</span>
+                <span class="item-spec">Reinforced Palm Protection</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Long-handled shovel</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-shovel-recovery')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Clears high-centered axles, packed clay, sand berms, or deep snow around tires.</span>
+                <span class="item-spec">Full / Foldable Steel Spade</span>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- HYDRATION & NUTRITION -->
+        <!-- 2. TIRE MANAGEMENT -->
         <div class="bugout-category-box">
           <div class="bugout-cat-header">
-            <i class="fa-solid fa-bottle-water"></i>
-            <h4>2. Water, Electrolytes & Day Nutrition</h4>
-            <span>Hydration Autonomy</span>
+            <i class="fa-solid fa-gauge-high"></i>
+            <h4>2. Tire Management</h4>
+            <span>Traction, Deflation & Puncture Plugs</span>
           </div>
           <div class="checklist-grid">
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Potable Drinking Water Storage</strong>
-                <a href="https://www.amazon.com/s?k=water%20jerry%20can%205%20gallon%20bpa%20free%20camping&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Minimum 1 Gallon (3.8L) per person per day in rugged canteens.</span>
-                <span class="item-spec">1 Gal / Person / Day</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Portable 12V air compressor (e.g., Viair)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-air-compressor')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>High-output direct-to-battery inflator to air back up to street pressure at the highway.</span>
+                <span class="item-spec">12V Heavy-Duty (Viair or Equivalent)</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Electrolyte Hydration Packets (Liquid I.V.)</strong>
-                <a href="https://www.amazon.com/s?k=Liquid%20IV%20hydration%20multiplier%20electrolyte%20packets&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Prevents heat exhaustion, muscle cramps, and dehydration on trail.</span>
-                <span class="item-spec">4-6 Packets</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Digital tire pressure gauge</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-tire-deflation')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>High-precision backlit gauge for accurate low-PSI single-digit trail readings.</span>
+                <span class="item-spec">0-60 PSI Low Pressure Resolution</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>High-Calorie Trail Snacks & Rations</strong>
-                <a href="https://www.amazon.com/s?k=emergency%20survival%20food%20bars%20high%20calorie%20rations&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Beef jerky, trail mix, protein bars, and dried fruit for quick energy.</span>
-                <span class="item-spec">2,000+ Cal Emergency Buffer</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Manual tire deflator</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-tire-deflation')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Rapid brass tire deflator valve to air down quickly to 12-18 PSI at the trailhead.</span>
+                <span class="item-spec">Brass Rapid Air-Down Tool</span>
               </div>
             </label>
             <label class="checklist-item">
-              <input type="checkbox">
+              <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Sawyer Squeeze Backcountry Water Filter</strong>
-                <a href="https://www.amazon.com/s?k=Sawyer%20Squeeze%20water%20filtration%20system&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>0.1-micron filtration for emergency refills from creeks and springs.</span>
-                <span class="item-spec">100,000 Gal Rating</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Heavy-duty tire repair/plug kit</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-tire-plug-kit')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>T-handle reamer, insertion needle, and vulcanizing self-sealing tire plugs.</span>
+                <span class="item-spec">T-Handle Kit + Plugs</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Valve core tool</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-tire-plug-kit')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Emergency 4-way valve stem core removal tool and spare brass valve cores.</span>
+                <span class="item-spec">4-Way Tool + Brass Cores</span>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- WARMTH, BLANKETS & TRAIL SURVIVAL -->
+        <!-- 3. NAVIGATION & COMMUNICATIONS -->
         <div class="bugout-category-box">
           <div class="bugout-cat-header">
-            <i class="fa-solid fa-fire"></i>
-            <h4>3. Thermal Warmth, Space Blankets & Fire</h4>
-            <span>Hypothermia & Exposure Prevention</span>
+            <i class="fa-solid fa-satellite"></i>
+            <h4>3. Navigation & Communications</h4>
+            <span>Offline Topo Maps & Convoy Comms</span>
           </div>
           <div class="checklist-grid">
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Heavy-Duty Mylar Thermal Space Blankets</strong>
-                <a href="https://www.amazon.com/s?k=heavy%20duty%20mylar%20emergency%20thermal%20blanket&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Reflects 90% body heat; windproof and waterproof emergency shelter.</span>
-                <span class="item-spec">2x Reflective Blankets</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Dedicated offline GPS mapping app</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-offline-gps')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Gaia GPS or OnX Offroad with downloaded local topographical maps and satellite imagery.</span>
+                <span class="item-spec">Pre-Downloaded Topo & Satellite</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Ferrocerium Firestarter Rod & Tinder Tabs</strong>
-                <a href="https://www.amazon.com/s?k=ferrocerium%20rod%20fire%20starter%20kit%20bushcraft&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>5,500°F spark thrower that works when soaking wet or sub-zero.</span>
-                <span class="item-spec">Ferro Rod + Storm Matches</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Fully charged power bank</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-offline-gps')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>High-capacity rugged external battery pack to maintain phone, GPS tablet, and radio charge.</span>
+                <span class="item-spec">10,000+ mAh USB-C PD</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Emergency Ripstop Rain Poncho & Gloves</strong>
-                <a href="https://www.amazon.com/s?k=heavy%20duty%20ripstop%20emergency%20rain%20poncho&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Keeps core dry during sudden mountain downpours and cold winds.</span>
-                <span class="item-spec">Waterproof + Thermal Layer</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox">
-              <div class="checklist-item-content">
-                <strong>Leatherman Multi-Tool & Bushcraft Fixed Blade</strong>
-                <a href="https://www.amazon.com/s?k=Leatherman%20multi%20tool%20stainless%20steel&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Wire cutters, pliers, serrated blade, and wood-notching tools.</span>
-                <span class="item-spec">Stainless Steel Heavy-Duty</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Programmed handheld two-way radio (GMRS or FRS)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-gmrs-radios')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>GMRS or FRS 5W two-way radio preset for convoy coordination and emergency spotters.</span>
+                <span class="item-spec">GMRS / FRS (Preset Ch 16 / CB 4)</span>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- FIRST AID & TRAIL MECHANICS -->
+        <!-- 4. EMERGENCY & FIRST AID -->
         <div class="bugout-category-box">
           <div class="bugout-cat-header">
             <i class="fa-solid fa-kit-medical"></i>
-            <h4>4. Wilderness Trauma First Aid & Tire Repair</h4>
-            <span>Life Safety & Mobility</span>
+            <h4>4. Emergency & First Aid</h4>
+            <span>Wilderness Trauma & Field Safety</span>
           </div>
           <div class="checklist-grid">
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Wilderness Trauma IFAK Kit</strong>
-                <a href="https://www.amazon.com/s?k=tactical%20IFAK%20trauma%20first%20aid%20kit%20CAT%20tourniquet&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>CAT Tourniquet, QuikClot hemostatic gauze, chest seal & pressure wrap.</span>
-                <span class="item-spec">MOLLE Rip-Away Pouch</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Comprehensive trauma-informed first-aid kit</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Equipped with tourniquets (CAT), chest seals, and quick-clot gauze for severe trail injuries.</span>
+                <span class="item-spec">IFAK Wilderness Trauma Level</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Heavy-Duty T-Handle Tire Plug Kit</strong>
-                <a href="https://www.amazon.com/s?k=heavy%20duty%20tire%20plug%20repair%20kit%20brass%20t%20handle&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Brass reamer, inserting tool, 30 self-vulcanizing plugs & valve cores.</span>
-                <span class="item-spec">For Sidewall / Tread Punctures</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>High-lumen headlamp with extra batteries</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>1,000+ lumen hands-free headlamp with red-light mode and spare lithium cells for night repairs.</span>
+                <span class="item-spec">Rechargeable + Spare Cells</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>1,500A Lithium Jump Starter Power Pack</strong>
-                <a href="https://www.amazon.com/s?k=NOCO%20Boost%20lithium%20jump%20starter%20battery%20pack&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Starts dead vehicle batteries instantly without needing a second rig.</span>
-                <span class="item-spec">12V Multi-Jump Capacity</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox">
-              <div class="checklist-item-content">
-                <strong>Heavy-Duty Gorilla Tape & Bailing Wire</strong>
-                <a href="https://www.amazon.com/s?k=Gorilla%20tape%20all%20weather%20heavy%20duty&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Emergency trail fixes for loose hoses, severed brackets, and wiring.</span>
-                <span class="item-spec">Field Repair Essentials</span>
-              </div>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2: OVERNIGHT & MULTI-DAY BUG-OUT PACK -->
-      <div id="bugoutOvernightTab" style="display: none;">
-        <!-- EXPEDITION SURVIVAL -->
-        <div class="bugout-category-box">
-          <div class="bugout-cat-header">
-            <i class="fa-solid fa-tent"></i>
-            <h4>1. Shelter, Sleeping System & Cold Weather Gear</h4>
-            <span>Overnight Mountain Survival</span>
-          </div>
-          <div class="checklist-grid">
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>20°F Compact Down Sleeping Bag</strong>
-                <span>Hydrophobic down insulation rated for freezing mountain ridge drops.</span>
-                <span class="item-spec">Comfort Rating 20°F / -7°C</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Heavy-duty multi-tool</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Stainless steel pliers, wire cutters, saw blade, screwdrivers, and bottle opener.</span>
+                <span class="item-spec">Full-Size Multi-Plier</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Rooftop Tent (RTT) or 4-Season All-Weather Ground Tent</strong>
-                <a href="https://www.amazon.com/s?k=rooftop%20tent%204x4%20overland%20all%20weather&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Heavy-duty ripstop canvas with waterproof rainfly and wind guy lines.</span>
-                <span class="item-spec">All-Weather Stormproof</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>Insulated Ground Sleep Pad (R-Value 4.5+)</strong>
-                <a href="https://www.amazon.com/s?k=insulated%20sleeping%20pad%20r%20value%204.5%20camping&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Prevents dangerous thermal ground chill from sapping body warmth.</span>
-                <span class="item-spec">Self-Inflating Thermal Pad</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox">
-              <div class="checklist-item-content">
-                <strong>Emergency Thermal Bivvy Sack</strong>
-                <a href="https://www.amazon.com/s?k=emergency%20thermal%20bivvy%20survival%20sleeping%20bag&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Waterproof seam-taped survival shelter if caught away from vehicle.</span>
-                <span class="item-spec">Reflects 90% Body Heat</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Fixed-blade knife</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-kinetic-strap')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Full-tang high-carbon fixed blade for cutting fouled synthetic lines, brush, and camp utility.</span>
+                <span class="item-spec">Full-Tang Survival Blade</span>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- 72-HOUR SUSTENANCE & WATER PURIFICATION -->
-        <div class="bugout-category-box">
-          <div class="bugout-cat-header">
-            <i class="fa-solid fa-utensils"></i>
-            <h4>2. 72-Hour Food, Camp Stove & Gravity Water Filter</h4>
-            <span>Multi-Day Autonomy</span>
-          </div>
-          <div class="checklist-grid">
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>72-Hour Freeze-Dried Meals (Mountain House / Peak)</strong>
-                <a href="https://www.amazon.com/s?k=Mountain%20House%20freeze%20dried%20meals%203%20day%20supply&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>6x high-protein freeze-dried pouches (Beef Stroganoff, Chicken Teriyaki).</span>
-                <span class="item-spec">3-Day Calorie Supply</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>Jetboil Flash / MSR PocketRocket Camp Stove</strong>
-                <a href="https://www.amazon.com/s?k=Jetboil%20Flash%20camping%20stove%20isobutane&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Boils 2 cups of mountain water in 100 seconds with isobutane fuel.</span>
-                <span class="item-spec">Stove + 2x 230g Fuel Cans</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>Gravity-Fed Water Filter Bag & Chlorine Dioxide Tablets</strong>
-                <a href="https://www.amazon.com/s?k=gravity%20water%20filter%20bag%203L%20camping&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>3-Liter dirty water reservoir with 0.1-micron inline micro-filter.</span>
-                <span class="item-spec">1L/min Flow Rate + 30 Tabs</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox">
-              <div class="checklist-item-content">
-                <strong>Titanium Camp Cookset & Spork</strong>
-                <a href="https://www.amazon.com/s?k=titanium%20camp%20pot%20and%20spork%20ultralight&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Ultralight non-toxic boiling pot with folding insulated handles.</span>
-                <span class="item-spec">750ml Titanium Pot</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- SATELLITE COMMS & OFF-GRID POWER -->
-        <div class="bugout-category-box">
-          <div class="bugout-cat-header">
-            <i class="fa-solid fa-satellite-dish"></i>
-            <h4>3. Satellite SOS, NOAA Weather & Solar Charging</h4>
-            <span>Off-Grid Emergency Comms</span>
-          </div>
-          <div class="checklist-grid">
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>Garmin InReach Mini 2 / SPOT Satellite SOS Messenger</strong>
-                <a href="https://www.amazon.com/s?k=Garmin%20inReach%20Mini%202%20satellite%20communicator&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>100% global Iridium satellite coverage for two-way SOS & live tracking.</span>
-                <span class="item-spec">Interactive GEOS SOS</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>NOAA Emergency Alert Weather Radio (Hand-Crank + Solar)</strong>
-                <a href="https://www.amazon.com/s?k=NOAA%20emergency%20weather%20radio%20hand%20crank%20solar&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Live National Weather Service alert broadcasts for flash floods & storms.</span>
-                <span class="item-spec">7 NOAA Channels + Siren</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox" checked>
-              <div class="checklist-item-content">
-                <strong>24,000mAh LiFePO4 Battery Pack + 28W Folding Solar Panel</strong>
-                <a href="https://www.amazon.com/s?k=folding%20solar%20panel%2028w%20USB%20power%20bank&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Recharges radios, GPS, phones, and headlamps indefinitely off-grid.</span>
-                <span class="item-spec">Solar & Type-C 65W PD</span>
-              </div>
-            </label>
-            <label class="checklist-item">
-              <input type="checkbox">
-              <div class="checklist-item-content">
-                <strong>Offline GPS Navigation Tablet (Gaia GPS / OnX Offroad)</strong>
-                <a href="https://www.amazon.com/s?k=rugged%20android%20tablet%20GPS%20navigation%20vehicle%20mount&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Full topographic maps & satellite imagery pre-downloaded offline.</span>
-                <span class="item-spec">With 12V Dash Mount</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- MECHANICAL SPARES -->
+        <!-- 5. VEHICLE ESSENTIALS -->
         <div class="bugout-category-box">
           <div class="bugout-cat-header">
             <i class="fa-solid fa-wrench"></i>
-            <h4>4. Field Mechanics & Breakdown Spares</h4>
-            <span>Self-Repair Capability</span>
+            <h4>5. Vehicle Essentials</h4>
+            <span>Trail Mechanics & Trailside Spares</span>
           </div>
           <div class="checklist-grid">
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>4x4 Trail Tool Kit (Metric & SAE Sockets + Torx/Allen)</strong>
-                <a href="https://www.amazon.com/s?k=mechanics%20tool%20set%20roll%20up%20pouch%204x4%20trail&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>3/8\" ratchet, deep sockets (8-19mm), breaker bar & Torx bits for Jeep/trucks.</span>
-                <span class="item-spec">64-Piece Roll-Up Bag</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Factory jack plus a wide base plate</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-jack-base-plate')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Jack with wide Hi-Lift base plate or solid wood block for stable jacking on soft ground.</span>
+                <span class="item-spec">Stable Wide Base for Mud/Sand</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Emergency Vehicle Fluids & JB Weld Quick-Steel</strong>
-                <a href="https://www.amazon.com/s?k=JB%20Weld%20steel%20reinforced%20epoxy%20putty&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>1 Qt 75W-90 gear oil, 1 Qt motor oil, DOT 4 brake fluid & metal epoxy.</span>
-                <span class="item-spec">Differential & Oil Pan Fix</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Basic metric socket and wrench set</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>3/8" ratchet, metric sockets (8-19mm), extension, and combination wrenches for loose bolts.</span>
+                <span class="item-spec">Metric Roll-Up Tool Set</span>
               </div>
             </label>
             <label class="checklist-item">
               <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>Spare Fuses, Heavy Zip Ties (150 lb) & Hose Clamps</strong>
-                <a href="https://www.amazon.com/s?k=heavy%20duty%20zip%20ties%20150%20lb%20assorted%20automotive%20fuses&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Replaces blown electrical circuits and seals punctured radiator hoses.</span>
-                <span class="item-spec">Assorted Multi-Pack</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Zip ties (heavy-duty)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>150 lb tensile strength heavy-duty zip ties for securing wiring, loose brake lines, or trim.</span>
+                <span class="item-spec">150 lb Assorted Lengths</span>
               </div>
             </label>
             <label class="checklist-item">
-              <input type="checkbox">
+              <input type="checkbox" checked>
               <div class="checklist-item-content">
-                <strong>High-Lift Jack / Bottle Jack & Jack Base Plate</strong>
-                <a href="https://www.amazon.com/s?k=Hi-Lift%20jack%2048%20inch%20offroad%20recovery&tag=thebrewapp13-20" target="_blank" rel="noopener noreferrer nofollow" style="font-size:10px; color:#ea580c; text-decoration:none; font-weight:800; display:inline-flex; align-items:center; gap:3px; margin-top:2px;" title="Find on Amazon"><span>🛒 Shop on Amazon</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px;"></i></a>
-                <span>Lifts lifted rigs on uneven terrain for tire swaps and suspension fixes.</span>
-                <span class="item-spec">6-Ton Hydraulic + Base</span>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Duct tape & electrical tape</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>All-weather heavy-duty duct tape and professional electrical tape for trailside fixes.</span>
+                <span class="item-spec">Waterproof Adhesive Rolls</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Spare serpentine belt</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-serpentine-belt')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Vehicle-specific serpentine drive belt to prevent being stranded by belt failure.</span>
+                <span class="item-spec">Model-Matched OEM/HD Belt</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 6. PERSONAL SUSTENANCE -->
+        <div class="bugout-category-box">
+          <div class="bugout-cat-header">
+            <i class="fa-solid fa-bottle-water"></i>
+            <h4>6. Personal Sustenance</h4>
+            <span>Hydration, Rations & Weather Protection</span>
+          </div>
+          <div class="checklist-grid">
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Minimum of 1 gallon of drinking water per person</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>1 gallon (3.8L) per person per day baseline hydration in rugged canteens or jugs.</span>
+                <span class="item-spec">1 Gallon / Person / Day Min</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>High-calorie non-perishable food</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Jerky, trail mix, protein bars, and emergency freeze-dried meal pouches for energy buffer.</span>
+                <span class="item-spec">2,000+ Calorie Buffer</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Weather-appropriate layers</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Thermal base layers, fleece/down jacket, and dry socks for mountain ridge temperature drops.</span>
+                <span class="item-spec">Moisture-Wicking & Thermal</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Durable rain shell</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Waterproof, windproof breathable jacket with taped seams for sudden mountain cloudbursts.</span>
+                <span class="item-spec">Waterproof Ripstop Shell</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Heavy-duty insect repellent</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>High-efficacy DEET or Picaridin spray for tick, gnat, mosquito, and black fly defense.</span>
+                <span class="item-spec">DEET / Picaridin Formula</span>
               </div>
             </label>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: HEAVY VEHICLE RECOVERY -->
-      <div id="bugoutRecoveryTab" style="display: none;">
-        <div class="gear-grid">
-          <div class="gear-card">
-            <div class="gear-icon"><i class="fa-solid fa-link"></i></div>
-            <div class="gear-title">Kinetic Recovery Rope & Soft Shackles</div>
-            <div class="gear-importance"><i class="fa-solid fa-triangle-exclamation"></i> Essential #1: Dynamic Snatch</div>
-            <div class="gear-desc">Kinetic ropes stretch up to 30% to smoothly snatch stuck 4x4s out of mud, sand, or snow without damaging frame mounts. Soft synthetic shackles prevent dangerous flying metal missiles.</div>
-            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/KZiA6rcJgFk', 'Kinetic Rope & Soft Shackle Safety')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
-              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
-            </button>
+      <!-- TAB 2: VIDEO TUTORIALS HUB -->
+      <div id="recoveryTabTutorials" style="display: none;">
+        <!-- CATEGORY FILTER CHIPS -->
+        <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+          <button type="button" class="tutorial-chip-btn active" onclick="filterRecoveryTutorials('all', this)">
+            <i class="fa-solid fa-film"></i> All Tutorials (12)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Recovery Gear', this)">
+            <i class="fa-solid fa-truck-pickup"></i> Recovery Rigging (4)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Tire Management', this)">
+            <i class="fa-solid fa-gauge-high"></i> Tire Management (3)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Navigation & Communications', this)">
+            <i class="fa-solid fa-satellite"></i> Comms & Offline GPS (2)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Emergency & First Aid', this)">
+            <i class="fa-solid fa-kit-medical"></i> First Aid (1)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Vehicle Essentials', this)">
+            <i class="fa-solid fa-wrench"></i> Spares & Jacking (2)
+          </button>
+        </div>
+
+        <!-- DYNAMIC TUTORIALS CONTAINER -->
+        <div class="tutorial-grid" id="recoveryTutorialsContainer">
+          <!-- Rendered dynamically by renderRecoveryTutorials() -->
+        </div>
+      </div>
+
+      <!-- TAB 3: EXTRACTION SAFETY PROTOCOLS -->
+      <div id="recoveryTabSafety" style="display: none;">
+        <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:20px; box-shadow:0 4px 14px rgba(0,0,0,0.04);">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1.5px solid #f1f5f9;">
+            <div style="background:#fee2e2; color:#dc2626; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px;">
+              <i class="fa-solid fa-skull-crossbones"></i>
+            </div>
+            <div>
+              <h4 style="font-size:16px; font-weight:900; color:#0f172a; margin:0;">The 6 Golden Rules of 4x4 Trail Recovery</h4>
+              <div style="font-size:11.5px; color:#64748b;">Essential safety guidelines to prevent catastrophic failure, structural damage, and fatal injuries</div>
+            </div>
           </div>
 
-          <div class="gear-card">
-            <div class="gear-icon"><i class="fa-solid fa-anchor"></i></div>
-            <div class="gear-title">10k+ Electric Winch & Tree Trunk Saver</div>
-            <div class="gear-importance"><i class="fa-solid fa-triangle-exclamation"></i> Essential #2: Self-Extraction</div>
-            <div class="gear-desc">A heavy-duty winch with synthetic line is the gold standard for solo recovery on boulder ledges and washed-out shelves. Always use a wide tree strap to protect anchor points.</div>
-            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/7pbSmOAqLeg', 'Winch Rigging & Tree Saver Safety Guide')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
-              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
-            </button>
-          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;">
+            <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:12px;">
+              <strong style="color:#991b1b; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-ban"></i> 1. NEVER Recover from a Tow Hitch Ball
+              </strong>
+              <div style="font-size:11.5px; color:#7f1d1d; line-height:1.4;">
+                A standard tow ball is cast steel and will instantly snap off under kinetic shock loads, turning into a lethal 4-pound projectile traveling at 200+ mph. Always connect to chassis-mounted rated recovery points or a hitch receiver shackle bracket.
+              </div>
+            </div>
 
-          <div class="gear-card">
-            <div class="gear-icon"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="gear-title">Heavy-Duty Nylon Traction Boards</div>
-            <div class="gear-importance"><i class="fa-solid fa-circle-check"></i> High Friction Bite</div>
-            <div class="gear-desc">Reinforced traction ramps provide instant tire traction when high-centered, spinning on slick wet clay, or digging into soft sand dunes.</div>
-            <button onclick="openVideoModal('https://www.youtube-nocookie.com/embed/yz1pV4g3XbQ', 'Traction Board Mud & Sand Recovery')" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">
-              <i class="fa-solid fa-circle-play"></i> Watch How-To Video
-            </button>
-          </div>
+            <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:8px; padding:12px;">
+              <strong style="color:#92400e; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-people-arrows"></i> 2. Establish a 1.5x Exclusion Zone
+              </strong>
+              <div style="font-size:11.5px; color:#78350f; line-height:1.4;">
+                Keep all spotters, passengers, and bystanders standing at a distance at least 1.5 times the length of the recovery rope to the sides. NEVER allow anyone to stand in the direct line of tension or behind either vehicle.
+              </div>
+            </div>
 
-          <div class="gear-card">
-            <div class="gear-icon"><i class="fa-solid fa-gauge-high"></i></div>
-            <div class="gear-title">Brass Rapid Deflator & 12V Air Compressor</div>
-            <div class="gear-importance"><i class="fa-solid fa-circle-check"></i> Traction & Sidewall Flex</div>
-            <div class="gear-desc">Airing down tires from 35 PSI to 12-16 PSI doubles your rubber footprint, smoothing out jagged rocks and drastically improving grip.</div>
-            <button onclick="openInclinometerModal()" style="width:100%; background:var(--amber-orange); color:#fff; border:none; padding:9px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer;">
-              <i class="fa-solid fa-calculator"></i> Calculate Optimal PSI
-            </button>
+            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:8px; padding:12px;">
+              <strong style="color:#166534; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-blanket"></i> 3. Always Use a Line Dampener
+              </strong>
+              <div style="font-size:11.5px; color:#14532d; line-height:1.4;">
+                Place a heavy recovery dampener, winch weight bag, or heavy canvas jacket over the center of steel cables and kinetic straps. If the line snaps, the dampener forces the recoiling ends straight down to the dirt.
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:8px; padding:12px;">
+              <strong style="color:#0f172a; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-hand"></i> 4. Appoint ONE Single Recovery Master
+              </strong>
+              <div style="font-size:11.5px; color:#475569; line-height:1.4;">
+                Multiple people yelling conflicting commands causes accidents. Designate ONE experienced person to communicate via radio or clear hand signals to the drivers. All other individuals must remain silent and behind the perimeter.
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:8px; padding:12px;">
+              <strong style="color:#0f172a; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-rotate-left"></i> 5. Back Off Shackle Pins 1/4 Turn
+              </strong>
+              <div style="font-size:11.5px; color:#475569; line-height:1.4;">
+                When tightening a 3/4" bow shackle screw pin, turn it until snug, then back it off 1/4 to 1/2 turn. Extreme tension under extraction will cause pin friction-galling, permanently locking the shackle if tightened all the way down.
+              </div>
+            </div>
+
+            <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:8px; padding:12px;">
+              <strong style="color:#1d4ed8; display:flex; align-items:center; gap:6px; font-size:12.5px; margin-bottom:4px;">
+                <i class="fa-solid fa-heart-pulse"></i> 6. Tread Lightly! Tree Preservation
+              </strong>
+              <div style="font-size:11.5px; color:#1e40af; line-height:1.4;">
+                Never wrap a winch cable or chain directly around a tree. The immense pressure will ring-bark and kill the tree. Always wrap a 3-inch wide polyester tree saver strap low around the trunk.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2431,6 +2604,11 @@ footer {
         </div>
       </div>
 
+      <!-- EMBEDDED IFRAME PLAYER CONTAINER (FOR TUTORIAL VIDEOS) -->
+      <div id="videoIframeContainer" style="display: none; position: relative; width: 100%; padding-top: 56.25%; border-radius: 12px; overflow: hidden; background: #0f172a; box-shadow: 0 8px 24px rgba(0,0,0,0.3); margin-bottom: 16px;">
+        <iframe id="videoIframe" src="" style="position: absolute; inset:0; width:100%; height:100%; border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+
       <!-- INTERACTIVE 3D HERO LAUNCHER BANNER -->
       <div id="videoHeroLauncher" style="position: relative; height: 260px; border-radius: 12px; overflow: hidden; background: #0f172a; box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer;">
         <img id="videoHeroImg" src="./assets/ga_traverse_3d_relief.jpg" style="position: absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity: 0.65;" alt="Trail 3D Topo Map">
@@ -2450,8 +2628,19 @@ footer {
         </div>
       </div>
 
+      <!-- TUTORIAL FIELD INSTRUCTIONS & SAFETY NOTES (SHOWN IN TUTORIAL MODE) -->
+      <div id="tutorialStepsContainer" style="display: none; margin-top: 14px; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:16px;">
+        <div style="font-size:12px; font-weight:900; color:#0f172a; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-list-check" style="color:var(--amber-orange);"></i> Step-by-Step Field Instructions:
+        </div>
+        <ol id="tutorialStepsList" style="margin:0 0 10px 18px; padding:0; font-size:12px; color:#334155; line-height:1.5;">
+        </ol>
+        <div id="tutorialProTip" style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px 12px; font-size:11.5px; color:#92400e; font-weight:700;">
+        </div>
+      </div>
+
       <!-- DYNAMIC TAILORED SEARCH TOPICS FOR THIS TRAIL -->
-      <div style="margin-top: 18px; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:16px;">
+      <div id="videoQueryFiltersContainer" style="margin-top: 18px; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:16px;">
         <div style="font-size:12px; font-weight:900; color:#1e293b; text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
           <i class="fa-solid fa-film" style="color:var(--amber-orange);"></i> Select a Specific Overlanding Video Topic for this Trail:
         </div>
@@ -2532,7 +2721,7 @@ footer {
         </span>
       </div>
       <div style="font-size:11.5px; color:#475569; line-height:1.4;">
-        Active Features: Real-Time Weather API, AI Open/Closed Predictability HUD, Interconnected Trail Systems (Beasley Knob 8-route breakdown), Water Crossings & Falls, Verified Amazon Gear Affiliate tags.
+        Active Features: Real-Time Weather API, AI Open/Closed Predictability HUD, Interconnected Trail Systems (Beasley Knob 8-route breakdown), Water Crossings & Falls, Standard 6-Category Trail Readiness & Recovery Checklist.
       </div>
     </div>
 
@@ -2567,6 +2756,38 @@ footer {
 </footer>
 
 <script>
+// TOP-OF-PAGE ENFORCEMENT & MOBILE SCROLL-LOCK
+let userHasManuallyScrolled = false;
+function markUserScrolled() {
+  userHasManuallyScrolled = true;
+}
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('touchstart', markUserScrolled, { passive: true });
+  window.addEventListener('touchmove', markUserScrolled, { passive: true });
+  window.addEventListener('wheel', markUserScrolled, { passive: true });
+  window.addEventListener('pointerdown', markUserScrolled, { passive: true });
+}
+
+function ensureTopViewport() {
+  if (!userHasManuallyScrolled && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }
+}
+
+if (typeof history !== 'undefined' && 'scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+if (typeof window !== 'undefined') {
+  if (window.location && window.location.hash) {
+    try { history.replaceState(null, document.title, window.location.pathname + window.location.search); } catch(e) {}
+  }
+  ensureTopViewport();
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('DOMContentLoaded', ensureTopViewport);
+    window.addEventListener('pageshow', ensureTopViewport);
+  }
+}
+
 // 4X4 & OVERLANDING DATABASE (NORTH GEORGIA, TENNESSEE & NATIONAL TRAILS)
 
 // 4X4 OFF-ROAD SHOPS & FABRICATION OUTFITTERS DATABASE
@@ -10550,7 +10771,7 @@ function initMap() {
     scrollWheelZoom: false,
     doubleClickZoom: true,
     boxZoom: true,
-    keyboard: true,
+    keyboard: false,
     tap: false
   });
 
@@ -10564,7 +10785,7 @@ function initMap() {
   renderMapMarkers();
 
   setTimeout(() => {
-    if (map) map.invalidateSize();
+    if (map) map.invalidateSize({ pan: false });
   }, 250);
 }
 
@@ -10688,11 +10909,284 @@ function switchMapLayer(type) {
 // HAVERSINE DISTANCE IN MILES
 
 
-// AMAZON ASSOCIATES AFFILIATE CONFIGURATION
-const AMAZON_AFFILIATE_TAG = "thebrewapp13-20";
+// STANDARD MANDATORY TRIP GEAR (SAME LIST FOR EVERY 4X4 EXPEDITION)
+const STANDARD_TRIP_GEAR = [
+  {
+    category: "Recovery Gear",
+    icon: "fa-truck-pickup",
+    description: "Kinetic recovery strap (snatch strap), two 3/4-inch bow shackles (WLL 4.75-ton minimum), rated tree saver strap, heavy-duty leather gloves, and a long-handled shovel."
+  },
+  {
+    category: "Tire Management",
+    icon: "fa-gauge-high",
+    description: "Portable 12V air compressor (e.g., Viair), digital tire pressure gauge, manual tire deflator, heavy-duty tire repair/plug kit, and a valve core tool."
+  },
+  {
+    category: "Navigation & Communications",
+    icon: "fa-satellite",
+    description: "Dedicated offline GPS mapping app (such as Gaia GPS or OnX Offroad) with downloaded local topographical maps, a fully charged power bank, and a programmed handheld two-way radio (GMRS or FRS)."
+  },
+  {
+    category: "Emergency & First Aid",
+    icon: "fa-kit-medical",
+    description: "Comprehensive trauma-informed first-aid kit (including tourniquets, chest seals, and quick-clot gauze), a high-lumen headlamp with extra batteries, a heavy-duty multi-tool, and a fixed-blade knife."
+  },
+  {
+    category: "Vehicle Essentials",
+    icon: "fa-wrench",
+    description: "Factory jack plus a wide base plate (such as a Hi-Lift jack base or solid wood block for soft ground), basic metric socket and wrench set, zip ties, duct tape, electrical tape, and a spare serpentine belt."
+  },
+  {
+    category: "Personal Sustenance",
+    icon: "fa-bottle-water",
+    description: "Minimum of 1 gallon of drinking water per person, high-calorie non-perishable food, weather-appropriate layers, a durable rain shell, and heavy-duty insect repellent."
+  }
+];
 
-function getAmazonAffiliateUrl(searchQuery) {
-  return "https://www.amazon.com/s?k=" + encodeURIComponent(searchQuery) + "&tag=" + AMAZON_AFFILIATE_TAG;
+// RECOVERY & EMERGENCY BUG-OUT VIDEO TUTORIALS DATASET (FOCUSED ON USER LOADOUT)
+const RECOVERY_TUTORIALS = [
+  {
+    id: "tut-kinetic-strap",
+    category: "Recovery Gear",
+    title: "Kinetic Recovery Strap (Snatch Strap) Dynamic Extraction",
+    icon: "fa-truck-pickup",
+    gearItem: "Kinetic recovery strap (snatch strap)",
+    youtubeId: "KZiA6rcJgFk",
+    searchQuery: "kinetic recovery rope snatch strap tutorial 4x4 off road",
+    duration: "10 Min Guide",
+    difficulty: "Essential Technique",
+    summary: "How to use kinetic rope stretch to extract stuck 4x4s smoothly without damaging vehicle frame mounts or snapping tow hooks.",
+    steps: [
+      "Confirm both vehicles are equipped with rated recovery points attached directly to the chassis (NEVER pull from a tow hitch ball).",
+      "Connect kinetic strap using 3/4\" rated bow shackles or synthetic soft shackles. Allow 6-10 feet of slack in an S-curve.",
+      "Drape a heavy recovery dampener, winch weight bag, or heavy canvas jacket over the center of the strap to absorb recoil in case of line failure.",
+      "Clear all bystanders to at least 1.5x the strap length to the sides (NEVER allow anyone to stand in the line of tension).",
+      "Recovery driver starts with smooth second-gear acceleration. The stretching rope uses kinetic energy to smoothly pop the stuck vehicle free."
+    ],
+    proTip: "⚠️ Always use smooth vehicle momentum and rope elongation rather than violent jerking or full-throttle wheel spinning."
+  },
+  {
+    id: "tut-bow-shackles",
+    category: "Recovery Gear",
+    title: "3/4-Inch Bow Shackles & Soft Shackles Safety Guide",
+    icon: "fa-link",
+    gearItem: "Two 3/4-inch bow shackles (WLL 4.75-ton minimum)",
+    youtubeId: "7pbSmOAqLeg",
+    searchQuery: "how to use bow shackles and soft shackles 4x4 recovery",
+    duration: "8 Min Guide",
+    difficulty: "Critical Safety",
+    summary: "Proper pin threading, working load limits, and eliminating lethal metal projectiles during high-tension pulls.",
+    steps: [
+      "Inspect shackles before every trip for hairline stress cracks, elongation, or stripped threads (verify WLL 4.75T stamp).",
+      "Thread the screw pin completely until snug, then back it off 1/4 to 1/2 turn to prevent pin binding under heavy tension.",
+      "Never allow side-loading on a bow shackle; keep load centered along the bow crown.",
+      "Use synthetic soft shackles whenever linking straps together to eliminate flying metal projectiles if a line parts."
+    ],
+    proTip: "💡 Backing the screw pin off 1/4 turn prevents friction-galling so you can unscrew it by hand after a heavy pull."
+  },
+  {
+    id: "tut-tree-saver",
+    category: "Recovery Gear",
+    title: "Rated Tree Saver Strap Rigging & Winch Anchor Safety",
+    icon: "fa-tree",
+    gearItem: "Rated tree saver strap",
+    youtubeId: "7pbSmOAqLeg",
+    searchQuery: "tree saver strap winch rigging tutorial 4x4",
+    duration: "7 Min Guide",
+    difficulty: "Trail Ethics & Safety",
+    summary: "Protect live trees from bark girdling while creating an immovable winch anchor point on boulder ledges and washed-out shelves.",
+    steps: [
+      "Select a healthy live tree with at least a 10-12 inch trunk diameter in direct line with your pull.",
+      "Wrap the wide polyester tree strap around the base as low to the ground as possible to reduce lever torque on tree roots.",
+      "Join the two end loops together using a rated bow shackle or soft shackle (never choke or knot the strap).",
+      "Connect your winch hook with the hook opening facing UP so if it slips, it drops down safely."
+    ],
+    proTip: "🌲 Tread Lightly! rule: Never wrap steel cable or synthetic winch line directly around a tree trunk."
+  },
+  {
+    id: "tut-shovel-recovery",
+    category: "Recovery Gear",
+    title: "Shovel Clearing & High-Centered Axle Unstucking",
+    icon: "fa-trowel",
+    gearItem: "Long-handled shovel & heavy-duty leather gloves",
+    youtubeId: "yz1pV4g3XbQ",
+    searchQuery: "how to dig out a stuck 4x4 off road shovel recovery",
+    duration: "6 Min Guide",
+    difficulty: "Essential Labor",
+    summary: "How to clear mud, sand, and clay berms from differentials and frame rails to reduce winching resistance by 50%.",
+    steps: [
+      "Always put on heavy-duty leather gloves before inspecting or clearing undercarriage debris.",
+      "Dig clear trenches directly in front of all 4 tires in the desired direction of travel to create gentle climbing ramps.",
+      "Scoop out compacted mud or snow from underneath high-centered differential pumpkins, axle tubes, and skid plates.",
+      "Place flat rocks, branches, or traction ramps into the dug-out tire tracks for instant bite."
+    ],
+    proTip: "⛏️ 5 minutes of shovel work can cut extraction winch loads in half and prevent broken CV axles."
+  },
+  {
+    id: "tut-tire-deflation",
+    category: "Tire Management",
+    title: "Rapid Tire Deflation & Trail PSI Optimization",
+    icon: "fa-gauge-high",
+    gearItem: "Manual tire deflator & digital tire pressure gauge",
+    youtubeId: "yz1pV4g3XbQ",
+    searchQuery: "how to air down 4x4 tires rapid tire deflator gauge",
+    duration: "9 Min Guide",
+    difficulty: "Top Performance Mod",
+    summary: "Why airing down to 12-18 PSI doubles your tire contact patch, smooths out rough washboards, and prevents sidewall punctures.",
+    steps: [
+      "Thread the brass rapid deflator onto the valve stem and screw the core shaft in to engage the valve core.",
+      "Turn counter-clockwise to unscrew the valve core into the deflator housing (the core stays captured inside).",
+      "Slide the air-release collar backward to dump air rapidly; slide forward to check live pressure on the gauge.",
+      "Target 15-18 PSI for general rocky trails; 10-12 PSI for deep mud or soft sand dunes.",
+      "Thread the valve core back in until snug, remove the tool, and reinstall the valve cap."
+    ],
+    proTip: "🎯 Airing down is the #1 free traction upgrade in off-roading. It lets tires wrap around rocks instead of getting sliced."
+  },
+  {
+    id: "tut-tire-plug-kit",
+    category: "Tire Management",
+    title: "Trailside Tire Plug & Valve Core Field Repair",
+    icon: "fa-wrench",
+    gearItem: "Heavy-duty tire repair/plug kit & valve core tool",
+    youtubeId: "KZiA6rcJgFk",
+    searchQuery: "how to plug a tire off road t handle tire plug kit repair",
+    duration: "8 Min Guide",
+    difficulty: "Field Mechanical",
+    summary: "Step-by-step method to plug tread punctures from thorns, sharp rocks, and roots without removing the tire from the vehicle.",
+    steps: [
+      "Locate the puncture by listening for air hiss or spraying soapy water / puddle water over the tire.",
+      "Use pliers to extract the nail, stick, or rock shard causing the puncture.",
+      "Insert the T-handle spiral reamer into the hole and push/pull vigorously to clean and roughen the channel.",
+      "Thread a vulcanizing rubber strip halfway through the eyelet of the T-handle insertion tool.",
+      "Push the plug firmly 2/3 of the way into the hole, then yank the tool straight out without twisting.",
+      "Trim the excess plug flush with the tread using your knife, air up, and test for bubbles."
+    ],
+    proTip: "🛑 For larger tread gashes, insert 2 or 3 plugs together in the insertion needle for an airtight emergency trail seal."
+  },
+  {
+    id: "tut-air-compressor",
+    category: "Tire Management",
+    title: "12V Portable Air Compressor Operation & Air-Up",
+    icon: "fa-compress",
+    gearItem: "Portable 12V air compressor (e.g., Viair)",
+    youtubeId: "KZiA6rcJgFk",
+    searchQuery: "how to use viair 12v portable air compressor off road",
+    duration: "7 Min Guide",
+    difficulty: "Post-Trail Essential",
+    summary: "Airing back up to 32-38 PSI before hitting high-speed pavement to avoid dangerous tire overheating and tread separation.",
+    steps: [
+      "Park vehicle safely on level ground at the trailhead and KEEP ENGINE RUNNING to maintain 13.8V+ alternator voltage.",
+      "Connect heavy-duty alligator clamps directly to battery terminals (Red to Positive, Black to Negative/Ground).",
+      "Attach air chuck to tire valve stem and flip the compressor switch ON.",
+      "Inflate each tire to factory highway spec (typically 32-37 PSI), monitoring the in-line pressure gauge.",
+      "Let compressor cool for 2 minutes before packing into its protective storage bag."
+    ],
+    proTip: "⚡ Never run high-amp compressors from cigarette lighter sockets; direct battery clamping prevents blown vehicle fuses."
+  },
+  {
+    id: "tut-offline-gps",
+    category: "Navigation & Communications",
+    title: "Offline Topo GPS Navigation (Gaia GPS / OnX Offroad)",
+    icon: "fa-satellite",
+    gearItem: "Dedicated offline GPS mapping app & power bank",
+    youtubeId: "KZiA6rcJgFk",
+    searchQuery: "gaia gps onx offroad offline maps navigation tutorial",
+    duration: "11 Min Guide",
+    difficulty: "Essential Preparedness",
+    summary: "Pre-downloading offline topo layers and satellite maps so you never get lost when cellular signals drop to zero.",
+    steps: [
+      "Before leaving home/Wi-Fi, select the trail region in Gaia GPS or OnX Offroad and download offline maps (USFS 2016, Topo, Satellite).",
+      "Verify downloaded map tile boundaries while offline in airplane mode.",
+      "Drop waypoints for trailhead entry, water crossings, emergency bail-out spurs, and intended campsites.",
+      "Enable track recording at the trailhead so you can backtrack your exact GPS breadcrumbs if trails become overgrown or washed out.",
+      "Keep phone/tablet connected to your high-capacity power bank to prevent cold temperatures from draining battery life."
+    ],
+    proTip: "📍 Always calibrate your phone compass before heading out and keep a physical printed topographic map as a zero-power backup."
+  },
+  {
+    id: "tut-gmrs-radios",
+    category: "Navigation & Communications",
+    title: "Handheld Two-Way Radios (GMRS / FRS) & Spotter Comms",
+    icon: "fa-walkie-talkie",
+    gearItem: "Programmed handheld two-way radio (GMRS or FRS)",
+    youtubeId: "7pbSmOAqLeg",
+    searchQuery: "gmrs radio off road trail comms tutorial guide",
+    duration: "9 Min Guide",
+    difficulty: "Team Coordination",
+    summary: "Clear spotter communication, convoy gap reporting, and emergency radio hailing protocols.",
+    steps: [
+      "Preset radios to standard off-road convoy channels (GMRS Ch 16 / 462.575 MHz or CB Ch 4).",
+      "Set squelch to eliminate background static without cutting off weak trail transmissions.",
+      "Spotter Rule: Only ONE person spots a driver over an obstacle. Spotter should be in direct line of sight.",
+      "Use clear, unambiguous commands: 'Driver Left', 'Passenger Right', 'Straight', 'STOP'.",
+      "In emergencies, broadcast your exact GPS coordinates, rig count, and trail mile marker on high power."
+    ],
+    proTip: "📻 Say 'Driver Left' or 'Passenger Right' instead of 'Left/Right' to eliminate disorientation from opposite perspectives."
+  },
+  {
+    id: "tut-trauma-firstaid",
+    category: "Emergency & First Aid",
+    title: "Wilderness Trauma First Aid (CAT Tourniquet & QuikClot)",
+    icon: "fa-kit-medical",
+    gearItem: "Comprehensive trauma-informed first-aid kit",
+    youtubeId: "8eYh4oF2j-I",
+    searchQuery: "stop the bleed cat tourniquet quikclot application tutorial",
+    duration: "12 Min Guide",
+    difficulty: "Life-Saving Skill",
+    summary: "Controlling catastrophic bleeding, sealing penetrating chest wounds, and stabilizing fractures in remote wilderness.",
+    steps: [
+      "For severe arterial limb bleeding: Apply Combat Application Tourniquet (CAT) 2-3 inches above wound (High and Tight).",
+      "Pull self-adhering band tight, turn windlass rod until bright red bleeding stops completely, and lock windlass in clip. Write timestamp on time strap.",
+      "For junctional wounds (groin/armpit/neck): Pack deep wound cavity tightly with QuikClot hemostatic gauze and hold direct firm pressure for 3 full minutes.",
+      "For chest trauma: Apply vented chest seal to allow air/blood escape while preventing tension pneumothorax.",
+      "Keep patient insulated with thermal mylar blanket to prevent shock and hypothermia."
+    ],
+    proTip: "🩸 Never loosen a tourniquet once applied in the field; only emergency room trauma surgeons should remove it."
+  },
+  {
+    id: "tut-jack-base-plate",
+    category: "Vehicle Essentials",
+    title: "Safe 4x4 Jacking on Soft Ground with a Base Plate",
+    icon: "fa-cubes",
+    gearItem: "Factory jack plus wide base plate (Hi-Lift base / wood block)",
+    youtubeId: "yz1pV4g3XbQ",
+    searchQuery: "how to jack a 4x4 safely off road jack base plate",
+    duration: "8 Min Guide",
+    difficulty: "High Risk Operation",
+    summary: "Preventing jacks from sinking into mud/sand or tipping over when changing tires on uneven terrain.",
+    steps: [
+      "Engage parking brake, put transmission in Park (or 1st gear for manual), and CHOCK the diagonally opposite wheels.",
+      "Place wide base plate (or 2-inch solid hardwood block) on the ground to distribute ground pressure over 4x larger surface area.",
+      "Position jack base directly under solid axle tube or designated chassis lift point (never under sheet metal or steering links).",
+      "Ensure jack shaft is angled slightly toward the vehicle so as it lifts, the load remains centered over the base.",
+      "Never put any body part underneath a vehicle supported only by a jack; slide the spare wheel under the frame rail for safety."
+    ],
+    proTip: "🛡️ Always slide your removed wheel or spare tire under the frame rail next to the jack as an emergency failsafe."
+  },
+  {
+    id: "tut-serpentine-belt",
+    category: "Vehicle Essentials",
+    title: "Emergency Serpentine Belt Replacement & Trail Tool Kit",
+    icon: "fa-screwdriver-wrench",
+    gearItem: "Basic metric socket set, zip ties, tape & spare serpentine belt",
+    youtubeId: "KZiA6rcJgFk",
+    searchQuery: "trail repair serpentine belt replacement 4x4 trail tools",
+    duration: "10 Min Guide",
+    difficulty: "Mechanical Preparedness",
+    summary: "How to route and replace a snapped drive belt in the field to restore power steering, water pump cooling, and alternator charging.",
+    steps: [
+      "Allow engine bay to cool. Check belt routing diagram sticker on radiator cowl (or snap a phone photo before trips).",
+      "Fit correct metric socket or 3/8\" ratchet square drive onto the spring-loaded belt tensioner pulley bolt.",
+      "Lever the tensioner counter-clockwise to relieve tension and route the new belt around all grooved and smooth pulleys.",
+      "Slip the belt over the final smooth idler pulley last, then slowly release tensioner tension.",
+      "Inspect for proper alignment in all pulley grooves before starting the engine."
+    ],
+    proTip: "🔧 Always carry a model-specific spare belt and 3/8\" ratchet in your rear cubby; a snapped belt stops your water pump instantly."
+  }
+];
+
+function getRecommendedGear() {
+  return STANDARD_TRIP_GEAR;
 }
 
 function handleImgError(img) {
@@ -10713,45 +11207,6 @@ function calculateDistanceInMiles(lat1, lon1, lat2, lon2) {
   const miles = Math.round(R * c);
   const hours = (miles / 45.0).toFixed(1);
   return { miles, hours };
-}
-
-// RECOMMENDED ESSENTIAL & RECOVERY GEAR HELPER PER TRAIL (100% VERIFIED AMAZON GEAR)
-function getRecommendedGear(trail) {
-  if (trail.isOverland) {
-    return [
-      { icon: 'fa-tower-broadcast', label: 'Garmin inReach Mini 2 Satellite SOS', search: 'Garmin inReach Mini 2' },
-      { icon: 'fa-gas-pump', label: 'RotopaX 2-Gallon Fuel Pack & Mount', search: 'Rotopax 2 Gallon Fuel Pack' },
-      { icon: 'fa-link', label: 'Rhino USA 30ft Kinetic Recovery Rope', search: 'Rhino USA Kinetic Recovery Rope 30ft' },
-      { icon: 'fa-link', label: 'Synthetic Soft Shackles 1/2\" 45k lb', search: 'Synthetic Soft Shackles 1/2 inch' },
-      { icon: 'fa-gauge-high', label: 'VIAIR 400P Portable 12V Compressor', search: 'VIAIR 400P Air Compressor' },
-      { icon: 'fa-map-location-dot', label: 'Garmin Tread 4x4 Off-Road GPS', search: 'Garmin Tread Off-Road GPS' }
-    ];
-  } else if (trail.difficultyScale >= 7) {
-    return [
-      { icon: 'fa-anchor', label: 'WARN VR EVO 10-S Synthetic Winch', search: 'WARN VR EVO 10-S Winch' },
-      { icon: 'fa-link', label: 'Rhino USA Kinetic Recovery Rope 30ft', search: 'Rhino USA Kinetic Recovery Rope 30ft' },
-      { icon: 'fa-link', label: 'Heavy Duty 3/4\" Steel D-Ring Shackles', search: '3/4 inch D Ring Shackles' },
-      { icon: 'fa-layer-group', label: 'Off-Road Traction Recovery Boards', search: 'Offroad Traction Recovery Boards' },
-      { icon: 'fa-wrench', label: 'ARB Heavy Duty Speedy Tire Repair Kit', search: 'ARB Tire Repair Kit Speedy Seal' }
-    ];
-  } else if (trail.difficultyScale >= 4) {
-    return [
-      { icon: 'fa-link', label: 'Kinetic Recovery Strap & Soft Shackles', search: 'Kinetic Recovery Tow Strap Soft Shackles' },
-      { icon: 'fa-layer-group', label: 'Off-Road Traction Recovery Boards', search: 'Offroad Traction Boards' },
-      { icon: 'fa-gauge-high', label: 'ARB E-Z Tire Deflator with Gauge', search: 'ARB Tire Deflator E-Z' },
-      { icon: 'fa-kit-medical', label: 'Everlit Tactical Trauma IFAK Kit', search: 'Offroad First Aid Kit IFAK' },
-      { icon: 'fa-gauge-high', label: 'VIAIR 88P Heavy Duty 12V Compressor', search: 'VIAIR 88P 12V Air Compressor' }
-    ];
-  } else {
-    return [
-      { icon: 'fa-gauge-high', label: 'ARB E-Z Tire Deflator with Gauge', search: 'ARB Tire Deflator E-Z' },
-      { icon: 'fa-gauge-high', label: 'VIAIR 88P Portable 12V Compressor', search: 'VIAIR 88P 12V Air Compressor' },
-      { icon: 'fa-link', label: 'Rhino USA 20ft 3\" Recovery Tow Strap', search: 'Rhino USA Tow Strap 20ft' },
-      { icon: 'fa-radio', label: 'Midland MXT275 15W GMRS 2-Way Radio', search: 'Midland MXT275 GMRS Radio' },
-      { icon: 'fa-kit-medical', label: 'Everlit Emergency Trauma First Aid Kit', search: 'Everlit First Aid Kit Trauma' },
-      { icon: 'fa-map', label: 'NatGeo Waterproof Trails Topo Map', search: 'National Geographic Trails Illustrated Topo Map' }
-    ];
-  }
 }
 
 // DIFFICULTY BADGE COLOR HELPER
@@ -11473,12 +11928,12 @@ function renderTrails() {
             </div>
           ` : ''}
 
-          <!-- COLLAPSIBLE CURATED AMAZON ESSENTIAL GEAR ACCORDION -->
+          <!-- COLLAPSIBLE STANDARD MANDATORY TRIP GEAR ACCORDION -->
           <div style="margin-top: 8px;">
             <div onclick="toggleCardGear('${trail.id}')" style="cursor: pointer; background: #fff7ed; border: 1.5px solid #fed7aa; border-radius: 8px; padding: 7px 10px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
               <div style="font-size: 11px; font-weight: 800; color: #c2410c; display: flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-shield-halved" style="color: var(--amber-orange);"></i>
-                <span id="gear-label-${trail.id}">Essential Gear for ${trail.difficultyCategory || '4x4'} Trails</span>
+                <span id="gear-label-${trail.id}">Essential Trail Checklist (All Trips)</span>
               </div>
               <div style="font-size: 10.5px; color: #9a3412; font-weight: 800; display:flex; align-items:center; gap:4px;">
                 <span>View Gear</span>
@@ -11487,16 +11942,21 @@ function renderTrails() {
             </div>
             
             <div id="gear-body-${trail.id}" style="display:none; background:#ffffff; border:1.5px solid #cbd5e1; border-top:none; border-radius:0 0 8px 8px; padding:10px; margin-top:-2px;">
-              <div style="font-size:9.5px; font-weight:700; color:#c2410c; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                <span>Gear for ${trail.difficultyCategory} Terrain:</span>
-                <span style="font-size:9px; color:#64748b;"><i class="fa-brands fa-amazon" style="color:#f59e0b;"></i> Amazon Curated</span>
+              <div style="font-size:9.5px; font-weight:800; color:#c2410c; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                <span><i class="fa-solid fa-clipboard-check"></i> Standard Mandatory Trip Gear:</span>
+                <span style="font-size:9px; color:#64748b;">6 Core Categories</span>
               </div>
-              <div style="display:flex; flex-wrap:wrap; gap:4px;">
-                ${getRecommendedGear(trail).map(g => `
-                  <a href="${getAmazonAffiliateUrl(g.search || g.label)}" target="_blank" rel="noopener noreferrer nofollow" title="View ${g.label} on Amazon" style="background:#ffffff; border:1px solid #cbd5e1; color:#1e293b; font-size:10px; font-weight:700; padding:3px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.color='#ea580c';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#1e293b';">
-                    <i class="fa-solid ${g.icon}" style="color:var(--amber-orange); font-size:9px;"></i> ${g.label}
-                    <i class="fa-brands fa-amazon" style="font-size:9px; color:#f59e0b; margin-left:2px;"></i>
-                  </a>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                ${STANDARD_TRIP_GEAR.map(g => `
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 8px; font-size:10.5px;">
+                    <div style="font-weight:800; color:#0f172a; display:flex; align-items:center; gap:5px; margin-bottom:1px;">
+                      <i class="fa-solid ${g.icon}" style="color:var(--amber-orange); font-size:10px;"></i>
+                      <span>${g.category}:</span>
+                    </div>
+                    <div style="color:#475569; font-size:10px; line-height:1.35;">
+                      ${g.description}
+                    </div>
+                  </div>
                 `).join('')}
               </div>
             </div>
@@ -11668,7 +12128,7 @@ function renderMapMarkers(filteredList = TRAILS, detectedState = null) {
 
       // Re-center around user GPS with appropriate zoom
       const zoomLevel = activeRadiusMiles <= 35 ? 9 : (activeRadiusMiles <= 70 ? 8 : 7);
-      map.setView([userLat, userLng], zoomLevel, { animate: true });
+      map.setView([userLat, userLng], zoomLevel, { animate: false });
     } else if (markerLatLongs.length > 0) {
       // All Distances
       const bounds = L.latLngBounds(markerLatLongs);
@@ -11831,206 +12291,130 @@ function toggleRecoveryGearSection() {
   if (body.style.display === 'none') {
     body.style.display = 'block';
     if (icon) icon.style.transform = 'rotate(180deg)';
+    renderRecoveryTutorials();
   } else {
     body.style.display = 'none';
     if (icon) icon.style.transform = 'rotate(0deg)';
   }
 }
 
-// BUGOUT TAB SWITCHER
-function switchBugoutTab(tab, btn) {
+// RECOVERY & BUG-OUT TAB CONTROLLER
+function switchRecoveryGuideTab(tab, btn) {
   document.querySelectorAll('.bugout-tab-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
-  const dayTab = document.getElementById('bugoutDayTab');
-  const overnightTab = document.getElementById('bugoutOvernightTab');
-  const recoveryTab = document.getElementById('bugoutRecoveryTab');
+  const checkTab = document.getElementById('recoveryTabChecklist');
+  const tutTab = document.getElementById('recoveryTabTutorials');
+  const safeTab = document.getElementById('recoveryTabSafety');
 
-  if (dayTab) dayTab.style.display = (tab === 'day') ? 'block' : 'none';
-  if (overnightTab) overnightTab.style.display = (tab === 'overnight') ? 'block' : 'none';
-  if (recoveryTab) recoveryTab.style.display = (tab === 'recovery') ? 'block' : 'none';
-}
-
-// SCROLL TO AND HIGHLIGHT TRAIL CARD ON MARKER CLICK
-function scrollToTrailCard(trailId) {
-  const card = document.getElementById(`card-${trailId}`);
-  const trailsBody = document.getElementById('trailsBody');
-  const icon = document.getElementById('trailsToggleIcon');
-  
-  if (trailsBody && trailsBody.style.display === 'none') {
-    trailsBody.style.display = 'block';
-    if (icon) icon.style.transform = 'rotate(180deg)';
+  if (checkTab) checkTab.style.display = (tab === 'checklist') ? 'block' : 'none';
+  if (tutTab) {
+    tutTab.style.display = (tab === 'tutorials') ? 'block' : 'none';
+    if (tab === 'tutorials') renderRecoveryTutorials();
   }
-
-  if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
-    // Remove previous highlights
-    document.querySelectorAll('.trail-card').forEach(c => c.classList.remove('card-highlighted'));
-    
-    // Add pulsing highlight
-    card.classList.add('card-highlighted');
-    setTimeout(() => {
-      card.classList.remove('card-highlighted');
-    }, 3500);
-  }
+  if (safeTab) safeTab.style.display = (tab === 'safety') ? 'block' : 'none';
 }
 
-// GET USER GPS LOCATION (TRAIL LOCATOR)
-function getUserGPSLocation() {
-  const btn = document.getElementById('btnGpsMainText');
-  if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> LOCATING TRAILS NEAR YOU...';
-
-  const applyLocation = (lat, lng, isDeviceGps) => {
-    userLat = lat;
-    userLng = lng;
-    isGpsActive = true;
-    if (btn) btn.innerHTML = '<img src="./assets/favicon.svg" style="width:20px; height:20px; display:inline-block; vertical-align:middle; border-radius:3px; margin-right:6px;"> ' + (isDeviceGps ? 'GPS POSITION LOCKED' : 'CENTERED: NORTH GEORGIA');
-
-    if (map) {
-      map.flyTo([userLat, userLng], 8, { duration: 1.2 });
-      setTimeout(() => { if (map) map.invalidateSize(); }, 200);
-    }
-
-    renderTrails();
-    renderShops();
-
-    const mapSec = document.getElementById('mapSection');
-    if (mapSec) mapSec.scrollIntoView({ behavior: 'smooth' });
-
-    setTimeout(() => {
-      if (btn) btn.innerHTML = '<img src="./assets/favicon.svg" style="width:22px; height:22px; display:inline-block; vertical-align:middle; border-radius:4px; margin-right:6px;"> LOCATE TRAILS NEAR ME';
-    }, 3500);
-  };
-
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        applyLocation(pos.coords.latitude, pos.coords.longitude, true);
-      },
-      (err) => {
-        console.warn("GPS Sensor unavailable:", err.message);
-        // Default North Georgia / Appalachian center
-        applyLocation(34.7000, -84.0000, false);
-      },
-      { enableHighAccuracy: true, timeout: 6000 }
-    );
-  } else {
-    applyLocation(34.7000, -84.0000, false);
-  }
-}
-
-// CATEGORY SWITCHER (ALL / OVERLAND / BOH / DAY)
-function selectRouteCategory(cat, btn) {
-  activeCategory = cat;
-  
-  document.querySelectorAll('#btnCatAll, #btnCatOverland, #btnCatBOH, #btnCatDay').forEach(b => {
-    b.classList.remove('active-green', 'active');
-  });
-
-  if (btn) {
-    btn.classList.add('active-green');
-  } else {
-    if (cat === 'overland') document.getElementById('btnCatOverland')?.classList.add('active-green');
-    else if (cat === 'boh') document.getElementById('btnCatBOH')?.classList.add('active-green');
-    else if (cat === 'day') document.getElementById('btnCatDay')?.classList.add('active-green');
-    else document.getElementById('btnCatAll')?.classList.add('active-green');
-  }
-
-  renderTrails();
-
-  if (cat === 'overland') {
-    const guide = document.getElementById('overlandingGuideBody');
-    const icon = document.getElementById('overlandingToggleIcon');
-    if (guide) {
-      guide.style.display = 'block';
-      if (icon) icon.style.transform = 'rotate(180deg)';
-    }
-  }
-}
-
-// EXACT MILE RADIUS FILTER (30 / 60 / 90 MILES / ALL)
-function setMileRadiusFilter(miles, btn) {
-  activeRadiusMiles = miles;
-  btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTrails();
-}
-
-// DIFFICULTY FILTER (1-10)
-function setDiffFilter(diff, btn) {
-  activeDifficulty = diff;
-  btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTrails();
-}
-
-function onSearchInput() {
-  searchQuery = document.getElementById('searchInput').value;
-  renderTrails();
-}
-
-function onSearchIconClick() {
-  onSearchInput();
-  const trailsSec = document.getElementById('trails');
-  if (trailsSec) trailsSec.scrollIntoView({ behavior: 'smooth' });
-}
-
-// COLLAPSIBLE TOGGLES
-function toggleTrailsSection() {
-  const body = document.getElementById('trailsBody');
-  const icon = document.getElementById('trailsToggleIcon');
-  if (!body) return;
-  if (body.style.display === 'none') {
-    body.style.display = 'block';
-    if (icon) icon.style.transform = 'rotate(180deg)';
-    renderShops();
-    if (map) setTimeout(() => map.invalidateSize(), 150);
-  } else {
-    body.style.display = 'none';
-    if (icon) icon.style.transform = 'rotate(0deg)';
-  }
-}
-
-function toggleOverlandingGuideSection() {
-  const body = document.getElementById('overlandingGuideBody');
-  const icon = document.getElementById('overlandingToggleIcon');
-  if (!body) return;
-  if (body.style.display === 'none') {
-    body.style.display = 'block';
-    if (icon) icon.style.transform = 'rotate(180deg)';
-  } else {
-    body.style.display = 'none';
-    if (icon) icon.style.transform = 'rotate(0deg)';
-  }
-}
-
-function toggleRecoveryGearSection() {
+function jumpToRecoveryTutorials(category = 'all') {
+  const section = document.getElementById('recovery-gear');
   const body = document.getElementById('recoveryGearBody');
   const icon = document.getElementById('recoveryToggleIcon');
-  if (!body) return;
-  if (body.style.display === 'none') {
+  if (body) {
     body.style.display = 'block';
     if (icon) icon.style.transform = 'rotate(180deg)';
-  } else {
-    body.style.display = 'none';
-    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+  const tabBtn = document.getElementById('tabBtnTutorials');
+  switchRecoveryGuideTab('tutorials', tabBtn);
+  if (category !== 'all') {
+    filterRecoveryTutorials(category);
+  }
+  if (section && typeof section.scrollIntoView === 'function') {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
-// BUGOUT TAB SWITCHER
-function switchBugoutTab(tab, btn) {
-  document.querySelectorAll('.bugout-tab-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-
-  const dayTab = document.getElementById('bugoutDayTab');
-  const overnightTab = document.getElementById('bugoutOvernightTab');
-  const recoveryTab = document.getElementById('bugoutRecoveryTab');
-
-  if (dayTab) dayTab.style.display = (tab === 'day') ? 'block' : 'none';
-  if (overnightTab) overnightTab.style.display = (tab === 'overnight') ? 'block' : 'none';
-  if (recoveryTab) recoveryTab.style.display = (tab === 'recovery') ? 'block' : 'none';
+function jumpToRecoveryChecklist() {
+  const section = document.getElementById('recovery-gear');
+  const body = document.getElementById('recoveryGearBody');
+  const icon = document.getElementById('recoveryToggleIcon');
+  if (body) {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  }
+  const tabBtn = document.getElementById('tabBtnChecklist');
+  switchRecoveryGuideTab('checklist', tabBtn);
+  if (section && typeof section.scrollIntoView === 'function') {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
+
+function filterRecoveryTutorials(category, btn) {
+  document.querySelectorAll('.tutorial-chip-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderRecoveryTutorials(category);
+}
+
+function renderRecoveryTutorials(filterCategory = 'all') {
+  const container = document.getElementById('recoveryTutorialsContainer');
+  if (!container) return;
+
+  const list = (filterCategory === 'all')
+    ? RECOVERY_TUTORIALS
+    : RECOVERY_TUTORIALS.filter(t => t.category === filterCategory);
+
+  container.innerHTML = list.map(t => `
+    <div class="tutorial-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:32px; height:32px; border-radius:6px; background:#fff7ed; color:#ea580c; display:flex; align-items:center; justify-content:center; font-size:14px;">
+              <i class="fa-solid ${t.icon}"></i>
+            </div>
+            <div>
+              <span style="font-size:10px; font-weight:800; color:#ea580c; text-transform:uppercase; letter-spacing:0.5px;">${t.category}</span>
+              <div style="font-size:10px; color:#64748b; font-weight:700;">${t.duration} • ${t.difficulty}</div>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size:14px; font-weight:900; color:var(--forest-dark); margin:0 0 6px 0; line-height:1.3;">
+          ${t.title}
+        </h4>
+        <div style="font-size:11.5px; color:#475569; line-height:1.45; margin-bottom:12px;">
+          ${t.summary}
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; margin-bottom:12px;">
+          <strong style="display:block; font-size:10.5px; text-transform:uppercase; color:#0f172a; margin-bottom:4px;">
+            <i class="fa-solid fa-list-ol" style="color:var(--amber-orange);"></i> Key Steps:
+          </strong>
+          <ul style="margin:0 0 0 16px; padding:0; font-size:11px; color:#334155; line-height:1.45;">
+            ${t.steps.slice(0, 3).map(s => `<li>${s}</li>`).join('')}
+          </ul>
+          ${t.steps.length > 3 ? `<div style="font-size:10px; color:#ea580c; font-weight:700; margin-top:4px;">+ ${t.steps.length - 3} more field steps inside tutorial modal</div>` : ''}
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <button type="button" onclick="openRecoveryTutorial('${t.id}')" style="width:100%; background:linear-gradient(135deg, var(--forest-dark), #1e293b); color:#fff; border:none; padding:9px 14px; border-radius:6px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+          <i class="fa-solid fa-circle-play" style="color:#f97316;"></i> Watch Video Tutorial
+        </button>
+        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(t.searchQuery)}" target="_blank" rel="noopener noreferrer" style="font-size:10.5px; color:#64748b; font-weight:700; text-align:center; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:4px;" onmouseover="this.style.color='#ea580c'" onmouseout="this.style.color='#64748b'">
+          <i class="fa-brands fa-youtube" style="color:#dc2626;"></i> Search more ${t.category} on YouTube ↗
+        </a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openRecoveryTutorial(tutorialId) {
+  const tut = RECOVERY_TUTORIALS.find(t => t.id === tutorialId);
+  if (!tut) return;
+
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${tut.youtubeId}?autoplay=1`;
+  openVideoModal(embedUrl, tut.title, tutorialId);
+}
+
 
 function toggleVideoLibrarySection() {
   const body = document.getElementById('videoLibraryBody');
@@ -12204,7 +12588,12 @@ function openTrailSpecificVideoModal(videoId) {
   const regionEl = document.getElementById('videoModalRegion');
   const linkEl = document.getElementById('videoDirectSearchLink');
   const filtersEl = document.getElementById('videoQueryFilters');
-  const iframe = document.getElementById('videoIframe');
+  const filtersContainer = document.getElementById('videoQueryFiltersContainer');
+  const iframeContainer = document.getElementById('videoIframeContainer');
+  const stepsContainer = document.getElementById('tutorialStepsContainer');
+  const heroLauncher = document.getElementById('videoHeroLauncher');
+  const heroTitle = document.getElementById('videoHeroTitle');
+  const heroImg = document.getElementById('videoHeroImg');
 
   if (titleEl) titleEl.innerText = v.title;
   if (regionEl) regionEl.innerText = v.region;
@@ -12216,13 +12605,17 @@ function openTrailSpecificVideoModal(videoId) {
     linkEl.href = directYoutubeUrl;
   }
 
-  // Load YouTube Search Embed or Direct Fallback
-  if (iframe) {
-    // Open dynamic YouTube embed search query
-    iframe.src = 'https://www.youtube.com/embed?listType=search&list=' + baseQuery;
+  if (iframeContainer) iframeContainer.style.display = 'none';
+  if (stepsContainer) stepsContainer.style.display = 'none';
+  if (heroLauncher) {
+    heroLauncher.style.display = 'flex';
+    heroLauncher.onclick = () => window.open(directYoutubeUrl, '_blank');
   }
+  if (heroTitle) heroTitle.innerText = `Click to Watch Live ${v.title} Overlanding Videos on YouTube`;
+  if (heroImg && v.thumbnail) heroImg.src = v.thumbnail;
 
   // Inject tailored overlanding sub-topic search chips
+  if (filtersContainer) filtersContainer.style.display = 'block';
   if (filtersEl) {
     const topics = [
       { label: '🎬 Full Overlanding Documentary', q: v.title + ' overland camping trip full video' },
@@ -12231,7 +12624,7 @@ function openTrailSpecificVideoModal(videoId) {
       { label: '🏕️ Best Campsites & River Fords', q: v.title + ' dispersed camping water crossings' }
     ];
     filtersEl.innerHTML = topics.map(t => `
-      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(t.q)}" target="_blank" rel="noopener noreferrer" style="background:#ffffff; border:1px solid #cbd5e1; color:#1e293b; font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.color='#ea580c';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#1e293b';">
+      <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(t.q)}" target="_blank" rel="noopener noreferrer" style="background:#ffffff; border:1px solid #cbd5e1; color:#1e293b; font-size:10.5px; font-weight:700; padding:6px 10px; border-radius:6px; text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s;" onmouseover="this.style.borderColor='#ea580c'; this.style.color='#ea580c';" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#1e293b';">
         ${t.label} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:9px;"></i>
       </a>
     `).join('');
@@ -12470,23 +12863,53 @@ function openTrailSourceModal(trailId) {
 }
 
 // MODAL CONTROLLERS
-function openVideoModal(url, title) {
+function openVideoModal(url, title, tutorialId) {
+  const modal = document.getElementById('videoModal');
   const iframe = document.getElementById('videoIframe');
+  const iframeContainer = document.getElementById('videoIframeContainer');
+  const heroLauncher = document.getElementById('videoHeroLauncher');
+  const filtersContainer = document.getElementById('videoQueryFiltersContainer');
+  const stepsContainer = document.getElementById('tutorialStepsContainer');
+  const stepsList = document.getElementById('tutorialStepsList');
+  const proTipEl = document.getElementById('tutorialProTip');
   const titleEl = document.getElementById('videoModalTitle');
+  const regionEl = document.getElementById('videoModalRegion');
   const linkEl = document.getElementById('videoDirectSearchLink');
 
-  if (iframe) iframe.src = url;
   if (titleEl) titleEl.innerText = title;
-  if (linkEl) {
-    const cleanSearchQuery = encodeURIComponent(title.replace('Walkthrough', '').trim() + ' off road 4x4 trail ride');
-    linkEl.href = `https://www.youtube.com/results?search_query=${cleanSearchQuery}`;
+  if (regionEl) regionEl.innerText = 'Recovery & Emergency Tutorial Guide';
+
+  if (iframe) iframe.src = url;
+  if (iframeContainer) iframeContainer.style.display = 'block';
+  if (heroLauncher) heroLauncher.style.display = 'none';
+  if (filtersContainer) filtersContainer.style.display = 'none';
+
+  if (tutorialId) {
+    const tut = RECOVERY_TUTORIALS.find(t => t.id === tutorialId);
+    if (tut && stepsContainer && stepsList && proTipEl) {
+      stepsContainer.style.display = 'block';
+      stepsList.innerHTML = tut.steps.map(s => `<li style="margin-bottom:4px;">${s}</li>`).join('');
+      proTipEl.innerHTML = `<strong>Field Pro-Tip:</strong> ${tut.proTip}`;
+      if (linkEl) {
+        linkEl.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(tut.searchQuery)}`;
+      }
+    }
+  } else {
+    if (stepsContainer) stepsContainer.style.display = 'none';
+    if (linkEl) {
+      const cleanSearchQuery = encodeURIComponent(title.replace('Walkthrough', '').trim() + ' off road 4x4 trail recovery');
+      linkEl.href = `https://www.youtube.com/results?search_query=${cleanSearchQuery}`;
+    }
   }
-  document.getElementById('videoModal').style.display = 'flex';
+
+  if (modal) modal.style.display = 'flex';
 }
 
 function closeVideoModal() {
-  document.getElementById('videoIframe').src = '';
-  document.getElementById('videoModal').style.display = 'none';
+  const iframe = document.getElementById('videoIframe');
+  if (iframe) iframe.src = '';
+  const modal = document.getElementById('videoModal');
+  if (modal) modal.style.display = 'none';
 }
 
 
@@ -12566,8 +12989,15 @@ function toggleShopsSection() {
 
 // INIT
 window.onload = function() {
+  ensureTopViewport();
   initMap();
   renderTrails();
+  renderRecoveryTutorials();
+
+  // Enforce top viewport as async weather telemetry & images load (unless user manually touched/scrolled)
+  [50, 150, 300, 600, 1000, 1500, 2500].forEach(delay => {
+    setTimeout(ensureTopViewport, delay);
+  });
 };
 </script>
 </body>
