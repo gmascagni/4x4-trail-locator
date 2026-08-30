@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.48.0_2026-08-30_14-41-43",
+    "version": "v2.48.0",
+    "timestamp": "2026-08-30T18:41:52.107Z",
+    "displayDate": "8/30/2026, 2:41:52 PM",
+    "description": "Fix broken Wilderness Trauma YouTube video ID with verified embeddable C-A-T tourniquet tutorial",
+    "zipFile": "v2.48.0_2026-08-30_14-41-43.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "3e3ba2d"
+  },
+  {
     "id": "v2.47.0_2026-08-25_14-32-01",
     "version": "v2.47.0",
     "timestamp": "2026-08-25T18:32:07.314Z",
