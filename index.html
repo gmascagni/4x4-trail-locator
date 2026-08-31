@@ -2213,13 +2213,78 @@ footer {
               <input type="checkbox" checked>
               <div class="checklist-item-content">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
-                  <strong>Comprehensive trauma-informed first-aid kit</strong>
+                  <strong>CAT Tourniquet & QuikClot Hemostatic Gauze</strong>
                   <button type="button" onclick="openRecoveryTutorial('tut-trauma-firstaid')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
                     <i class="fa-solid fa-circle-play"></i> Video
                   </button>
                 </div>
-                <span>Equipped with tourniquets (CAT), chest seals, and quick-clot gauze for severe trail injuries.</span>
-                <span class="item-spec">IFAK Wilderness Trauma Level</span>
+                <span>Combat Application Tourniquet (CAT Gen 7) & hemostatic gauze for catastrophic arterial bleeding.</span>
+                <span class="item-spec">IFAK Severe Trauma Bleeding</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Vented Chest Seals (HyFin / Halo)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-chest-seal')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Vented occlusive dressing for penetrating chest injuries and tension pneumothorax prevention.</span>
+                <span class="item-spec">Vented Occlusive Chest Seal</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>SAM Splint & Cohesive Wrap (Coban)</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-sam-splint')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Malleable structural foam-aluminum splint for field immobilizing fractures and severe sprains.</span>
+                <span class="item-spec">Structural 36" SAM Splint</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Hydrogel Burn Dressings & Sterile Wrap</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-burn-treatment')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Water-Jel hydrogel pads for rapid cooling and pain relief on exhaust, radiator, or campfire burns.</span>
+                <span class="item-spec">Water-Jel Sterile Dressings</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Wilderness Snakebite Protocol & Pen</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-snakebite-care')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Permanent marker for tracking swelling progression and satellite SOS hospital coordination.</span>
+                <span class="item-spec">Pit Viper Response Kit</span>
+              </div>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" checked>
+              <div class="checklist-item-content">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+                  <strong>Thermal Mylar Space Blanket & Heat Packs</strong>
+                  <button type="button" onclick="openRecoveryTutorial('tut-hypothermia-shock')" style="background:#fff7ed; border:1px solid #fed7aa; color:#c2410c; padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+                    <i class="fa-solid fa-circle-play"></i> Video
+                  </button>
+                </div>
+                <span>Reflective heat-retention barrier and chemical warmers for traumatic shock and hypothermia rewarming.</span>
+                <span class="item-spec">Hypothermia Wrap Barrier</span>
               </div>
             </label>
             <label class="checklist-item">
@@ -2422,7 +2487,7 @@ footer {
         <!-- CATEGORY FILTER CHIPS -->
         <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
           <button type="button" class="tutorial-chip-btn active" onclick="filterRecoveryTutorials('all', this)">
-            <i class="fa-solid fa-film"></i> All Tutorials (12)
+            <i class="fa-solid fa-film"></i> All Tutorials (17)
           </button>
           <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Recovery Gear', this)">
             <i class="fa-solid fa-truck-pickup"></i> Recovery Rigging (4)
@@ -2434,7 +2499,7 @@ footer {
             <i class="fa-solid fa-satellite"></i> Comms & Offline GPS (2)
           </button>
           <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Emergency & First Aid', this)">
-            <i class="fa-solid fa-kit-medical"></i> First Aid (1)
+            <i class="fa-solid fa-kit-medical"></i> Emergency & First Aid (6)
           </button>
           <button type="button" class="tutorial-chip-btn" onclick="filterRecoveryTutorials('Vehicle Essentials', this)">
             <i class="fa-solid fa-wrench"></i> Spares & Jacking (2)
@@ -11150,25 +11215,124 @@ const RECOVERY_TUTORIALS = [
     ],
     proTip: "📻 Say 'Driver Left' or 'Passenger Right' instead of 'Left/Right' to eliminate disorientation from opposite perspectives."
   },
-  {
+    {
     id: "tut-trauma-firstaid",
     category: "Emergency & First Aid",
     title: "Wilderness Trauma First Aid (CAT Tourniquet & QuikClot)",
     icon: "fa-kit-medical",
-    gearItem: "Comprehensive trauma-informed first-aid kit",
+    gearItem: "Comprehensive trauma kit with CAT tourniquet & QuikClot gauze",
     youtubeId: "PMfEls2LC8c",
     searchQuery: "stop the bleed cat tourniquet quikclot application tutorial",
     duration: "12 Min Guide",
     difficulty: "Life-Saving Skill",
-    summary: "Controlling catastrophic bleeding, sealing penetrating chest wounds, and stabilizing fractures in remote wilderness.",
+    summary: "Controlling catastrophic arterial limb bleeding and packing deep junctional puncture wounds in remote wilderness.",
     steps: [
       "For severe arterial limb bleeding: Apply Combat Application Tourniquet (CAT) 2-3 inches above wound (High and Tight).",
       "Pull self-adhering band tight, turn windlass rod until bright red bleeding stops completely, and lock windlass in clip. Write timestamp on time strap.",
       "For junctional wounds (groin/armpit/neck): Pack deep wound cavity tightly with QuikClot hemostatic gauze and hold direct firm pressure for 3 full minutes.",
-      "For chest trauma: Apply vented chest seal to allow air/blood escape while preventing tension pneumothorax.",
       "Keep patient insulated with thermal mylar blanket to prevent shock and hypothermia."
     ],
     proTip: "🩸 Never loosen a tourniquet once applied in the field; only emergency room trauma surgeons should remove it."
+  },
+  {
+    id: "tut-chest-seal",
+    category: "Emergency & First Aid",
+    title: "Penetrating Chest Trauma & Vented Chest Seal Application",
+    icon: "fa-lungs",
+    gearItem: "Vented chest seals (HyFin / Halo) & medical trauma shears",
+    youtubeId: "Fy_WHWG5F0k",
+    searchQuery: "how to apply vented chest seal sucking chest wound tutorial",
+    duration: "8 Min Guide",
+    difficulty: "Life-Saving Skill",
+    summary: "Sealing puncture wounds from tree branches or rollover debris to prevent fatal tension pneumothorax and collapsed lungs.",
+    steps: [
+      "Expose patient's chest completely using trauma shears to locate both entrance and exit puncture wounds.",
+      "Wipe away excess blood and sweat with sterile gauze to ensure adhesive adheres firmly to skin.",
+      "Center the vented valve directly over the puncture wound and press the adhesive backing down firmly on exhalation.",
+      "Inspect the patient's back for exit wounds and apply a second chest seal if found.",
+      "Continuously monitor breathing rhythm; if breathing worsens, burp the seal to release trapped intra-thoracic air."
+    ],
+    proTip: "🫁 Always check for an exit wound on the back; penetrating branches frequently cause through-and-through injuries."
+  },
+  {
+    id: "tut-sam-splint",
+    category: "Emergency & First Aid",
+    title: "SAM Splinting for Fractures, Dislocations & Ankle Sprains",
+    icon: "fa-bone",
+    gearItem: "Malleable SAM splint, elastic wrap (Coban), and triangular bandages",
+    youtubeId: "2zDvg06PhOs",
+    searchQuery: "how to apply sam splint ankle wrist fracture wilderness first aid",
+    duration: "10 Min Guide",
+    difficulty: "Field Orthopedic",
+    summary: "Immobilizing broken limbs, fractured wrists, and severe trail sprains using rigid curved aluminum-foam SAM splints.",
+    steps: [
+      "Curve the flat SAM splint longitudinally into a structural C-curve or structural U-trough to maximize rigidity.",
+      "Mold the splint gently to the uninjured opposite limb first to create a custom anatomical contour.",
+      "Pad all bony prominences (ankles, wrists) with gauze to prevent pressure sores.",
+      "Wrap securely with cohesive elastic wrap (Coban) or medical tape without overtightening.",
+      "Check distal pulse and capillary refill in fingertips or toes before and after splinting."
+    ],
+    proTip: "🦴 A flat SAM splint bends easily; bending it into a structural C-curve makes it as rigid as heavy plaster."
+  },
+  {
+    id: "tut-burn-treatment",
+    category: "Emergency & First Aid",
+    title: "Trail Burn Management (Exhaust Header, Radiator & Campfire)",
+    icon: "fa-fire-flame-curved",
+    gearItem: "Hydrogel burn dressing (Water-Jel), non-stick sterile pads & wrap",
+    youtubeId: "J3sP9U1DLSg",
+    searchQuery: "wilderness first aid burn treatment radiator exhaust campfire",
+    duration: "7 Min Guide",
+    difficulty: "Field Care",
+    summary: "Immediate cooling and sterile dressing protocols for severe contact burns from hot exhaust pipes, boiling coolant, or campfires.",
+    steps: [
+      "Immediately cool the burn with clean, cool water for at least 10 minutes (never apply ice, butter, or greasy ointments).",
+      "Gently remove tight rings, watches, or boots from the affected limb before tissue swelling starts.",
+      "Apply a sterile hydrogel burn dressing (e.g. Water-Jel) directly over the burn to soothe nerve endings.",
+      "Cover loosely with sterile non-adherent gauze and wrap lightly with roll bandage.",
+      "Do NOT pop or puncture burn blisters; intact blisters form a natural sterile barrier against wilderness bacteria."
+    ],
+    proTip: "🔥 Coolant steam can reach 240°F+; never open a pressurized radiator cap on a hot engine on the trail."
+  },
+  {
+    id: "tut-snakebite-care",
+    category: "Emergency & First Aid",
+    title: "Wilderness Pit Viper Snakebite First Aid & Evacuation",
+    icon: "fa-staff-snake",
+    gearItem: "Marker pen, loose sterile gauze, satellite SOS communicator",
+    youtubeId: "g20cT4uoc0U",
+    searchQuery: "wilderness pit viper rattlesnake bite first aid what to do",
+    duration: "9 Min Guide",
+    difficulty: "Critical Protocol",
+    summary: "Evidence-based field protocols for copperhead, timber rattlesnake, and cottonmouth envenomations during trail expeditions.",
+    steps: [
+      "Keep patient calm and still. Have them sit or lie down with the bitten limb resting in a neutral position at heart level.",
+      "Remove all rings, watches, bracelets, and tight footwear from the limb IMMEDIATELY before swelling advances.",
+      "Use a permanent pen to outline the leading edge of swelling/redness and write the current time next to it. Re-trace every 15 minutes.",
+      "Trigger your satellite SOS beacon (Garmin InReach/ZOLEO) to coordinate hospital transport with antivenom capability.",
+      "NEVER use tourniquets, ice packs, electrical shock, suction devices, or incisions; these worsen tissue necrosis."
+    ],
+    proTip: "🐍 The best snakebite kit is a car key and a satellite messenger. Rapid hospital transport for CroFab antivenom is the only definitive cure."
+  },
+  {
+    id: "tut-hypothermia-shock",
+    category: "Emergency & First Aid",
+    title: "Severe Hypothermia Rewarming & Traumatic Shock Defense",
+    icon: "fa-temperature-low",
+    gearItem: "Thermal mylar space blanket, chemical heat packs, dry wool base layers",
+    youtubeId: "6n6OERtW5y4",
+    searchQuery: "wilderness hypothermia treatment rewarming burrito wrap shock",
+    duration: "11 Min Guide",
+    difficulty: "Environmental Hazard",
+    summary: "Preventing and reversing lethal core temperature drops from wet trail clothing, mountain cold snaps, and traumatic blood loss.",
+    steps: [
+      "Move patient into a wind-sheltered vehicle or tent immediately.",
+      "Strip off all wet, muddy clothing and dress patient in dry synthetic or merino wool base layers.",
+      "Create a 'Hypothermia Burrito': Lay down an insulating ground pad, wrap patient in a thermal mylar blanket, and enclose in a sleeping bag.",
+      "Place warm chemical heat packs against the patient's armpits, groin, and chest (never against bare skin to prevent burns).",
+      "Provide warm, sweet drinks only if patient is fully conscious and capable of swallowing without choking."
+    ],
+    proTip: "🥶 Wet clothing loses 90% of its insulating capacity; always keep a sealed waterproof dry-bag with spare wool clothes in your rig."
   },
   {
     id: "tut-jack-base-plate",

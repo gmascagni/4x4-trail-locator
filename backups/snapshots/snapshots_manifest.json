@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.49.0_2026-08-31_09-02-09",
+    "version": "v2.49.0",
+    "timestamp": "2026-08-31T13:02:20.886Z",
+    "displayDate": "8/31/2026, 9:02:20 AM",
+    "description": "Add 5 comprehensive Wilderness First Aid video tutorials and field checklist integration",
+    "zipFile": "v2.49.0_2026-08-31_09-02-09.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "fd17998"
+  },
+  {
     "id": "v2.48.0_2026-08-30_14-41-43",
     "version": "v2.48.0",
     "timestamp": "2026-08-30T18:41:52.107Z",
