@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.50.0_2026-09-05_11-31-19",
+    "version": "v2.50.0",
+    "timestamp": "2026-09-05T15:31:22.460Z",
+    "displayDate": "9/5/2026, 11:31:22 AM",
+    "description": "Fix QA audit path, resolve Vite build control characters, and clean docs",
+    "zipFile": "v2.50.0_2026-09-05_11-31-19.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "0f3538d"
+  },
+  {
     "id": "v2.49.0_2026-08-31_09-02-09",
     "version": "v2.49.0",
     "timestamp": "2026-08-31T13:02:20.886Z",

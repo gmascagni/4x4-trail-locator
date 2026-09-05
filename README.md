@@ -26,7 +26,7 @@ An interactive, high-performance web application designed for off-road enthusias
 
 ### Installation & Run
 
-`ash
+```bash
 # Clone the repository
 git clone https://github.com/gmascagni/4x4-trail-locator.git
 
@@ -38,7 +38,7 @@ npm install
 
 # Start development server
 npm run dev
-`
+```
 
 Open [http://localhost:8080](http://localhost:8080) in your browser.
 
@@ -49,4 +49,4 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 This single-page application is structured with root index.html and assets for instant deployment via **GitHub Pages**:
 1. Go to repository **Settings** -> **Pages**.
 2. Select **Source**: Deploy from a branch.
-3. Choose branch main / oot and click **Save**.
+3. Choose branch main / root and click **Save**.

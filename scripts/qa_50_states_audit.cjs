@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const targetFile = 'c:/Users/gmasc/Documents/Antigravity/4x4TrailFinder/index.html';
+const PROJECT_ROOT = path.resolve(__dirname, '..');
+const targetFile = path.join(PROJECT_ROOT, 'index.html');
 const content = fs.readFileSync(targetFile, 'utf8');
 
 console.log('====================================================');
@@ -20,7 +21,7 @@ let currentBounds = null;
 
 const sandbox = {
   window: {
-    US_STATES_GEOJSON_DATA: JSON.parse(fs.readFileSync('c:/Users/gmasc/Documents/Antigravity/4x4TrailFinder/assets/us_states.geojson', 'utf8'))
+    US_STATES_GEOJSON_DATA: JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'assets', 'us_states.geojson'), 'utf8'))
   },
   document: {
     getElementById: (id) => ({
