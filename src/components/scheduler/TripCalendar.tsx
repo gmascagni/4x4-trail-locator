@@ -35,27 +35,37 @@ export default function TripCalendar({
 }: TripCalendarProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [showCompleted, setShowCompleted] = useState(true);
+  const [filterCanceledOnly, setFilterCanceledOnly] = useState(false);
 
   // Filter trips
   const filteredTrips = useMemo(() => {
     return trips.filter((t) => {
+      const isNoGo = t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled';
+      if (filterCanceledOnly) {
+        return isNoGo;
+      }
       if (selectedDifficulty !== 'all' && t.difficultyRating !== selectedDifficulty) {
         return false;
       }
-      if (!showCompleted && (t.status === 'Completed' || t.status === 'Cancelled')) {
+      if (!showCompleted && (t.status === 'Completed' || t.status === 'Cancelled' || t.status === 'Postponed')) {
         return false;
       }
       return true;
     });
-  }, [trips, selectedDifficulty, showCompleted]);
+  }, [trips, selectedDifficulty, showCompleted, filterCanceledOnly]);
 
   // Format events for FullCalendar
   const events = useMemo(() => {
     return filteredTrips.map((trip) => {
-      const colors = DIFFICULTY_COLORS[trip.difficultyRating] || DIFFICULTY_COLORS.Moderate;
+      const isNoGo = trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled';
+      const colors = isNoGo 
+        ? { bg: '#7f1d1d', border: '#ef4444', text: '#fecaca' }
+        : (DIFFICULTY_COLORS[trip.difficultyRating] || DIFFICULTY_COLORS.Moderate);
+
+      const prefix = isNoGo ? '🔴 [NO-GO]' : '🟢';
       return {
         id: trip.id,
-        title: `${trip.trailName}: ${trip.title}`,
+        title: `${prefix} ${trip.trailName}: ${trip.title}`,
         start: trip.startTime,
         end: trip.endTime || trip.startTime,
         backgroundColor: colors.bg,
@@ -142,6 +152,22 @@ export default function TripCalendar({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => {
+              setFilterCanceledOnly(!filterCanceledOnly);
+              if (!filterCanceledOnly) setSelectedDifficulty('all');
+            }}
+            className={`px-2.5 py-1 rounded-lg font-mono text-xs flex items-center gap-1.5 transition-colors border ${
+              filterCanceledOnly
+                ? 'bg-red-600 text-white border-red-500 font-bold'
+                : 'bg-stone-800 text-red-300 border-red-900/60 hover:bg-red-950/40'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-red-500" />
+            <span>Canceled / Postponed ({trips.filter(t => t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled').length})</span>
+          </button>
         </div>
 
         <label className="flex items-center gap-2 text-stone-400 font-mono text-[11px] cursor-pointer hover:text-stone-200">

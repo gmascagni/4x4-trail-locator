@@ -2660,6 +2660,9 @@ footer {
           <button type="button" class="tutorial-chip-btn" onclick="filterSchedulerTrips('Hard', this)">
             <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ea580c;margin-right:4px;"></span> Hard (35"+ Lockers)
           </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterSchedulerTrips('cancelled_or_postponed', this)" style="border-color:#fca5a5;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-right:4px;"></span> 🔴 Canceled / Postponed
+          </button>
         </div>
 
         <button type="button" onclick="openPlanRunModal()" style="background: linear-gradient(135deg, var(--amber-orange), #c2410c); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(234,88,12,0.35);">
@@ -13243,9 +13246,34 @@ const INITIAL_INDEX_TRIPS = [
     minimumRequirements: ['33" Tires min', 'Rear Locker required', 'Full-size spare', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
     status: "Completed",
+    goDecision: "GO",
     roster: [
       { name: "Red Rock Trail Guide", rig: "2024 Jeep Rubicon 392 (37s)", role: "Host", status: "Going" },
       { name: "Dave K.", rig: "2023 Jeep Gladiator JT (35s)", role: "Participant", status: "Going" }
+    ]
+  },
+  {
+    id: "trip-tallulah-river",
+    trailId: "ga-tallulah-river",
+    trailName: "Tallulah River Road & Water Crossings",
+    title: "[Example Only - Postponed] Deep Water Fording & Cascades Run",
+    description: "(Postponed run demonstration) Technical water crossing run into the Upper Tallulah River gorge. High river water levels require sealed breathers and recovery gear.",
+    startTime: "2026-08-18T10:00:00.000Z",
+    endTime: "2026-08-18T16:00:00.000Z",
+    meetingLocation: "Tallulah River Staging & Camp Kiosk, Clayton, GA",
+    lat: 34.9812,
+    lng: -83.5241,
+    organizerName: "Blue Ridge 4x4 Host",
+    organizerRig: "Jeep Gladiator Rubicon",
+    maxRigs: 6,
+    difficultyRating: "Moderate",
+    minimumRequirements: ['33" Tires min', 'Waterproof Breathers', 'Winch required'],
+    commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
+    status: "Postponed",
+    goDecision: "NO_GO",
+    cancellationReason: "Torrential downpours raised Tallulah River depth past 38 inches. Postponed for driver and rig safety until river levels drop to safe fording limits.",
+    roster: [
+      { name: "Blue Ridge 4x4 Host", rig: "Gladiator Rubicon (35s)", role: "Host", status: "Going" }
     ]
   },
   {
@@ -13266,6 +13294,7 @@ const INITIAL_INDEX_TRIPS = [
     minimumRequirements: ['35" Tires min', 'Front Locker required', 'Rear Locker required', 'Winch required'],
     commsChannel: "GMRS Channel 19 / 462.650 MHz",
     status: "Completed",
+    goDecision: "GO",
     roster: [
       { name: "Moab Expeditions Lead", rig: "Built JLU on 40s", role: "Host", status: "Going" },
       { name: "Sarah M.", rig: "2021 Ford Bronco Badlands (35s)", role: "Tail Gunner / Sweep", status: "Going" }
@@ -13289,6 +13318,7 @@ const INITIAL_INDEX_TRIPS = [
     minimumRequirements: ['33" Tires min', 'Winch required', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
     status: "Completed",
+    goDecision: "GO",
     roster: [
       { name: "Blue Ridge 4x4 Host", rig: "Gladiator Rubicon (35s)", role: "Host", status: "Going" }
     ]
@@ -13301,7 +13331,7 @@ function getCommunityTrips() {
     if (stored) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map(t => {
+        const sanitized = parsed.map(t => {
           const matchDefault = INITIAL_INDEX_TRIPS.find(d => d.id === t.id);
           if (matchDefault) {
             return {
@@ -13310,11 +13340,21 @@ function getCommunityTrips() {
               description: matchDefault.description,
               startTime: matchDefault.startTime,
               endTime: matchDefault.endTime,
-              status: matchDefault.status
+              status: matchDefault.status,
+              goDecision: matchDefault.goDecision || 'GO',
+              cancellationReason: matchDefault.cancellationReason
             };
           }
           return t;
         });
+
+        INITIAL_INDEX_TRIPS.forEach(d => {
+          if (!sanitized.some(s => s.id === d.id)) {
+            sanitized.push(d);
+          }
+        });
+
+        return sanitized;
       }
     }
   } catch (e) {}
@@ -13356,7 +13396,9 @@ function renderSchedulerTrips() {
   const allTrips = getCommunityTrips();
   const filtered = (activeSchedulerDifficulty === 'all')
     ? allTrips
-    : allTrips.filter(t => t.difficultyRating === activeSchedulerDifficulty);
+    : (activeSchedulerDifficulty === 'cancelled_or_postponed')
+      ? allTrips.filter(t => t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled')
+      : allTrips.filter(t => t.difficultyRating === activeSchedulerDifficulty);
 
   const diffColors = {
     Easy: { bg: '#dcfce7', text: '#15803d', border: '#bbf7d0' },
@@ -13372,19 +13414,32 @@ function renderSchedulerTrips() {
     const startDate = new Date(t.startTime);
     const isPast = startDate < new Date() || t.status === 'Completed';
     const isExample = (t.title || '').includes('Example Only');
+    const isNoGo = t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled';
     const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
     const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     return `
-      <div class="tutorial-card" style="background:#ffffff; border:1.5px solid var(--card-border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 4px 14px rgba(0,0,0,0.04);">
-        <div style="background:linear-gradient(135deg, #0f172a, #1e293b); padding:16px; color:#fff; border-bottom:3px solid var(--amber-orange);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span style="font-size:10.5px; font-weight:800; background:${dStyle.bg}; color:${dStyle.text}; border:1px solid ${dStyle.border}; padding:2px 8px; border-radius:4px; font-family:monospace;">
-              ${t.difficultyRating} Difficulty
-            </span>
+      <div class="tutorial-card" style="background:#ffffff; border:1.5px solid ${isNoGo ? '#fca5a5' : 'var(--card-border)'}; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 4px 14px rgba(0,0,0,0.04);">
+        <div style="background:linear-gradient(135deg, ${isNoGo ? '#450a0a, #7f1d1d' : '#0f172a, #1e293b'}); padding:16px; color:#fff; border-bottom:3px solid ${isNoGo ? '#ef4444' : 'var(--amber-orange)'};">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:6px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:5px;">
+              <span style="font-size:10.5px; font-weight:800; background:${dStyle.bg}; color:${dStyle.text}; border:1px solid ${dStyle.border}; padding:2px 8px; border-radius:4px; font-family:monospace;">
+                ${t.difficultyRating} Difficulty
+              </span>
+              ${isNoGo ? `
+                <span style="font-size:10px; font-weight:800; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-family:monospace; display:inline-flex; align-items:center; gap:4px;">
+                  <i class="fa-solid fa-circle-xmark"></i> NO-GO: POSTPONED
+                </span>
+              ` : `
+                <span style="font-size:10px; font-weight:800; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:2px 8px; border-radius:4px; font-family:monospace; display:inline-flex; align-items:center; gap:4px;">
+                  <i class="fa-solid fa-circle-check"></i> GO: CONFIRMED
+                </span>
+              `}
+            </div>
+
             ${isPast || isExample ? `
               <span style="font-size:10px; font-weight:800; background:#334155; color:#cbd5e1; border:1px solid #475569; padding:2px 8px; border-radius:4px; font-family:monospace;">
-                <i class="fa-solid fa-clock-rotate-left"></i> Archived (Example Only)
+                <i class="fa-solid fa-clock-rotate-left"></i> Example Only
               </span>
             ` : `
               <span style="font-size:10.5px; font-weight:800; background:rgba(234,88,12,0.2); color:#fbbf24; border:1px solid rgba(234,88,12,0.4); padding:2px 8px; border-radius:4px; font-family:monospace;">
@@ -13403,6 +13458,12 @@ function renderSchedulerTrips() {
             ${t.description}
           </div>
 
+          ${isNoGo && t.cancellationReason ? `
+            <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:8px; padding:8px 12px; font-size:11px; color:#991b1b; line-height:1.45; font-family:monospace;">
+              <strong><i class="fa-solid fa-triangle-exclamation"></i> Reason for Postponement:</strong> ${t.cancellationReason}
+            </div>
+          ` : ''}
+
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:11px; space-y:4px; font-family:monospace;">
             <div style="color:#0f172a; margin-bottom:3px;">
               <i class="fa-regular fa-clock" style="color:var(--amber-orange);"></i> <strong>Run Date:</strong> ${dateFormatted} at ${timeFormatted}
@@ -13418,7 +13479,7 @@ function renderSchedulerTrips() {
 
           <div style="display:flex; gap:6px; pt-2; border-top:1px dashed #e2e8f0; padding-top:10px;">
             <button type="button" onclick="openConvoyDetailModal('${t.id}')" style="flex:1; background:#0f172a; color:#fff; border:none; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> ${isPast || isExample ? 'Inspect Specs (Example Only)' : 'Details & RSVP (' + roster.length + '/' + t.maxRigs + ')'}
+              ${isNoGo ? '<i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i> Postponed — View Details' : (isPast || isExample ? '<i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Inspect Specs (Example Only)' : '<i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Details & RSVP (' + roster.length + '/' + t.maxRigs + ')')}
             </button>
             <button type="button" onclick="openGoogleCalendar('${t.id}')" style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;" title="Add to Google Calendar">
               <i class="fa-brands fa-google"></i>
@@ -13504,6 +13565,7 @@ function submitPlanRunForm(e) {
     minimumRequirements: [`${hostTires}" Tires min`, hostWinch ? 'Winch recommended' : 'Recovery points', 'Full-size spare'],
     commsChannel,
     status: "Upcoming",
+    goDecision: "GO",
     roster: [
       { name: "You (Lead)", rig: `${hostRig} (${hostTires}" Tires${hostWinch ? ', Winch' : ''})`, role: "Host", status: "Going" }
     ]
@@ -13532,6 +13594,7 @@ function openConvoyDetailModal(tripId) {
   const startDate = new Date(t.startTime);
   const isPast = startDate < new Date() || t.status === 'Completed';
   const isExample = (t.title || '').includes('Example Only');
+  const isNoGo = t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled';
   const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
   const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   const roster = t.roster || [];
@@ -13543,10 +13606,19 @@ function openConvoyDetailModal(tripId) {
         <span style="font-size:11px; font-weight:800; color:#ea580c; text-transform:uppercase;">${t.trailName}</span>
         <h3 style="font-size:20px; font-weight:900; color:var(--forest-dark); margin:2px 0 0;">${t.title}</h3>
       </div>
-      <div style="display:flex; gap:6px; align-items:center;">
+      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
         <span style="font-size:11px; font-weight:800; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-family:monospace;">
           ${t.difficultyRating} Difficulty
         </span>
+        ${isNoGo ? `
+          <span style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding:4px 10px; border-radius:6px; font-family:monospace; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-circle-xmark"></i> NO-GO: POSTPONED
+          </span>
+        ` : `
+          <span style="font-size:11px; font-weight:800; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:4px 10px; border-radius:6px; font-family:monospace; display:inline-flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-circle-check"></i> GO: CONFIRMED
+          </span>
+        `}
         ${isPast || isExample ? `
           <span style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:4px 10px; border-radius:6px; font-family:monospace;">
             Past Example Run
@@ -13554,6 +13626,32 @@ function openConvoyDetailModal(tripId) {
         ` : ''}
       </div>
     </div>
+
+    <!-- GO / NO-GO STATUS BANNER -->
+    <div style="border-radius:8px; padding:12px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border:1.5px solid ${isNoGo ? '#fca5a5' : '#86efac'}; background:${isNoGo ? '#fef2f2' : '#f0fdf4'};">
+      <div>
+        <div style="font-size:13px; font-weight:900; color:${isNoGo ? '#991b1b' : '#166534'}; display:flex; align-items:center; gap:6px;">
+          ${isNoGo ? '<i class="fa-solid fa-circle-xmark"></i> NO-GO: RUN POSTPONED / CALLED OFF' : '<i class="fa-solid fa-circle-check"></i> GO: TRAIL RUN CONFIRMED & ROLLING'}
+        </div>
+        <div style="font-size:11px; color:${isNoGo ? '#b91c1c' : '#15803d'}; margin-top:2px;">
+          ${isNoGo ? 'This group run has been called off or postponed due to weather, flooded obstacles, or conditions.' : 'Weather and trail conditions are clear. The convoy is scheduled to roll as planned.'}
+        </div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button type="button" onclick="toggleTripGoDecision('${t.id}', 'GO')" style="background:${!isNoGo ? '#16a34a' : '#ffffff'}; color:${!isNoGo ? '#ffffff' : '#166534'}; border:1px solid #86efac; padding:6px 12px; border-radius:6px; font-size:10.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+          <i class="fa-solid fa-check"></i> Confirm GO
+        </button>
+        <button type="button" onclick="toggleTripGoDecision('${t.id}', 'NO_GO')" style="background:${isNoGo ? '#dc2626' : '#ffffff'}; color:${isNoGo ? '#ffffff' : '#991b1b'}; border:1px solid #fca5a5; padding:6px 12px; border-radius:6px; font-size:10.5px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+          <i class="fa-solid fa-ban"></i> Postpone (NO-GO)
+        </button>
+      </div>
+    </div>
+
+    ${isNoGo && t.cancellationReason ? `
+      <div style="background:#fef2f2; border:1.5px solid #fca5a5; border-left:4px solid #ef4444; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:11.5px; color:#991b1b; line-height:1.45;">
+        <strong><i class="fa-solid fa-triangle-exclamation"></i> Reason for Postponement / Call-Off:</strong> ${t.cancellationReason}
+      </div>
+    ` : ''}
 
     ${isPast || isExample ? `
       <div style="background:#fffbeb; border:1.5px solid #fef3c7; border-left:4px solid #f59e0b; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:11.5px; color:#92400e; line-height:1.45;">
@@ -13577,7 +13675,7 @@ function openConvoyDetailModal(tripId) {
       </div>
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
         <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">🚙 Convoy Capacity</span>
-        <strong style="color:#c2410c;">${isPast || isExample ? 'Registration Closed (' + roster.length + '/' + t.maxRigs + ')' : (openSlots > 0 ? openSlots + ' of ' + t.maxRigs + ' Slots Open' : 'Convoy Full (Waitlist)')}</strong>
+        <strong style="color:#c2410c;">${isNoGo ? 'Convoy Postponed' : (isPast || isExample ? 'Registration Closed (' + roster.length + '/' + t.maxRigs + ')' : (openSlots > 0 ? openSlots + ' of ' + t.maxRigs + ' Slots Open' : 'Convoy Full (Waitlist)'))}</strong>
       </div>
     </div>
 
@@ -13621,7 +13719,11 @@ function openConvoyDetailModal(tripId) {
     </div>
 
     <!-- RSVP SECTION -->
-    ${isPast || isExample ? `
+    ${isNoGo ? `
+      <div style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:8px; padding:12px 14px; text-align:center; color:#991b1b; font-size:11.5px; font-weight:700;">
+        <i class="fa-solid fa-lock"></i> RSVP Registration is locked because this trail run has been marked NO-GO (Postponed or Canceled).
+      </div>
+    ` : (isPast || isExample) ? `
       <div style="background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px 14px; text-align:center; color:#64748b; font-size:11.5px; font-weight:700;">
         <i class="fa-solid fa-lock"></i> RSVP Registration is closed for historical / example runs. Click <strong>Plan a Group Run</strong> above to coordinate an upcoming community convoy!
       </div>
@@ -13659,6 +13761,11 @@ function submitRsvpForm(e, tripId) {
   const t = trips.find(x => x.id === tripId);
   if (!t) return;
 
+  if (t.goDecision === 'NO_GO' || t.status === 'Postponed' || t.status === 'Cancelled') {
+    alert("Registration is locked because this run has been postponed or cancelled.");
+    return;
+  }
+
   if (t.status === 'Completed' || (t.title || '').includes('Example Only')) {
     alert("Registration is closed for past / example demonstration runs.");
     return;
@@ -13675,6 +13782,30 @@ function submitRsvpForm(e, tripId) {
     role: t.roster.length >= t.maxRigs ? 'Waitlist' : role,
     status: 'Going'
   });
+
+  saveCommunityTrips(trips);
+  openConvoyDetailModal(tripId);
+  renderSchedulerTrips();
+}
+
+function toggleTripGoDecision(tripId, newDecision) {
+  const trips = getCommunityTrips();
+  const t = trips.find(x => x.id === tripId);
+  if (!t) return;
+
+  if (newDecision === 'NO_GO') {
+    const reason = prompt("Enter reason for postponement / cancellation (e.g. Severe downpour & flooded creek crossing, rockslide, low turnout):", t.cancellationReason || "Inclement weather and unsafe trail conditions");
+    if (reason === null) return; // user clicked cancel
+    t.goDecision = 'NO_GO';
+    t.status = 'Postponed';
+    t.cancellationReason = reason.trim() || 'Trail conditions deemed unsafe / postponed.';
+  } else {
+    t.goDecision = 'GO';
+    if (t.status === 'Postponed' || t.status === 'Cancelled') {
+      t.status = 'Upcoming';
+    }
+    t.cancellationReason = undefined;
+  }
 
   saveCommunityTrips(trips);
   openConvoyDetailModal(tripId);

@@ -159,7 +159,8 @@ export interface OffroadLogbookEntry {
 // GROUP RUNS & TRIP SCHEDULER DATA MODELS
 // ====================================================================
 
-export type TripStatus = "Upcoming" | "In Progress" | "Completed" | "Cancelled";
+export type TripStatus = "Upcoming" | "In Progress" | "Completed" | "Cancelled" | "Postponed";
+export type TripGoDecision = "GO" | "NO_GO" | "STANDBY";
 export type TripDifficulty = "Easy" | "Moderate" | "Hard" | "Extreme";
 export type TripRole = "Host" | "Tail Gunner / Sweep" | "Participant" | "Waitlist";
 export type RSVPStatus = "Going" | "Maybe" | "Cancelled";
@@ -201,6 +202,8 @@ export interface Trip {
   minimumRequirements: string[];
   commsChannel: string;
   status: TripStatus;
+  goDecision?: TripGoDecision; // "GO" (Green) | "NO_GO" (Red) | "STANDBY" (Amber)
+  cancellationReason?: string; // Reason for cancellation/postponement (bad rain, low turnout, etc.)
   createdAt: string;
 }
 

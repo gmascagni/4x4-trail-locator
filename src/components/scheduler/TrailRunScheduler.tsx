@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Database, AlertCircle, Sparkles, CheckCircle2, Shield } from 'lucide-react';
-import { Trail4x4, Trip, UserProfile } from '../../types';
+import { Trail4x4, Trip, UserProfile, TripGoDecision, TripStatus } from '../../types';
 import { supabase, isSupabaseConfigured, getLocalUserProfile } from '../../lib/supabaseClient';
 import TripCalendar from './TripCalendar';
 import PlanRunModal from './PlanRunModal';
@@ -36,7 +36,33 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     minimumRequirements: ['33" Tires min', 'Rear Locker required', 'Full-size spare', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
     status: "Completed",
+    goDecision: "GO",
     createdAt: "2026-08-01T12:00:00.000Z"
+  },
+  {
+    id: "trip-tallulah-river",
+    trailId: "ga-tallulah-river",
+    trailName: "Tallulah River Road & Water Crossings",
+    title: "[Example Only - Postponed] Deep Water Fording & Cascades Run",
+    description: "(Postponed run demonstration) Technical water crossing run into the Upper Tallulah River gorge. River fording requires snorkel and sealed breathers.",
+    startTime: "2026-08-18T10:00:00.000Z", // Past demonstration date
+    endTime: "2026-08-18T16:00:00.000Z",
+    meetingLocation: "Tallulah River Staging & Camp Kiosk, Clayton, GA",
+    meetingPointCoordinates: { lat: 34.9812, lng: -83.5241 },
+    organizerId: "host-appalachian",
+    organizerProfile: {
+      id: "host-appalachian",
+      fullName: "Blue Ridge 4x4 Host",
+      defaultRig: "Jeep Gladiator Rubicon"
+    },
+    maxRigs: 6,
+    difficultyRating: "Moderate",
+    minimumRequirements: ['33" Tires min', 'Waterproof Breathers', 'Winch required'],
+    commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
+    status: "Postponed",
+    goDecision: "NO_GO",
+    cancellationReason: "Heavy torrential rainfall caused Tallulah River crossing depth to surge past 38 inches. Postponed for vehicle safety until water recedes to safe fording levels.",
+    createdAt: "2026-08-04T12:00:00.000Z"
   },
   {
     id: "trip-hells-revenge",
@@ -59,6 +85,7 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     minimumRequirements: ['35" Tires min', 'Front Locker required', 'Rear Locker required', 'Winch required'],
     commsChannel: "GMRS Channel 19 / 462.650 MHz",
     status: "Completed",
+    goDecision: "GO",
     createdAt: "2026-08-05T12:00:00.000Z"
   },
   {
@@ -82,6 +109,7 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     minimumRequirements: ['33" Tires min', 'Winch required', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
     status: "Completed",
+    goDecision: "GO",
     createdAt: "2026-08-10T12:00:00.000Z"
   }
 ];
@@ -158,6 +186,8 @@ export default function TrailRunScheduler({
           minimumRequirements: t.minimum_requirements || [],
           commsChannel: t.comms_channel,
           status: t.status,
+          goDecision: (t.go_decision as TripGoDecision) || 'GO',
+          cancellationReason: t.cancellation_reason,
           createdAt: t.created_at
         }));
         setTrips(mapped);
@@ -180,11 +210,21 @@ export default function TrailRunScheduler({
               description: matchDefault.description,
               startTime: matchDefault.startTime,
               endTime: matchDefault.endTime,
-              status: matchDefault.status
+              status: matchDefault.status,
+              goDecision: matchDefault.goDecision || 'GO',
+              cancellationReason: matchDefault.cancellationReason
             };
           }
           return t;
         });
+
+        // Ensure newly added demo trips (like postponed demo run) exist
+        INITIAL_DEMO_TRIPS.forEach(d => {
+          if (!sanitized.some(s => s.id === d.id)) {
+            sanitized.push(d);
+          }
+        });
+
         setTrips(sanitized);
         localStorage.setItem('local_trail_trips', JSON.stringify(sanitized));
       } else {
@@ -195,6 +235,50 @@ export default function TrailRunScheduler({
       setTrips(INITIAL_DEMO_TRIPS);
     }
   }, []);
+
+  const handleUpdateTripDecision = async (tripId: string, decision: TripGoDecision, reason?: string) => {
+    const newStatus: TripStatus = decision === 'NO_GO' ? 'Postponed' : 'Upcoming';
+
+    // Update in Supabase if configured
+    if (isSupabaseConfigured) {
+      await supabase
+        .from('trips')
+        .update({
+          go_decision: decision,
+          status: newStatus,
+          cancellation_reason: reason || null
+        })
+        .eq('id', tripId);
+    }
+
+    // Update local state and local storage
+    setTrips(prev => {
+      const updated = prev.map(t => {
+        if (t.id === tripId) {
+          return {
+            ...t,
+            goDecision: decision,
+            status: newStatus,
+            cancellationReason: reason || t.cancellationReason
+          };
+        }
+        return t;
+      });
+      try {
+        localStorage.setItem('local_trail_trips', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+
+    if (selectedTrip && selectedTrip.id === tripId) {
+      setSelectedTrip(prev => prev ? {
+        ...prev,
+        goDecision: decision,
+        status: newStatus,
+        cancellationReason: reason || prev.cancellationReason
+      } : null);
+    }
+  };
 
   useEffect(() => {
     fetchTrips();
@@ -276,6 +360,7 @@ export default function TrailRunScheduler({
           currentUser={currentUser}
           onClose={() => setSelectedTrip(null)}
           onTripUpdated={fetchTrips}
+          onUpdateTripDecision={handleUpdateTripDecision}
         />
       )}
     </div>

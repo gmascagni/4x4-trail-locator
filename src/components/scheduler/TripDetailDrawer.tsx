@@ -14,7 +14,7 @@ import {
   UserCheck,
   UserPlus
 } from 'lucide-react';
-import { Trip, TripParticipant, UserProfile, RigDetails, TripRole, RSVPStatus } from '../../types';
+import { Trip, TripParticipant, UserProfile, RigDetails, TripRole, RSVPStatus, TripGoDecision } from '../../types';
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 import AddToCalendarButton from './AddToCalendarButton';
 import DiscussionThread from './DiscussionThread';
@@ -24,6 +24,7 @@ interface TripDetailDrawerProps {
   currentUser: UserProfile;
   onClose: () => void;
   onTripUpdated?: () => void;
+  onUpdateTripDecision?: (tripId: string, decision: TripGoDecision, reason?: string) => void;
 }
 
 const DIFFICULTY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
@@ -37,10 +38,12 @@ export default function TripDetailDrawer({
   trip,
   currentUser,
   onClose,
-  onTripUpdated
+  onTripUpdated,
+  onUpdateTripDecision
 }: TripDetailDrawerProps) {
   const [roster, setRoster] = useState<TripParticipant[]>([]);
   const [isLoadingRoster, setIsLoadingRoster] = useState(true);
+  const [isEditingDecision, setIsEditingDecision] = useState(false);
 
   // RSVP Form State
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
@@ -305,6 +308,96 @@ export default function TripDetailDrawer({
 
         {/* Content Body */}
         <div className="p-5 space-y-6 flex-1">
+          {/* Go / No-Go Decision Banner */}
+          <div className={`p-4 rounded-xl border flex flex-col gap-2.5 ${
+            trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled'
+              ? 'bg-red-950/40 border-red-700/60 text-red-200'
+              : 'bg-emerald-950/40 border-emerald-700/60 text-emerald-200'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full font-black text-xs text-white ${
+                  trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled'
+                    ? 'bg-red-600'
+                    : 'bg-emerald-600'
+                }`}>
+                  {trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled' ? '✕' : '✓'}
+                </span>
+                <div>
+                  <h4 className="font-heading font-black text-sm uppercase tracking-wide">
+                    {trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled'
+                      ? '🔴 NO-GO: Run Postponed / Called Off'
+                      : '🟢 GO: Trail Ride Confirmed & Active'}
+                  </h4>
+                  <p className="text-[11px] font-mono text-stone-300">
+                    {trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled'
+                      ? 'Inclement weather, trail condition, or turnout conflict. Convoy is suspended.'
+                      : 'Weather and trail check clear. Convoy departure proceeding as planned.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Host Toggle Action */}
+              <button
+                type="button"
+                onClick={() => setIsEditingDecision(!isEditingDecision)}
+                className="px-2.5 py-1 rounded-lg bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 text-[11px] font-mono transition-colors"
+              >
+                {isEditingDecision ? 'Done' : 'Change Go/No-Go'}
+              </button>
+            </div>
+
+            {/* Postponement Reason Alert */}
+            {(trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled') && trip.cancellationReason && (
+              <div className="mt-1 p-2.5 bg-red-900/30 rounded-lg border border-red-800/40 text-[11.5px] font-mono text-red-200">
+                <span className="font-bold text-red-300 block mb-0.5">⚠️ Reason for Cancellation / Postponement:</span>
+                {trip.cancellationReason}
+              </div>
+            )}
+
+            {/* Host Decision Edit Panel */}
+            {isEditingDecision && (
+              <div className="mt-2 pt-3 border-t border-stone-800 space-y-2.5 bg-stone-900/90 p-3 rounded-lg">
+                <span className="text-[11px] font-heading font-bold text-stone-200 block">
+                  Update Convoy Status & Decision:
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onUpdateTripDecision?.(trip.id, 'GO');
+                      setIsEditingDecision(false);
+                    }}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border transition-all ${
+                      trip.goDecision !== 'NO_GO' && trip.status !== 'Postponed'
+                        ? 'bg-emerald-600 text-white border-emerald-500'
+                        : 'bg-stone-800 text-stone-300 border-stone-700 hover:bg-emerald-950/60'
+                    }`}
+                  >
+                    🟢 GO (Ride Confirmed)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const reason = prompt("Enter reason for postponement / cancellation (e.g. Bad rain / trail washout / low turnout):", trip.cancellationReason || "Inclement weather forecasted.");
+                      if (reason !== null) {
+                        onUpdateTripDecision?.(trip.id, 'NO_GO', reason);
+                        setIsEditingDecision(false);
+                      }
+                    }}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold border transition-all ${
+                      trip.goDecision === 'NO_GO' || trip.status === 'Postponed'
+                        ? 'bg-red-600 text-white border-red-500'
+                        : 'bg-stone-800 text-stone-300 border-stone-700 hover:bg-red-950/60'
+                    }`}
+                  >
+                    🔴 NO-GO (Postponed / Cancelled)
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Example / Past Notice Banner */}
           {(trip.status === 'Completed' || trip.title.includes('Example Only')) && (
             <div className="p-3.5 bg-amber-950/30 border border-amber-700/40 rounded-xl text-xs text-amber-200 font-mono flex items-start gap-2.5">
@@ -421,7 +514,7 @@ export default function TripDetailDrawer({
                 Convoy Roster ({roster.length} / {trip.maxRigs} Rigs)
               </h3>
 
-              {!myParticipant && trip.status !== 'Completed' && !trip.title.includes('Example Only') && (
+              {!myParticipant && trip.goDecision !== 'NO_GO' && trip.status !== 'Postponed' && trip.status !== 'Cancelled' && trip.status !== 'Completed' && !trip.title.includes('Example Only') && (
                 <button
                   type="button"
                   onClick={() => setIsRsvpOpen(!isRsvpOpen)}
@@ -431,7 +524,12 @@ export default function TripDetailDrawer({
                   <span>{openSpots > 0 ? 'RSVP / Join Convoy' : 'Join Waitlist'}</span>
                 </button>
               )}
-              {(trip.status === 'Completed' || trip.title.includes('Example Only')) && (
+              {(trip.goDecision === 'NO_GO' || trip.status === 'Postponed' || trip.status === 'Cancelled') && (
+                <span className="text-[11px] font-mono text-red-400 bg-red-950/50 border border-red-800/60 px-2.5 py-1 rounded-md">
+                  Registration Locked (Run Postponed)
+                </span>
+              )}
+              {trip.goDecision !== 'NO_GO' && trip.status !== 'Postponed' && trip.status !== 'Cancelled' && (trip.status === 'Completed' || trip.title.includes('Example Only')) && (
                 <span className="text-[11px] font-mono text-stone-400 bg-stone-950 border border-stone-800 px-2.5 py-1 rounded-md">
                   Registration Closed (Example Run)
                 </span>

@@ -48,7 +48,9 @@ create table if not exists public.trips (
   difficulty_rating text check (difficulty_rating in ('Easy', 'Moderate', 'Hard', 'Extreme')),
   minimum_requirements text[] default array['Full-size spare', 'Rated recovery points', '33" Tires'],
   comms_channel text default 'GMRS Channel 16 / 462.575 MHz',
-  status text default 'Upcoming' check (status in ('Upcoming', 'In Progress', 'Completed', 'Cancelled')),
+  status text default 'Upcoming' check (status in ('Upcoming', 'In Progress', 'Completed', 'Cancelled', 'Postponed')),
+  go_decision text default 'GO' check (go_decision in ('GO', 'NO_GO', 'STANDBY')),
+  cancellation_reason text,
   created_at timestamptz default timezone('utc'::text, now()) not null
 );
 

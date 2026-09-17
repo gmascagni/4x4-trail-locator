@@ -157,6 +157,7 @@ export default function PlanRunModal({
       minimumRequirements: selectedRequirements,
       commsChannel,
       status: 'Upcoming',
+      goDecision: 'GO',
       createdAt: new Date().toISOString()
     };
 
@@ -186,7 +187,8 @@ export default function PlanRunModal({
             difficulty_rating: newTrip.difficultyRating,
             minimum_requirements: newTrip.minimumRequirements,
             comms_channel: newTrip.commsChannel,
-            status: 'Upcoming'
+            status: 'Upcoming',
+            go_decision: 'GO'
           })
           .select()
           .single();

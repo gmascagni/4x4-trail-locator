@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.56.0_2026-09-16_23-18-59",
+    "version": "v2.56.0",
+    "timestamp": "2026-09-17T03:19:02.694Z",
+    "displayDate": "9/16/2026, 11:19:02 PM",
+    "description": "Add Canceled or Postponed section with Go/No-Go status indicator",
+    "zipFile": "v2.56.0_2026-09-16_23-18-59.zip",
+    "sizeMb": "42.04 MB",
+    "gitHash": "612ad99"
+  },
+  {
     "id": "v2.55.0_2026-09-16_23-09-14",
     "version": "v2.55.0",
     "timestamp": "2026-09-17T03:09:16.381Z",
