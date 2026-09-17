@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.53.0_2026-09-16_22-59-31",
+    "version": "v2.53.0",
+    "timestamp": "2026-09-17T02:59:34.391Z",
+    "displayDate": "9/16/2026, 10:59:34 PM",
+    "description": "Integrate Group Runs & Trip Scheduler into live index.html with calendar sync and RSVP",
+    "zipFile": "v2.53.0_2026-09-16_22-59-31.zip",
+    "sizeMb": "42.04 MB",
+    "gitHash": "5258e03"
+  },
+  {
     "id": "v2.52.0_2026-09-16_22-55-06",
     "version": "v2.52.0",
     "timestamp": "2026-09-17T02:55:09.353Z",

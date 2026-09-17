@@ -2628,6 +2628,49 @@ footer {
     </div>
   </section>
 
+  <!-- COLLAPSIBLE COMMUNITY GROUP RUNS & TRIP SCHEDULER -->
+  <section style="margin-bottom: 40px;" id="trip-scheduler">
+    <div class="collapsible-bar" onclick="toggleSchedulerSection()">
+      <div class="collapsible-title">
+        <i class="fa-solid fa-calendar-days" style="color: var(--amber-orange); font-size: 20px;"></i>
+        <div>
+          <span>COMMUNITY GROUP RUNS & CONVOY TRIP SCHEDULER</span>
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Coordinate trail rides, verify rig criteria, RSVP to open convoys, and sync to Apple & Google Calendar</div>
+        </div>
+      </div>
+      <div class="collapsible-icon" id="schedulerToggleIcon" style="transform: rotate(180deg);">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <div id="schedulerBody" style="display: block; margin-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;" id="schedulerFilterChips">
+          <button type="button" class="tutorial-chip-btn active" onclick="filterSchedulerTrips('all', this)">
+            <i class="fa-solid fa-calendar-check"></i> All Scheduled Runs
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterSchedulerTrips('Easy', this)">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-right:4px;"></span> Easy (Stock)
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterSchedulerTrips('Moderate', this)">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2563eb;margin-right:4px;"></span> Moderate (33")
+          </button>
+          <button type="button" class="tutorial-chip-btn" onclick="filterSchedulerTrips('Hard', this)">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ea580c;margin-right:4px;"></span> Hard (35"+ Lockers)
+          </button>
+        </div>
+
+        <button type="button" onclick="openPlanRunModal()" style="background: linear-gradient(135deg, var(--amber-orange), #c2410c); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(234,88,12,0.35);">
+          <i class="fa-solid fa-plus"></i> Plan a Group Run
+        </button>
+      </div>
+
+      <div class="tutorial-grid" id="schedulerTripsGrid">
+        <!-- Rendered dynamically by renderSchedulerTrips() -->
+      </div>
+    </div>
+  </section>
+
 </main>
 
 
@@ -2795,6 +2838,112 @@ footer {
     <button onclick="closeVcModal()" style="width:100%; background:var(--forest-dark); color:#fff; border:none; padding:11px; border-radius:8px; font-weight:800; cursor:pointer;">
       CLOSE VERSION MANAGER
     </button>
+  </div>
+</div>
+
+<!-- PLAN A GROUP RUN MODAL -->
+<div class="modal-overlay" id="planRunModal" onclick="if(event.target===this)closePlanRunModal()">
+  <div class="modal-content" style="max-width: 680px; padding: 24px; position: relative;">
+    <button class="modal-close-btn" type="button" onclick="closePlanRunModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; border-bottom:1.5px solid #e2e8f0; padding-bottom:12px;">
+      <div style="background:#fff7ed; color:#ea580c; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; border:1px solid #fed7aa;">
+        <i class="fa-solid fa-calendar-plus"></i>
+      </div>
+      <div>
+        <h3 style="font-size:18px; font-weight:900; color:var(--forest-dark); margin:0;">Plan a Group Trail Run</h3>
+        <div style="font-size:11.5px; color:#64748b;">Schedule a convoy, establish rig criteria, and open community RSVPs</div>
+      </div>
+    </div>
+
+    <form id="planRunForm" onsubmit="submitPlanRunForm(event)" style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Target Trail</label>
+          <select id="planRunTrailSelect" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px; font-weight:700; color:#0f172a;" required>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Run Title</label>
+          <input type="text" id="planRunTitle" placeholder="e.g. Saturday Morning Slickrock Crawl" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px;" required />
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Start Date & Time (Rendezvous)</label>
+          <input type="datetime-local" id="planRunStartTime" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px; font-family:monospace;" required />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Estimated Wrap-up Time</label>
+          <input type="datetime-local" id="planRunEndTime" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px; font-family:monospace;" />
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Meeting Point / Staging Area</label>
+          <input type="text" id="planRunMeetingPoint" placeholder="e.g. North Staging Parking Lot" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px;" required />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Comms Radio Channel</label>
+          <select id="planRunComms" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px; font-weight:700; color:#0f172a;">
+            <option value="GMRS Channel 16 / 462.575 MHz">GMRS Channel 16 / 462.575 MHz (Standard 4x4)</option>
+            <option value="GMRS Channel 19 / 462.650 MHz">GMRS Channel 19 / 462.650 MHz</option>
+            <option value="CB Channel 4 (27.005 MHz)">CB Channel 4 (27.005 MHz)</option>
+            <option value="CB Channel 16 (27.155 MHz)">CB Channel 16 (27.155 MHz)</option>
+            <option value="HAM 2m 146.520 MHz Simplex">HAM 2m 146.520 MHz Simplex</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Difficulty Rating</label>
+          <select id="planRunDifficulty" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px; font-weight:700; color:#0f172a;">
+            <option value="Easy">Easy (Stock Friendly / Scenic)</option>
+            <option value="Moderate" selected>Moderate (33" Tires / Sliders)</option>
+            <option value="Hard">Hard (35"+ Tires / Lockers)</option>
+            <option value="Extreme">Extreme (37"+ Buggy / Winch)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Max Convoy Limit (Rigs)</label>
+          <input type="number" id="planRunMaxRigs" value="8" min="3" max="15" style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px;" required />
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:4px;">Run Briefing & Logistics Notes</label>
+        <textarea id="planRunDescription" rows="3" placeholder="Outline obstacle line choices, recovery expectations, air down procedures, lunch spot, etc." style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px;"></textarea>
+      </div>
+
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+        <span style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:6px;">Host Rig Specs (Lead Vehicle)</span>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; font-size:11px;">
+          <input type="text" id="planRunHostRig" placeholder="e.g. '24 Jeep Rubicon JLU" value="2024 Jeep Wrangler Rubicon" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;" required />
+          <input type="number" id="planRunHostTires" placeholder="Tire Size (35)" value="35" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;" required />
+          <label style="display:flex; align-items:center; gap:6px; font-weight:700; color:#475569;">
+            <input type="checkbox" id="planRunHostWinch" checked /> Winch Installed
+          </label>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button type="button" onclick="closePlanRunModal()" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:9px 16px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer;">Cancel</button>
+        <button type="submit" style="background:linear-gradient(135deg, var(--amber-orange), #c2410c); color:#fff; border:none; padding:9px 20px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; box-shadow:0 2px 6px rgba(234,88,12,0.35);">Publish Group Run</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CONVOY DETAILS & RSVP MODAL -->
+<div class="modal-overlay" id="convoyDetailModal" onclick="if(event.target===this)closeConvoyDetailModal()">
+  <div class="modal-content" style="max-width: 720px; padding: 24px; position: relative;">
+    <button class="modal-close-btn" type="button" onclick="closeConvoyDetailModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div id="convoyDetailModalBody">
+      <!-- Injected dynamically -->
+    </div>
   </div>
 </div>
 
@@ -12138,6 +12287,9 @@ function renderTrails() {
           <button type="button" onclick="openTrailSourceModal('${trail.id}')" style="flex: 1; background: #0f172a; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(15,23,42,0.3);">
             <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Official Details
           </button>
+          <button type="button" onclick="openPlanRunModal('${trail.id}')" style="background: #fff7ed; color: #c2410c; border: 1.5px solid #fed7aa; padding: 10px 12px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;" title="Schedule a Community Convoy Run">
+            <i class="fa-solid fa-calendar-plus" style="color:var(--amber-orange);"></i> Plan Run
+          </button>
           <a href="https://maps.google.com/?q=${trail.lat},${trail.lng}" target="_blank" style="flex: 1; background: linear-gradient(135deg, var(--amber-orange), #c2410c); color: #fff; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 6px rgba(234,88,12,0.35);">
             <i class="fa-solid fa-diamond-turn-right"></i> Directions ↗
           </a>
@@ -13033,6 +13185,8 @@ function closeModalOnBackdrop(e) {
     closeVideoModal();
     closeTrailSourceModal();
     closeInclinometerModal();
+    closePlanRunModal();
+    closeConvoyDetailModal();
   }
 }
 
@@ -13049,12 +13203,477 @@ function toggleShopsSection() {
   }
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// GROUP RUNS & TRIP SCHEDULER CONTROLLER
+// ══════════════════════════════════════════════════════════════════════
+
+let activeSchedulerDifficulty = 'all';
+
+const INITIAL_INDEX_TRIPS = [
+  {
+    id: "trip-fins-and-things",
+    trailId: "trail-fins-and-things",
+    trailName: "Fins & Things (Badge of Honor)",
+    title: "Saturday Sandstone Fins & Frenchie's Fin Run",
+    description: "Morning technical run tackling the slickrock domes and steep fin climbs. Air down to 12-14 PSI at the north staging parking lot. Full recovery kit and spotters on Frenchie's Fin.",
+    startTime: new Date(Date.now() + 86400000 * 2).toISOString(),
+    endTime: new Date(Date.now() + 86400000 * 2 + 14400000).toISOString(),
+    meetingLocation: "Fins & Things North Entrance Staging Lot, Sand Flats Rd, Moab, UT",
+    lat: 38.5815,
+    lng: -109.4795,
+    organizerName: "Red Rock Trail Guide",
+    organizerRig: "Jeep Wrangler Rubicon 392 (37s)",
+    maxRigs: 8,
+    difficultyRating: "Moderate",
+    minimumRequirements: ['33" Tires min', 'Rear Locker required', 'Full-size spare', 'Rated recovery points'],
+    commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
+    status: "Upcoming",
+    roster: [
+      { name: "Red Rock Trail Guide", rig: "2024 Jeep Rubicon 392 (37s)", role: "Host", status: "Going" },
+      { name: "Dave K.", rig: "2023 Jeep Gladiator JT (35s)", role: "Participant", status: "Going" }
+    ]
+  },
+  {
+    id: "trip-hells-revenge",
+    trailId: "trail-hells-revenge",
+    trailName: "Hell's Revenge (Badge of Honor)",
+    title: "Escalator & Hell's Gate Technical Crawl",
+    description: "High exposure slickrock crawling. Minimum 35-inch tires and true locking differentials strongly advised for the optional Hell's Gate and Escalator hot tubs.",
+    startTime: new Date(Date.now() + 86400000 * 5).toISOString(),
+    endTime: new Date(Date.now() + 86400000 * 5 + 18000000).toISOString(),
+    meetingLocation: "Sand Flats Recreation Area Staging Kiosk, Moab, UT",
+    lat: 38.5756,
+    lng: -109.5211,
+    organizerName: "Moab Expeditions Lead",
+    organizerRig: "Built JLU on 40s & Dynatrac 60s",
+    maxRigs: 6,
+    difficultyRating: "Hard",
+    minimumRequirements: ['35" Tires min', 'Front Locker required', 'Rear Locker required', 'Winch required'],
+    commsChannel: "GMRS Channel 19 / 462.650 MHz",
+    status: "Upcoming",
+    roster: [
+      { name: "Moab Expeditions Lead", rig: "Built JLU on 40s", role: "Host", status: "Going" },
+      { name: "Sarah M.", rig: "2021 Ford Bronco Badlands (35s)", role: "Tail Gunner / Sweep", status: "Going" }
+    ]
+  },
+  {
+    id: "trip-beasley-knob",
+    trailId: "trail-beasley-knob",
+    trailName: "Beasley Knob OHV Trail System",
+    title: "Chattahoochee Mountain Forest & Clay Ruts",
+    description: "Exploring the 93B mountain ridge cutouts and hill climbs in Blairsville. Winch and mud terrain tires recommended if damp.",
+    startTime: new Date(Date.now() + 86400000 * 9).toISOString(),
+    endTime: new Date(Date.now() + 86400000 * 9 + 18000000).toISOString(),
+    meetingLocation: "Beasley Knob Trailhead Staging, Blairsville, GA",
+    lat: 34.8465,
+    lng: -83.9142,
+    organizerName: "Blue Ridge 4x4 Host",
+    organizerRig: "Jeep Gladiator Rubicon",
+    maxRigs: 8,
+    difficultyRating: "Hard",
+    minimumRequirements: ['33" Tires min', 'Winch required', 'Rated recovery points'],
+    commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
+    status: "Upcoming",
+    roster: [
+      { name: "Blue Ridge 4x4 Host", rig: "Gladiator Rubicon (35s)", role: "Host", status: "Going" }
+    ]
+  }
+];
+
+function getCommunityTrips() {
+  try {
+    const stored = localStorage.getItem('local_trail_trips');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {}
+  return INITIAL_INDEX_TRIPS;
+}
+
+function saveCommunityTrips(trips) {
+  try {
+    localStorage.setItem('local_trail_trips', JSON.stringify(trips));
+  } catch (e) {}
+}
+
+function toggleSchedulerSection() {
+  const body = document.getElementById('schedulerBody');
+  const icon = document.getElementById('schedulerToggleIcon');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+    renderSchedulerTrips();
+  } else {
+    body.style.display = 'none';
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  }
+}
+
+function filterSchedulerTrips(diff, btn) {
+  activeSchedulerDifficulty = diff;
+  const chips = document.querySelectorAll('#schedulerFilterChips .tutorial-chip-btn');
+  chips.forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSchedulerTrips();
+}
+
+function renderSchedulerTrips() {
+  const container = document.getElementById('schedulerTripsGrid');
+  if (!container) return;
+
+  const allTrips = getCommunityTrips();
+  const filtered = (activeSchedulerDifficulty === 'all')
+    ? allTrips
+    : allTrips.filter(t => t.difficultyRating === activeSchedulerDifficulty);
+
+  const diffColors = {
+    Easy: { bg: '#dcfce7', text: '#15803d', border: '#bbf7d0' },
+    Moderate: { bg: '#dbeafe', text: '#1d4ed8', border: '#bfdbfe' },
+    Hard: { bg: '#ffedd5', text: '#c2410c', border: '#fed7aa' },
+    Extreme: { bg: '#fee2e2', text: '#b91c1c', border: '#fecaca' }
+  };
+
+  container.innerHTML = filtered.map(t => {
+    const dStyle = diffColors[t.difficultyRating] || diffColors.Moderate;
+    const roster = t.roster || [];
+    const openSlots = Math.max(0, t.maxRigs - roster.length);
+    const startDate = new Date(t.startTime);
+    const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    return `
+      <div class="tutorial-card" style="background:#ffffff; border:1.5px solid var(--card-border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 4px 14px rgba(0,0,0,0.04);">
+        <div style="background:linear-gradient(135deg, #0f172a, #1e293b); padding:16px; color:#fff; border-bottom:3px solid var(--amber-orange);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:10.5px; font-weight:800; background:${dStyle.bg}; color:${dStyle.text}; border:1px solid ${dStyle.border}; padding:2px 8px; border-radius:4px; font-family:monospace;">
+              ${t.difficultyRating} Difficulty
+            </span>
+            <span style="font-size:10.5px; font-weight:800; background:rgba(234,88,12,0.2); color:#fbbf24; border:1px solid rgba(234,88,12,0.4); padding:2px 8px; border-radius:4px; font-family:monospace;">
+              <i class="fa-solid fa-users"></i> ${openSlots > 0 ? openSlots + ' Slots Open' : 'Convoy Full'}
+            </span>
+          </div>
+          <div style="font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-bottom:2px;">${t.trailName}</div>
+          <h4 style="font-size:15px; font-weight:900; color:#f8fafc; margin:0; line-height:1.35; cursor:pointer;" onclick="openConvoyDetailModal('${t.id}')">
+            ${t.title}
+          </h4>
+        </div>
+
+        <div style="padding:16px; flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+          <div style="font-size:11.5px; color:#475569; line-height:1.45;">
+            ${t.description}
+          </div>
+
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:11px; space-y:4px; font-family:monospace;">
+            <div style="color:#0f172a; margin-bottom:3px;"><i class="fa-regular fa-clock" style="color:var(--amber-orange);"></i> <strong>Time:</strong> ${dateFormatted} at ${timeFormatted}</div>
+            <div style="color:#0f172a; margin-bottom:3px;"><i class="fa-solid fa-location-dot" style="color:#16a34a;"></i> <strong>Meet:</strong> ${t.meetingLocation}</div>
+            <div style="color:#0f172a;"><i class="fa-solid fa-radio" style="color:#2563eb;"></i> <strong>Comms:</strong> ${t.commsChannel}</div>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:6px; font-size:10.5px; font-family:monospace;">
+            ${(t.minimumRequirements || []).map(r => `<span style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:2px 6px; border-radius:4px;">✔ ${r}</span>`).join('')}
+          </div>
+
+          <div style="display:flex; gap:6px; pt-2; border-top:1px dashed #e2e8f0; padding-top:10px;">
+            <button type="button" onclick="openConvoyDetailModal('${t.id}')" style="flex:1; background:#0f172a; color:#fff; border:none; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Details & RSVP (${roster.length}/${t.maxRigs})
+            </button>
+            <button type="button" onclick="openGoogleCalendar('${t.id}')" style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;" title="Add to Google Calendar">
+              <i class="fa-brands fa-google"></i>
+            </button>
+            <button type="button" onclick="downloadIcsCalendar('${t.id}')" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;" title="Download Apple/Outlook .ics Invite">
+              <i class="fa-solid fa-download"></i> .ics
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openPlanRunModal(prefillTrailId = null) {
+  const modal = document.getElementById('planRunModal');
+  const select = document.getElementById('planRunTrailSelect');
+  if (!modal || !select) return;
+
+  // Populate trails dropdown from TRAILS array
+  select.innerHTML = TRAILS.map(t => `<option value="${t.id}">${t.name} (${t.region})</option>`).join('');
+
+  if (prefillTrailId) {
+    select.value = prefillTrailId;
+    const trail = TRAILS.find(t => t.id === prefillTrailId);
+    if (trail) {
+      document.getElementById('planRunTitle').value = `${trail.name} Group Run`;
+      document.getElementById('planRunMeetingPoint').value = `Staging Area: ${trail.address}`;
+    }
+  } else if (TRAILS.length > 0) {
+    document.getElementById('planRunTitle').value = `${TRAILS[0].name} Group Run`;
+    document.getElementById('planRunMeetingPoint').value = `Staging Area: ${TRAILS[0].address}`;
+  }
+
+  // Default tomorrow 9:00 AM
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(9, 0, 0, 0);
+  const pad = n => n < 10 ? '0' + n : n;
+  const isoLocal = `${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())}T09:00`;
+  document.getElementById('planRunStartTime').value = isoLocal;
+
+  modal.style.display = 'flex';
+}
+
+function closePlanRunModal() {
+  const modal = document.getElementById('planRunModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function submitPlanRunForm(e) {
+  e.preventDefault();
+  const trailId = document.getElementById('planRunTrailSelect').value;
+  const trail = TRAILS.find(t => t.id === trailId) || { name: '4x4 Trail', address: 'Trailhead' };
+  const title = document.getElementById('planRunTitle').value;
+  const startTime = new Date(document.getElementById('planRunStartTime').value).toISOString();
+  const endTimeInput = document.getElementById('planRunEndTime').value;
+  const endTime = endTimeInput ? new Date(endTimeInput).toISOString() : new Date(new Date(startTime).getTime() + 14400000).toISOString();
+  const meetingLocation = document.getElementById('planRunMeetingPoint').value;
+  const commsChannel = document.getElementById('planRunComms').value;
+  const difficultyRating = document.getElementById('planRunDifficulty').value;
+  const maxRigs = parseInt(document.getElementById('planRunMaxRigs').value, 10) || 8;
+  const description = document.getElementById('planRunDescription').value || `${title} on ${trail.name}. Bring recovery gear and lunch.`;
+  const hostRig = document.getElementById('planRunHostRig').value || 'Jeep 4x4';
+  const hostTires = parseInt(document.getElementById('planRunHostTires').value, 10) || 33;
+  const hostWinch = document.getElementById('planRunHostWinch').checked;
+
+  const newTrip = {
+    id: `trip-${Date.now()}`,
+    trailId,
+    trailName: trail.name,
+    title,
+    description,
+    startTime,
+    endTime,
+    meetingLocation,
+    lat: trail.lat || 34.7,
+    lng: trail.lng || -84.0,
+    organizerName: "You (Host)",
+    organizerRig: hostRig,
+    maxRigs,
+    difficultyRating,
+    minimumRequirements: [`${hostTires}" Tires min`, hostWinch ? 'Winch recommended' : 'Recovery points', 'Full-size spare'],
+    commsChannel,
+    status: "Upcoming",
+    roster: [
+      { name: "You (Lead)", rig: `${hostRig} (${hostTires}" Tires${hostWinch ? ', Winch' : ''})`, role: "Host", status: "Going" }
+    ]
+  };
+
+  const trips = getCommunityTrips();
+  trips.unshift(newTrip);
+  saveCommunityTrips(trips);
+
+  closePlanRunModal();
+  renderSchedulerTrips();
+
+  const sec = document.getElementById('trip-scheduler');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+}
+
+function openConvoyDetailModal(tripId) {
+  const modal = document.getElementById('convoyDetailModal');
+  const body = document.getElementById('convoyDetailModalBody');
+  if (!modal || !body) return;
+
+  const trips = getCommunityTrips();
+  const t = trips.find(x => x.id === tripId);
+  if (!t) return;
+
+  const startDate = new Date(t.startTime);
+  const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const roster = t.roster || [];
+  const openSlots = Math.max(0, t.maxRigs - roster.length);
+
+  body.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; border-bottom:1.5px solid #e2e8f0; padding-bottom:12px;">
+      <div>
+        <span style="font-size:11px; font-weight:800; color:#ea580c; text-transform:uppercase;">${t.trailName}</span>
+        <h3 style="font-size:20px; font-weight:900; color:var(--forest-dark); margin:2px 0 0;">${t.title}</h3>
+      </div>
+      <span style="font-size:11px; font-weight:800; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-family:monospace;">
+        ${t.difficultyRating} Difficulty
+      </span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; font-family:monospace; margin-bottom:14px;">
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+        <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">📅 Rendezvous Time</span>
+        <strong style="color:#0f172a;">${dateFormatted}</strong> at ${timeFormatted}
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+        <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">📍 Meeting Location</span>
+        <strong style="color:#0f172a;">${t.meetingLocation}</strong>
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+        <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">📻 Comms Radio</span>
+        <strong style="color:#2563eb;">${t.commsChannel}</strong>
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+        <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">🚙 Convoy Capacity</span>
+        <strong style="color:#c2410c;">${openSlots > 0 ? openSlots + ' of ' + t.maxRigs + ' Slots Open' : 'Convoy Full (Waitlist)'}</strong>
+      </div>
+    </div>
+
+    <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:11.5px; color:#1e40af; line-height:1.45;">
+      <strong>Briefing:</strong> ${t.description}
+    </div>
+
+    <!-- CALENDAR SYNC -->
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#fff7ed; border:1.5px solid #fed7aa; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
+      <div style="font-size:11.5px; font-weight:800; color:#c2410c;">
+        <i class="fa-solid fa-calendar-check"></i> Sync with Mobile / Personal Calendar:
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button type="button" onclick="openGoogleCalendar('${t.id}')" style="background:#ffffff; color:#c2410c; border:1px solid #fed7aa; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+          <i class="fa-brands fa-google"></i> Google Calendar ↗
+        </button>
+        <button type="button" onclick="downloadIcsCalendar('${t.id}')" style="background:#ffffff; color:#0f172a; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+          <i class="fa-solid fa-download"></i> Apple / Outlook .ics
+        </button>
+      </div>
+    </div>
+
+    <!-- CONVOY ROSTER -->
+    <div style="margin-bottom:16px;">
+      <h4 style="font-size:13px; font-weight:900; color:#0f172a; margin:0 0 8px; display:flex; justify-content:space-between;">
+        <span><i class="fa-solid fa-users"></i> Confirmed Convoy Roster (${roster.length}/${t.maxRigs} Rigs)</span>
+      </h4>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        ${roster.map(r => `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+            <div>
+              <strong style="color:#0f172a;">${r.name}</strong>
+              <span style="color:#64748b; font-family:monospace; margin-left:6px;">• ${r.rig}</span>
+            </div>
+            <span style="background:${r.role === 'Host' ? '#ea580c' : '#0f172a'}; color:#fff; font-size:10px; font-weight:800; padding:2px 7px; border-radius:4px; font-family:monospace;">
+              ${r.role}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- RSVP FORM -->
+    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px 14px;">
+      <h4 style="font-size:12px; font-weight:900; color:#0f172a; margin:0 0 8px;">
+        <i class="fa-solid fa-user-plus" style="color:var(--amber-orange);"></i> RSVP with Your Rig Specs:
+      </h4>
+      <form onsubmit="submitRsvpForm(event, '${t.id}')" style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:8px;">
+        <input type="text" id="rsvpDriverName" placeholder="Your Name" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
+        <input type="text" id="rsvpRigModel" placeholder="e.g. '22 Rubicon JL (35s)" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
+        <select id="rsvpRole" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;">
+          <option value="Participant">Participant</option>
+          <option value="Tail Gunner / Sweep">Tail Gunner / Sweep</option>
+        </select>
+        <button type="submit" style="background:var(--forest-dark); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+          Confirm RSVP
+        </button>
+      </form>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function closeConvoyDetailModal() {
+  const modal = document.getElementById('convoyDetailModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function submitRsvpForm(e, tripId) {
+  e.preventDefault();
+  const name = document.getElementById('rsvpDriverName').value;
+  const rig = document.getElementById('rsvpRigModel').value;
+  const role = document.getElementById('rsvpRole').value;
+
+  const trips = getCommunityTrips();
+  const t = trips.find(x => x.id === tripId);
+  if (!t) return;
+
+  if (!t.roster) t.roster = [];
+  t.roster.push({
+    name,
+    rig,
+    role: t.roster.length >= t.maxRigs ? 'Waitlist' : role,
+    status: 'Going'
+  });
+
+  saveCommunityTrips(trips);
+  openConvoyDetailModal(tripId);
+  renderSchedulerTrips();
+}
+
+function openGoogleCalendar(tripId) {
+  const trips = getCommunityTrips();
+  const t = trips.find(x => x.id === tripId);
+  if (!t) return;
+
+  const formatUtc = iso => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const start = formatUtc(t.startTime);
+  const end = formatUtc(t.endTime || new Date(new Date(t.startTime).getTime() + 14400000).toISOString());
+
+  const title = encodeURIComponent(`4x4 Trail Run: ${t.trailName} - ${t.title}`);
+  const details = encodeURIComponent(`${t.description}\n\nComms: ${t.commsChannel}\nConvoy Limit: ${t.maxRigs} rigs\nMin Requirements: ${(t.minimumRequirements || []).join(', ')}`);
+  const loc = encodeURIComponent(t.meetingLocation);
+
+  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${loc}`, '_blank');
+}
+
+function downloadIcsCalendar(tripId) {
+  const trips = getCommunityTrips();
+  const t = trips.find(x => x.id === tripId);
+  if (!t) return;
+
+  const formatUtc = iso => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const start = formatUtc(t.startTime);
+  const end = formatUtc(t.endTime || new Date(new Date(t.startTime).getTime() + 14400000).toISOString());
+  const now = formatUtc(new Date().toISOString());
+
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//4x4 TrailFinder//Group Runs//EN',
+    'BEGIN:VEVENT',
+    `UID:${t.id}@trailfinder4x4.com`,
+    `DTSTAMP:${now}`,
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:4x4 Convoy Run: ${t.trailName} (${t.title})`,
+    `DESCRIPTION:${t.description.replace(/\n/g, '\\n')}\\n\\nComms: ${t.commsChannel}`,
+    `LOCATION:${t.meetingLocation}`,
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `${t.id}.ics`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 // INIT
 window.onload = function() {
   ensureTopViewport();
   initMap();
   renderTrails();
   renderRecoveryTutorials();
+  renderSchedulerTrips();
 
   // Enforce top viewport as async weather telemetry & images load (unless user manually touched/scrolled)
   [50, 150, 300, 600, 1000, 1500, 2500].forEach(delay => {
