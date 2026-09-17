@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.51.0_2026-09-16_22-43-24",
+    "version": "v2.51.0",
+    "timestamp": "2026-09-17T02:43:27.391Z",
+    "displayDate": "9/16/2026, 10:43:27 PM",
+    "description": "Fix tutorial video mappings, clean checklist buttons, implement radius filter, and add shop images",
+    "zipFile": "v2.51.0_2026-09-16_22-43-24.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "48d36c1"
+  },
+  {
     "id": "v2.50.0_2026-09-05_11-31-19",
     "version": "v2.50.0",
     "timestamp": "2026-09-05T15:31:22.460Z",
