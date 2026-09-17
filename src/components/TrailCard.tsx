@@ -19,7 +19,8 @@ import {
   Flag,
   CloudSun,
   Layers,
-  Sparkles
+  Sparkles,
+  Calendar
 } from 'lucide-react';
 import { getDifficultyScaleBadge, getStatusBadge } from '../services/trailService';
 import { calculateRigMatch } from '../utils/rigMatcher';
@@ -32,6 +33,7 @@ interface TrailCardProps {
   onOpenReportModal?: (trail: Trail4x4) => void;
   onOpenShareModal?: (trail: Trail4x4) => void;
   onOpenInclinometer?: (trail: Trail4x4) => void;
+  onPlanRun?: (trail: Trail4x4) => void;
 }
 
 export default function TrailCard({
@@ -41,7 +43,8 @@ export default function TrailCard({
   onSelect,
   onOpenReportModal,
   onOpenShareModal,
-  onOpenInclinometer
+  onOpenInclinometer,
+  onPlanRun
 }: TrailCardProps) {
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
   const [showObstacles, setShowObstacles] = useState(false);
@@ -329,6 +332,20 @@ export default function TrailCard({
             <Flag className="w-3.5 h-3.5 text-emerald-400" />
             <span>Post Report</span>
           </button>
+
+          {onPlanRun && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPlanRun(trail);
+              }}
+              className="flex-1 py-2 px-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-heading font-bold text-xs rounded-xl border border-amber-500/30 transition-colors flex items-center justify-center gap-1.5"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Plan Run</span>
+            </button>
+          )}
 
           <button
             type="button"

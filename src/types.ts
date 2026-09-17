@@ -154,3 +154,73 @@ export interface OffroadLogbookEntry {
   photos?: string[];
   notes: string;
 }
+
+// ====================================================================
+// GROUP RUNS & TRIP SCHEDULER DATA MODELS
+// ====================================================================
+
+export type TripStatus = "Upcoming" | "In Progress" | "Completed" | "Cancelled";
+export type TripDifficulty = "Easy" | "Moderate" | "Hard" | "Extreme";
+export type TripRole = "Host" | "Tail Gunner / Sweep" | "Participant" | "Waitlist";
+export type RSVPStatus = "Going" | "Maybe" | "Cancelled";
+
+export interface RigDetails {
+  year: number;
+  make: string;
+  model: string;
+  tireSize: number;
+  hasWinch: boolean;
+  hasLockers?: boolean;
+}
+
+export interface UserProfile {
+  id: string;
+  fullName: string;
+  avatarUrl?: string;
+  defaultRig?: string;
+  createdAt?: string;
+}
+
+export interface Trip {
+  id: string;
+  trailId: string;
+  trailName: string;
+  title: string;
+  description: string;
+  startTime: string; // ISO 8601 string
+  endTime?: string;  // ISO 8601 string
+  meetingLocation: string;
+  meetingPointCoordinates?: {
+    lat: number;
+    lng: number;
+  };
+  organizerId: string;
+  organizerProfile?: UserProfile;
+  maxRigs: number;
+  difficultyRating: TripDifficulty;
+  minimumRequirements: string[];
+  commsChannel: string;
+  status: TripStatus;
+  createdAt: string;
+}
+
+export interface TripParticipant {
+  id: string;
+  tripId: string;
+  userId: string;
+  userProfile?: UserProfile;
+  rigDetails: RigDetails;
+  role: TripRole;
+  status: RSVPStatus;
+  joinedAt: string;
+}
+
+export interface TripMessage {
+  id: string;
+  tripId: string;
+  userId: string;
+  userProfile?: UserProfile;
+  content: string;
+  createdAt: string;
+}
+

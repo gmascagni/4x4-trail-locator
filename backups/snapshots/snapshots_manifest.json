@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.52.0_2026-09-16_22-55-06",
+    "version": "v2.52.0",
+    "timestamp": "2026-09-17T02:55:09.353Z",
+    "displayDate": "9/16/2026, 10:55:09 PM",
+    "description": "Add Group Runs and Trip Scheduler module with Supabase schema, FullCalendar, and real-time chat",
+    "zipFile": "v2.52.0_2026-09-16_22-55-06.zip",
+    "sizeMb": "42.03 MB",
+    "gitHash": "b0bad9d"
+  },
+  {
     "id": "v2.51.0_2026-09-16_22-43-24",
     "version": "v2.51.0",
     "timestamp": "2026-09-17T02:43:27.391Z",

@@ -18,7 +18,8 @@ import {
   Sun,
   AlertTriangle,
   ChevronDown,
-  Navigation
+  Navigation,
+  Calendar
 } from 'lucide-react';
 import { Trail4x4, JeepRig, OffroadLogbookEntry, CrowdsourcedConditionReport } from './types';
 import { useTrailSearch } from './hooks/useTrailSearch';
@@ -33,11 +34,13 @@ import SafetyBeacon from './components/SafetyBeacon';
 import BadgeOfHonorTracker from './components/BadgeOfHonorTracker';
 import ConditionReportModal from './components/ConditionReportModal';
 import ShareTrailModal from './components/ShareTrailModal';
+import { TrailRunScheduler } from './components/scheduler';
 
 export default function App() {
   // Navigation tabs
-  const [activeTab, setActiveTab] = useState<'explore' | 'garage' | 'inclinometer' | 'airdown' | 'boh' | 'safety'>('explore');
+  const [activeTab, setActiveTab] = useState<'explore' | 'garage' | 'inclinometer' | 'airdown' | 'boh' | 'safety' | 'scheduler'>('explore');
   const [viewMode, setViewMode] = useState<'split' | 'grid' | 'map'>('split');
+  const [schedulerPrefillTrail, setSchedulerPrefillTrail] = useState<Trail4x4 | null>(null);
 
   // Rigs State
   const [rigs, setRigs] = useState<JeepRig[]>(DEFAULT_RIGS);
@@ -210,6 +213,19 @@ export default function App() {
 
             <button
               type="button"
+              onClick={() => setActiveTab('scheduler')}
+              className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                activeTab === 'scheduler'
+                  ? 'bg-amber-500 text-stone-950 shadow-md font-bold'
+                  : 'text-stone-400 hover:text-white hover:bg-stone-800'
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Group Runs</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab('safety')}
               className={`px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                 activeTab === 'safety'
@@ -245,6 +261,13 @@ export default function App() {
             className={`px-2.5 py-1 rounded-lg shrink-0 ${activeTab === 'explore' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}`}
           >
             Trails
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('scheduler')}
+            className={`px-2.5 py-1 rounded-lg shrink-0 ${activeTab === 'scheduler' ? 'bg-amber-500 text-stone-950' : 'text-stone-400'}`}
+          >
+            Runs
           </button>
           <button
             type="button"
@@ -409,6 +432,10 @@ export default function App() {
                         onOpenReportModal={(t) => setReportingTrail(t)}
                         onOpenShareModal={(t) => setSharingTrail(t)}
                         onOpenInclinometer={(t) => setInclinometerModalTrail(t)}
+                        onPlanRun={(t) => {
+                          setSchedulerPrefillTrail(t);
+                          setActiveTab('scheduler');
+                        }}
                       />
                     ))}
                   </div>
@@ -441,6 +468,10 @@ export default function App() {
                     onOpenReportModal={(t) => setReportingTrail(t)}
                     onOpenShareModal={(t) => setSharingTrail(t)}
                     onOpenInclinometer={(t) => setInclinometerModalTrail(t)}
+                    onPlanRun={(t) => {
+                      setSchedulerPrefillTrail(t);
+                      setActiveTab('scheduler');
+                    }}
                   />
                 ))}
               </div>
@@ -501,6 +532,15 @@ export default function App() {
           <SafetyBeacon
             activeRig={activeRig}
             selectedTrail={selectedTrail}
+          />
+        )}
+
+        {/* Tab 7: Group Runs & Trip Scheduler */}
+        {activeTab === 'scheduler' && (
+          <TrailRunScheduler
+            trails={trails}
+            prefillTrail={schedulerPrefillTrail}
+            onClearPrefill={() => setSchedulerPrefillTrail(null)}
           />
         )}
       </main>
