@@ -170,6 +170,7 @@ export interface RigDetails {
   make: string;
   model: string;
   tireSize: number;
+  liftKit?: string;
   hasWinch: boolean;
   hasLockers?: boolean;
 }

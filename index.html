@@ -2923,14 +2923,53 @@ footer {
         <textarea id="planRunDescription" rows="3" placeholder="Outline obstacle line choices, recovery expectations, air down procedures, lunch spot, etc." style="width:100%; padding:8px 10px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:12px;"></textarea>
       </div>
 
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
-        <span style="font-size:11px; font-weight:800; color:#334155; display:block; margin-bottom:6px;">Host Rig Specs (Lead Vehicle)</span>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; font-size:11px;">
-          <input type="text" id="planRunHostRig" placeholder="e.g. '24 Jeep Rubicon JLU" value="2024 Jeep Wrangler Rubicon" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;" required />
-          <input type="number" id="planRunHostTires" placeholder="Tire Size (35)" value="35" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;" required />
-          <label style="display:flex; align-items:center; gap:6px; font-weight:700; color:#475569;">
-            <input type="checkbox" id="planRunHostWinch" checked /> Winch Installed
-          </label>
+      <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:8px; padding:12px 14px;">
+        <span style="font-size:11.5px; font-weight:800; color:#1e293b; display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+          <i class="fa-solid fa-truck-monster" style="color:var(--amber-orange);"></i> Lead Vehicle Specs (Host Rig)
+        </span>
+        <div style="display:grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap:8px; font-size:11px; align-items:flex-end;">
+          <div>
+            <label style="font-size:10px; font-weight:700; color:#64748b; display:block; margin-bottom:3px;">Lead Rig Make / Model</label>
+            <input type="text" id="planRunHostRig" placeholder="e.g. '24 Jeep Rubicon JLU" value="2024 Jeep Wrangler Rubicon" style="width:100%; padding:7px 8px; border:1.5px solid #cbd5e1; border-radius:6px; font-size:11px; box-sizing:border-box;" required />
+          </div>
+          <div>
+            <label style="font-size:10px; font-weight:700; color:#64748b; display:block; margin-bottom:3px;">Tires (31" to 42")</label>
+            <select id="planRunHostTires" style="width:100%; padding:7px 8px; border:1.5px solid #cbd5e1; border-radius:6px; font-size:11px; background:#ffffff; font-weight:700; color:#0f172a; box-sizing:border-box;">
+              <option value="31">31" Tires</option>
+              <option value="32">32" Tires</option>
+              <option value="33">33" Tires</option>
+              <option value="34">34" Tires</option>
+              <option value="35" selected>35" Tires</option>
+              <option value="36">36" Tires</option>
+              <option value="37">37" Tires</option>
+              <option value="38">38" Tires</option>
+              <option value="39">39" Tires</option>
+              <option value="40">40" Tires</option>
+              <option value="41">41" Tires</option>
+              <option value="42">42" Tires</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:10px; font-weight:700; color:#64748b; display:block; margin-bottom:3px;">Lift Kit (1" to 5")</label>
+            <select id="planRunHostLift" style="width:100%; padding:7px 8px; border:1.5px solid #cbd5e1; border-radius:6px; font-size:11px; background:#ffffff; font-weight:700; color:#0f172a; box-sizing:border-box;">
+              <option value="Stock (No Lift)">Stock (No Lift)</option>
+              <option value="1&quot; Lift">1" Lift Kit</option>
+              <option value="1.5&quot; Lift">1.5" Lift Kit</option>
+              <option value="2&quot; Lift">2" Lift Kit</option>
+              <option value="2.5&quot; Lift" selected>2.5" Lift Kit</option>
+              <option value="3&quot; Lift">3" Lift Kit</option>
+              <option value="3.5&quot; Lift">3.5" Lift Kit</option>
+              <option value="4&quot; Lift">4" Lift Kit</option>
+              <option value="4.5&quot; Lift">4.5" Lift Kit</option>
+              <option value="5&quot; Lift">5" Lift Kit</option>
+              <option value="5&quot;+ Lift">5"+ Lift Kit</option>
+            </select>
+          </div>
+          <div style="padding-bottom:7px;">
+            <label style="display:flex; align-items:center; gap:5px; font-weight:700; color:#475569; font-size:11px; cursor:pointer; white-space:nowrap;">
+              <input type="checkbox" id="planRunHostWinch" checked style="accent-color:var(--amber-orange);" /> Winch
+            </label>
+          </div>
         </div>
       </div>
 
@@ -13544,8 +13583,11 @@ function submitPlanRunForm(e) {
   const maxRigs = parseInt(document.getElementById('planRunMaxRigs').value, 10) || 8;
   const description = document.getElementById('planRunDescription').value || `${title} on ${trail.name}. Bring recovery gear and lunch.`;
   const hostRig = document.getElementById('planRunHostRig').value || 'Jeep 4x4';
-  const hostTires = parseInt(document.getElementById('planRunHostTires').value, 10) || 33;
+  const hostTires = parseInt(document.getElementById('planRunHostTires').value, 10) || 35;
+  const hostLift = (document.getElementById('planRunHostLift') && document.getElementById('planRunHostLift').value) || '2.5" Lift Kit';
   const hostWinch = document.getElementById('planRunHostWinch').checked;
+
+  const leadRigDesc = `${hostRig} (${hostTires}" Tires, ${hostLift}${hostWinch ? ', Winch' : ''})`;
 
   const newTrip = {
     id: `trip-${Date.now()}`,
@@ -13559,15 +13601,20 @@ function submitPlanRunForm(e) {
     lat: trail.lat || 34.7,
     lng: trail.lng || -84.0,
     organizerName: "You (Host)",
-    organizerRig: hostRig,
+    organizerRig: leadRigDesc,
     maxRigs,
     difficultyRating,
-    minimumRequirements: [`${hostTires}" Tires min`, hostWinch ? 'Winch recommended' : 'Recovery points', 'Full-size spare'],
+    minimumRequirements: [
+      `${hostTires}" Tires min`,
+      ...(hostLift && !hostLift.includes('No Lift') ? [`${hostLift} recommended`] : []),
+      hostWinch ? 'Winch recommended' : 'Recovery points',
+      'Full-size spare'
+    ],
     commsChannel,
     status: "Upcoming",
     goDecision: "GO",
     roster: [
-      { name: "You (Lead)", rig: `${hostRig} (${hostTires}" Tires${hostWinch ? ', Winch' : ''})`, role: "Host", status: "Going" }
+      { name: "You (Lead)", rig: leadRigDesc, role: "Host", status: "Going" }
     ]
   };
 

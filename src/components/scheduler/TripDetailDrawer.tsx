@@ -18,6 +18,7 @@ import { Trip, TripParticipant, UserProfile, RigDetails, TripRole, RSVPStatus, T
 import { supabase, isSupabaseConfigured } from '../../lib/supabaseClient';
 import AddToCalendarButton from './AddToCalendarButton';
 import DiscussionThread from './DiscussionThread';
+import { TIRE_SIZE_OPTIONS, LIFT_KIT_OPTIONS } from './PlanRunModal';
 
 interface TripDetailDrawerProps {
   trip: Trip;
@@ -51,6 +52,7 @@ export default function TripDetailDrawer({
   const [make, setMake] = useState('Jeep');
   const [model, setModel] = useState('Wrangler Rubicon');
   const [tireSize, setTireSize] = useState<number>(35);
+  const [liftKit, setLiftKit] = useState<string>('2.5" Lift');
   const [hasWinch, setHasWinch] = useState(true);
   const [role, setRole] = useState<TripRole>('Participant');
   const [rsvpStatus, setRsvpStatus] = useState<RSVPStatus>('Going');
@@ -179,6 +181,7 @@ export default function TripDetailDrawer({
       make,
       model,
       tireSize,
+      liftKit,
       hasWinch
     };
 
@@ -585,16 +588,28 @@ export default function TripDetailDrawer({
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono text-stone-400 block mb-1">Tire Size (Inches)</label>
-                    <input
-                      type="number"
+                    <label className="text-[10px] font-mono text-stone-400 block mb-1">Tires (31" to 42")</label>
+                    <select
                       value={tireSize}
                       onChange={(e) => setTireSize(Number(e.target.value))}
                       className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-stone-100 font-mono"
-                      min={28}
-                      max={44}
-                      required
-                    />
+                    >
+                      {TIRE_SIZE_OPTIONS.map((size) => (
+                        <option key={size} value={size}>{size}" Tires</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-mono text-stone-400 block mb-1">Lift Kit (1" to 5")</label>
+                    <select
+                      value={liftKit}
+                      onChange={(e) => setLiftKit(e.target.value)}
+                      className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-stone-100 font-mono"
+                    >
+                      {LIFT_KIT_OPTIONS.map((lift) => (
+                        <option key={lift} value={lift}>{lift}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="text-[10px] font-mono text-stone-400 block mb-1">Role</label>
@@ -649,7 +664,7 @@ export default function TripDetailDrawer({
                       You are registered ({myParticipant.role}) &bull; Status: {myParticipant.status}
                     </span>
                     <span className="text-[11px] font-mono text-stone-400">
-                      Rig: {myParticipant.rigDetails.year} {myParticipant.rigDetails.make} {myParticipant.rigDetails.model} ({myParticipant.rigDetails.tireSize}" Tires)
+                      Rig: {myParticipant.rigDetails.year} {myParticipant.rigDetails.make} {myParticipant.rigDetails.model} ({myParticipant.rigDetails.tireSize}" Tires{myParticipant.rigDetails.liftKit && !myParticipant.rigDetails.liftKit.includes('No Lift') ? `, ${myParticipant.rigDetails.liftKit}` : ''})
                     </span>
                   </div>
                 </div>
@@ -689,10 +704,16 @@ export default function TripDetailDrawer({
                           {p.role}
                         </span>
                       </div>
-                      <p className="text-stone-400 text-[11px] font-mono flex items-center gap-1.5">
+                      <p className="text-stone-400 text-[11px] font-mono flex items-center gap-1.5 flex-wrap">
                         <span>{p.rigDetails.year} {p.rigDetails.make} {p.rigDetails.model}</span>
                         <span>&bull;</span>
                         <span>{p.rigDetails.tireSize}" Tires</span>
+                        {p.rigDetails.liftKit && !p.rigDetails.liftKit.includes('No Lift') && (
+                          <>
+                            <span>&bull;</span>
+                            <span className="text-amber-300 font-bold">{p.rigDetails.liftKit}</span>
+                          </>
+                        )}
                         {p.rigDetails.hasWinch && (
                           <>
                             <span>&bull;</span>

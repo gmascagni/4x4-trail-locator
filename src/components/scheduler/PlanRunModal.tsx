@@ -44,6 +44,22 @@ const RADIO_CHANNELS = [
   'HAM 2m 146.520 MHz FM Simplex'
 ];
 
+export const TIRE_SIZE_OPTIONS = [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42];
+
+export const LIFT_KIT_OPTIONS = [
+  'Stock (No Lift)',
+  '1" Lift',
+  '1.5" Lift',
+  '2" Lift',
+  '2.5" Lift',
+  '3" Lift',
+  '3.5" Lift',
+  '4" Lift',
+  '4.5" Lift',
+  '5" Lift',
+  '5"+ Lift'
+];
+
 export default function PlanRunModal({
   trails,
   prefillTrail,
@@ -92,6 +108,7 @@ export default function PlanRunModal({
   const [hostRigMake, setHostRigMake] = useState('Jeep');
   const [hostRigModel, setHostRigModel] = useState('Wrangler Rubicon');
   const [hostTireSize, setHostTireSize] = useState(35);
+  const [hostLiftKit, setHostLiftKit] = useState('2.5" Lift');
   const [hostHasWinch, setHostHasWinch] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,18 +150,20 @@ export default function PlanRunModal({
 
     setIsSubmitting(true);
 
-    const tripId = `trip-${Date.now()}`;
-    const startIso = new Date(startTime).toISOString();
-    const endIso = endTime ? new Date(endTime).toISOString() : undefined;
+    const calculatedRequirements = [
+      `${hostTireSize}" Tires min`,
+      ...(hostLiftKit && !hostLiftKit.includes('No Lift') ? [`${hostLiftKit} recommended`] : []),
+      ...selectedRequirements.filter(r => !r.includes('Tires min'))
+    ];
 
     const newTrip: Trip = {
-      id: tripId,
+      id: `trip-${Date.now()}`,
       trailId: selectedTrail.id,
       trailName: selectedTrail.name,
       title: title.trim(),
-      description: description.trim(),
-      startTime: startIso,
-      endTime: endIso,
+      description: description.trim() || `${title} at ${selectedTrail.name}. Bring recovery gear and lunch.`,
+      startTime: new Date(startTime).toISOString(),
+      endTime: endTime ? new Date(endTime).toISOString() : new Date(new Date(startTime).getTime() + 14400000).toISOString(),
       meetingLocation: meetingLocation.trim(),
       meetingPointCoordinates: selectedTrail.location ? {
         lat: selectedTrail.location.lat,
@@ -154,7 +173,7 @@ export default function PlanRunModal({
       organizerProfile: currentUser,
       maxRigs,
       difficultyRating: difficulty,
-      minimumRequirements: selectedRequirements,
+      minimumRequirements: calculatedRequirements,
       commsChannel,
       status: 'Upcoming',
       goDecision: 'GO',
@@ -166,6 +185,7 @@ export default function PlanRunModal({
       make: hostRigMake,
       model: hostRigModel,
       tireSize: hostTireSize,
+      liftKit: hostLiftKit,
       hasWinch: hostHasWinch
     };
 
@@ -464,9 +484,9 @@ export default function PlanRunModal({
           {/* Host Rig Information */}
           <div className="p-3.5 bg-stone-950 rounded-xl border border-stone-800 space-y-2">
             <span className="font-heading font-bold text-stone-300 block text-xs">
-              Host Lead Rig Details (Shown on Convoy Roster)
+              Lead Vehicle Specs (Host Rig Details)
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] font-mono">
               <div>
                 <span className="text-stone-500 block mb-1">Year</span>
                 <input
@@ -490,13 +510,32 @@ export default function PlanRunModal({
                 />
               </div>
               <div>
-                <span className="text-stone-500 block mb-1">Tires (Inches)</span>
-                <input
-                  type="number"
+                <span className="text-stone-500 block mb-1">Tires (31" to 42")</span>
+                <select
                   value={hostTireSize}
                   onChange={(e) => setHostTireSize(Number(e.target.value))}
                   className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2 py-1 text-stone-100"
-                />
+                >
+                  {TIRE_SIZE_OPTIONS.map((size) => (
+                    <option key={size} value={size}>
+                      {size}" Tires
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <span className="text-stone-500 block mb-1">Lift Kit (1" to 5")</span>
+                <select
+                  value={hostLiftKit}
+                  onChange={(e) => setHostLiftKit(e.target.value)}
+                  className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2 py-1 text-stone-100"
+                >
+                  {LIFT_KIT_OPTIONS.map((lift) => (
+                    <option key={lift} value={lift}>
+                      {lift}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex items-center pt-4">
                 <label className="flex items-center gap-1.5 cursor-pointer text-stone-300">
