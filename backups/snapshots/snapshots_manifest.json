@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.54.0_2026-09-16_23-04-02",
+    "version": "v2.54.0",
+    "timestamp": "2026-09-17T03:04:04.946Z",
+    "displayDate": "9/16/2026, 11:04:04 PM",
+    "description": "Add direct Group Runs jump button to top navigation bar in live index.html",
+    "zipFile": "v2.54.0_2026-09-16_23-04-02.zip",
+    "sizeMb": "42.04 MB",
+    "gitHash": "95ac2d8"
+  },
+  {
     "id": "v2.53.0_2026-09-16_22-59-31",
     "version": "v2.53.0",
     "timestamp": "2026-09-17T02:59:34.391Z",

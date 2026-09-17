@@ -1588,7 +1588,9 @@ footer {
         <span class="logo-title">4x4 <span>TrailFinder</span></span>
       </div>
     </a>
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <button type="button" onclick="jumpToGroupRuns()" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:7px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(2,132,199,0.25);">
+        <i class="fa-solid fa-calendar-days" style="color:var(--amber-orange);"></i> Group Runs
+      </button>
       <button type="button" onclick="jumpToRecoveryTutorials('all')" style="background:linear-gradient(135deg, #ea580c, #c2410c); color:#ffffff; border:none; padding:7px 14px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(234,88,12,0.35);">
         <i class="fa-solid fa-graduation-cap"></i> 4x4 Wheeling Tutorials
       </button>
@@ -12673,6 +12675,19 @@ function jumpToRecoveryChecklist() {
   }
   const tabBtn = document.getElementById('tabBtnChecklist');
   switchRecoveryGuideTab('checklist', tabBtn);
+  if (section && typeof section.scrollIntoView === 'function') {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function jumpToGroupRuns() {
+  const section = document.getElementById('trip-scheduler');
+  const body = document.getElementById('schedulerBody');
+  const icon = document.getElementById('schedulerToggleIcon');
+  if (body) {
+    body.style.display = 'block';
+    if (icon) icon.style.transform = 'rotate(180deg)';
+  }
   if (section && typeof section.scrollIntoView === 'function') {
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
