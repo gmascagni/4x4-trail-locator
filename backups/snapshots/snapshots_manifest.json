@@ -1,5 +1,15 @@
 [
   {
+    "id": "v2.55.0_2026-09-16_23-09-14",
+    "version": "v2.55.0",
+    "timestamp": "2026-09-17T03:09:16.381Z",
+    "displayDate": "9/16/2026, 11:09:16 PM",
+    "description": "Set sample group runs to Example Only with past dates and closed registration",
+    "zipFile": "v2.55.0_2026-09-16_23-09-14.zip",
+    "sizeMb": "42.04 MB",
+    "gitHash": "befe739"
+  },
+  {
     "id": "v2.54.0_2026-09-16_23-04-02",
     "version": "v2.54.0",
     "timestamp": "2026-09-17T03:04:04.946Z",

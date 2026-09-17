@@ -13229,10 +13229,10 @@ const INITIAL_INDEX_TRIPS = [
     id: "trip-fins-and-things",
     trailId: "trail-fins-and-things",
     trailName: "Fins & Things (Badge of Honor)",
-    title: "Saturday Sandstone Fins & Frenchie's Fin Run",
-    description: "Morning technical run tackling the slickrock domes and steep fin climbs. Air down to 12-14 PSI at the north staging parking lot. Full recovery kit and spotters on Frenchie's Fin.",
-    startTime: new Date(Date.now() + 86400000 * 2).toISOString(),
-    endTime: new Date(Date.now() + 86400000 * 2 + 14400000).toISOString(),
+    title: "[Example Only] Saturday Sandstone Fins & Frenchie's Fin Run",
+    description: "(Historical demonstration run) Morning technical run tackling the slickrock domes and steep fin climbs. Air down to 12-14 PSI at the north staging parking lot. Full recovery kit and spotters on Frenchie's Fin.",
+    startTime: "2026-08-15T09:00:00.000Z",
+    endTime: "2026-08-15T13:00:00.000Z",
     meetingLocation: "Fins & Things North Entrance Staging Lot, Sand Flats Rd, Moab, UT",
     lat: 38.5815,
     lng: -109.4795,
@@ -13242,7 +13242,7 @@ const INITIAL_INDEX_TRIPS = [
     difficultyRating: "Moderate",
     minimumRequirements: ['33" Tires min', 'Rear Locker required', 'Full-size spare', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
-    status: "Upcoming",
+    status: "Completed",
     roster: [
       { name: "Red Rock Trail Guide", rig: "2024 Jeep Rubicon 392 (37s)", role: "Host", status: "Going" },
       { name: "Dave K.", rig: "2023 Jeep Gladiator JT (35s)", role: "Participant", status: "Going" }
@@ -13252,10 +13252,10 @@ const INITIAL_INDEX_TRIPS = [
     id: "trip-hells-revenge",
     trailId: "trail-hells-revenge",
     trailName: "Hell's Revenge (Badge of Honor)",
-    title: "Escalator & Hell's Gate Technical Crawl",
-    description: "High exposure slickrock crawling. Minimum 35-inch tires and true locking differentials strongly advised for the optional Hell's Gate and Escalator hot tubs.",
-    startTime: new Date(Date.now() + 86400000 * 5).toISOString(),
-    endTime: new Date(Date.now() + 86400000 * 5 + 18000000).toISOString(),
+    title: "[Example Only] Escalator & Hell's Gate Technical Crawl",
+    description: "(Historical demonstration run) High exposure slickrock crawling. Minimum 35-inch tires and true locking differentials strongly advised for the optional Hell's Gate and Escalator hot tubs.",
+    startTime: "2026-08-22T08:30:00.000Z",
+    endTime: "2026-08-22T13:30:00.000Z",
     meetingLocation: "Sand Flats Recreation Area Staging Kiosk, Moab, UT",
     lat: 38.5756,
     lng: -109.5211,
@@ -13265,7 +13265,7 @@ const INITIAL_INDEX_TRIPS = [
     difficultyRating: "Hard",
     minimumRequirements: ['35" Tires min', 'Front Locker required', 'Rear Locker required', 'Winch required'],
     commsChannel: "GMRS Channel 19 / 462.650 MHz",
-    status: "Upcoming",
+    status: "Completed",
     roster: [
       { name: "Moab Expeditions Lead", rig: "Built JLU on 40s", role: "Host", status: "Going" },
       { name: "Sarah M.", rig: "2021 Ford Bronco Badlands (35s)", role: "Tail Gunner / Sweep", status: "Going" }
@@ -13275,10 +13275,10 @@ const INITIAL_INDEX_TRIPS = [
     id: "trip-beasley-knob",
     trailId: "trail-beasley-knob",
     trailName: "Beasley Knob OHV Trail System",
-    title: "Chattahoochee Mountain Forest & Clay Ruts",
-    description: "Exploring the 93B mountain ridge cutouts and hill climbs in Blairsville. Winch and mud terrain tires recommended if damp.",
-    startTime: new Date(Date.now() + 86400000 * 9).toISOString(),
-    endTime: new Date(Date.now() + 86400000 * 9 + 18000000).toISOString(),
+    title: "[Example Only] Chattahoochee Mountain Forest & Clay Ruts",
+    description: "(Historical demonstration run) Exploring the 93B mountain ridge cutouts and hill climbs in Blairsville. Winch and mud terrain tires recommended if damp.",
+    startTime: "2026-08-29T10:00:00.000Z",
+    endTime: "2026-08-29T15:00:00.000Z",
     meetingLocation: "Beasley Knob Trailhead Staging, Blairsville, GA",
     lat: 34.8465,
     lng: -83.9142,
@@ -13288,7 +13288,7 @@ const INITIAL_INDEX_TRIPS = [
     difficultyRating: "Hard",
     minimumRequirements: ['33" Tires min', 'Winch required', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
-    status: "Upcoming",
+    status: "Completed",
     roster: [
       { name: "Blue Ridge 4x4 Host", rig: "Gladiator Rubicon (35s)", role: "Host", status: "Going" }
     ]
@@ -13300,7 +13300,22 @@ function getCommunityTrips() {
     const stored = localStorage.getItem('local_trail_trips');
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map(t => {
+          const matchDefault = INITIAL_INDEX_TRIPS.find(d => d.id === t.id);
+          if (matchDefault) {
+            return {
+              ...t,
+              title: matchDefault.title,
+              description: matchDefault.description,
+              startTime: matchDefault.startTime,
+              endTime: matchDefault.endTime,
+              status: matchDefault.status
+            };
+          }
+          return t;
+        });
+      }
     }
   } catch (e) {}
   return INITIAL_INDEX_TRIPS;
@@ -13355,7 +13370,9 @@ function renderSchedulerTrips() {
     const roster = t.roster || [];
     const openSlots = Math.max(0, t.maxRigs - roster.length);
     const startDate = new Date(t.startTime);
-    const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const isPast = startDate < new Date() || t.status === 'Completed';
+    const isExample = (t.title || '').includes('Example Only');
+    const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
     const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     return `
@@ -13365,9 +13382,15 @@ function renderSchedulerTrips() {
             <span style="font-size:10.5px; font-weight:800; background:${dStyle.bg}; color:${dStyle.text}; border:1px solid ${dStyle.border}; padding:2px 8px; border-radius:4px; font-family:monospace;">
               ${t.difficultyRating} Difficulty
             </span>
-            <span style="font-size:10.5px; font-weight:800; background:rgba(234,88,12,0.2); color:#fbbf24; border:1px solid rgba(234,88,12,0.4); padding:2px 8px; border-radius:4px; font-family:monospace;">
-              <i class="fa-solid fa-users"></i> ${openSlots > 0 ? openSlots + ' Slots Open' : 'Convoy Full'}
-            </span>
+            ${isPast || isExample ? `
+              <span style="font-size:10px; font-weight:800; background:#334155; color:#cbd5e1; border:1px solid #475569; padding:2px 8px; border-radius:4px; font-family:monospace;">
+                <i class="fa-solid fa-clock-rotate-left"></i> Archived (Example Only)
+              </span>
+            ` : `
+              <span style="font-size:10.5px; font-weight:800; background:rgba(234,88,12,0.2); color:#fbbf24; border:1px solid rgba(234,88,12,0.4); padding:2px 8px; border-radius:4px; font-family:monospace;">
+                <i class="fa-solid fa-users"></i> ${openSlots > 0 ? openSlots + ' Slots Open' : 'Convoy Full'}
+              </span>
+            `}
           </div>
           <div style="font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-bottom:2px;">${t.trailName}</div>
           <h4 style="font-size:15px; font-weight:900; color:#f8fafc; margin:0; line-height:1.35; cursor:pointer;" onclick="openConvoyDetailModal('${t.id}')">
@@ -13381,7 +13404,10 @@ function renderSchedulerTrips() {
           </div>
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:11px; space-y:4px; font-family:monospace;">
-            <div style="color:#0f172a; margin-bottom:3px;"><i class="fa-regular fa-clock" style="color:var(--amber-orange);"></i> <strong>Time:</strong> ${dateFormatted} at ${timeFormatted}</div>
+            <div style="color:#0f172a; margin-bottom:3px;">
+              <i class="fa-regular fa-clock" style="color:var(--amber-orange);"></i> <strong>Run Date:</strong> ${dateFormatted} at ${timeFormatted}
+              ${isPast || isExample ? `<span style="background:#fee2e2; color:#b91c1c; font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:3px; margin-left:4px;">PAST EVENT</span>` : ''}
+            </div>
             <div style="color:#0f172a; margin-bottom:3px;"><i class="fa-solid fa-location-dot" style="color:#16a34a;"></i> <strong>Meet:</strong> ${t.meetingLocation}</div>
             <div style="color:#0f172a;"><i class="fa-solid fa-radio" style="color:#2563eb;"></i> <strong>Comms:</strong> ${t.commsChannel}</div>
           </div>
@@ -13392,7 +13418,7 @@ function renderSchedulerTrips() {
 
           <div style="display:flex; gap:6px; pt-2; border-top:1px dashed #e2e8f0; padding-top:10px;">
             <button type="button" onclick="openConvoyDetailModal('${t.id}')" style="flex:1; background:#0f172a; color:#fff; border:none; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> Details & RSVP (${roster.length}/${t.maxRigs})
+              <i class="fa-solid fa-circle-info" style="color:#38bdf8;"></i> ${isPast || isExample ? 'Inspect Specs (Example Only)' : 'Details & RSVP (' + roster.length + '/' + t.maxRigs + ')'}
             </button>
             <button type="button" onclick="openGoogleCalendar('${t.id}')" style="background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; padding:8px 10px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;" title="Add to Google Calendar">
               <i class="fa-brands fa-google"></i>
@@ -13504,6 +13530,8 @@ function openConvoyDetailModal(tripId) {
   if (!t) return;
 
   const startDate = new Date(t.startTime);
+  const isPast = startDate < new Date() || t.status === 'Completed';
+  const isExample = (t.title || '').includes('Example Only');
   const dateFormatted = startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
   const timeFormatted = startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   const roster = t.roster || [];
@@ -13515,15 +13543,29 @@ function openConvoyDetailModal(tripId) {
         <span style="font-size:11px; font-weight:800; color:#ea580c; text-transform:uppercase;">${t.trailName}</span>
         <h3 style="font-size:20px; font-weight:900; color:var(--forest-dark); margin:2px 0 0;">${t.title}</h3>
       </div>
-      <span style="font-size:11px; font-weight:800; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-family:monospace;">
-        ${t.difficultyRating} Difficulty
-      </span>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <span style="font-size:11px; font-weight:800; background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; padding:4px 10px; border-radius:6px; font-family:monospace;">
+          ${t.difficultyRating} Difficulty
+        </span>
+        ${isPast || isExample ? `
+          <span style="font-size:11px; font-weight:800; background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; padding:4px 10px; border-radius:6px; font-family:monospace;">
+            Past Example Run
+          </span>
+        ` : ''}
+      </div>
     </div>
+
+    ${isPast || isExample ? `
+      <div style="background:#fffbeb; border:1.5px solid #fef3c7; border-left:4px solid #f59e0b; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:11.5px; color:#92400e; line-height:1.45;">
+        <strong><i class="fa-solid fa-triangle-exclamation"></i> Historical Demonstration Run (Example Only):</strong> This past event is provided solely to demonstrate trail rendezvous points and vehicle requirement criteria. It is not an active run, and RSVP registration is closed.
+      </div>
+    ` : ''}
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; font-family:monospace; margin-bottom:14px;">
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
         <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">📅 Rendezvous Time</span>
         <strong style="color:#0f172a;">${dateFormatted}</strong> at ${timeFormatted}
+        ${isPast || isExample ? `<span style="background:#fee2e2; color:#b91c1c; font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:3px; margin-left:4px;">PAST</span>` : ''}
       </div>
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
         <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">📍 Meeting Location</span>
@@ -13535,7 +13577,7 @@ function openConvoyDetailModal(tripId) {
       </div>
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
         <span style="color:#64748b; font-size:10px; text-transform:uppercase; display:block;">🚙 Convoy Capacity</span>
-        <strong style="color:#c2410c;">${openSlots > 0 ? openSlots + ' of ' + t.maxRigs + ' Slots Open' : 'Convoy Full (Waitlist)'}</strong>
+        <strong style="color:#c2410c;">${isPast || isExample ? 'Registration Closed (' + roster.length + '/' + t.maxRigs + ')' : (openSlots > 0 ? openSlots + ' of ' + t.maxRigs + ' Slots Open' : 'Convoy Full (Waitlist)')}</strong>
       </div>
     </div>
 
@@ -13546,7 +13588,7 @@ function openConvoyDetailModal(tripId) {
     <!-- CALENDAR SYNC -->
     <div style="display:flex; justify-content:space-between; align-items:center; background:#fff7ed; border:1.5px solid #fed7aa; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
       <div style="font-size:11.5px; font-weight:800; color:#c2410c;">
-        <i class="fa-solid fa-calendar-check"></i> Sync with Mobile / Personal Calendar:
+        <i class="fa-solid fa-calendar-check"></i> ${isPast || isExample ? 'Download Example Run Schedule:' : 'Sync with Mobile / Personal Calendar:'}
       </div>
       <div style="display:flex; gap:6px;">
         <button type="button" onclick="openGoogleCalendar('${t.id}')" style="background:#ffffff; color:#c2410c; border:1px solid #fed7aa; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
@@ -13561,7 +13603,7 @@ function openConvoyDetailModal(tripId) {
     <!-- CONVOY ROSTER -->
     <div style="margin-bottom:16px;">
       <h4 style="font-size:13px; font-weight:900; color:#0f172a; margin:0 0 8px; display:flex; justify-content:space-between;">
-        <span><i class="fa-solid fa-users"></i> Confirmed Convoy Roster (${roster.length}/${t.maxRigs} Rigs)</span>
+        <span><i class="fa-solid fa-users"></i> ${isPast || isExample ? 'Demonstration Roster' : 'Confirmed Convoy Roster'} (${roster.length}/${t.maxRigs} Rigs)</span>
       </h4>
       <div style="display:flex; flex-direction:column; gap:6px;">
         ${roster.map(r => `
@@ -13578,23 +13620,29 @@ function openConvoyDetailModal(tripId) {
       </div>
     </div>
 
-    <!-- RSVP FORM -->
-    <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px 14px;">
-      <h4 style="font-size:12px; font-weight:900; color:#0f172a; margin:0 0 8px;">
-        <i class="fa-solid fa-user-plus" style="color:var(--amber-orange);"></i> RSVP with Your Rig Specs:
-      </h4>
-      <form onsubmit="submitRsvpForm(event, '${t.id}')" style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:8px;">
-        <input type="text" id="rsvpDriverName" placeholder="Your Name" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
-        <input type="text" id="rsvpRigModel" placeholder="e.g. '22 Rubicon JL (35s)" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
-        <select id="rsvpRole" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;">
-          <option value="Participant">Participant</option>
-          <option value="Tail Gunner / Sweep">Tail Gunner / Sweep</option>
-        </select>
-        <button type="submit" style="background:var(--forest-dark); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
-          Confirm RSVP
-        </button>
-      </form>
-    </div>
+    <!-- RSVP SECTION -->
+    ${isPast || isExample ? `
+      <div style="background:#f1f5f9; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px 14px; text-align:center; color:#64748b; font-size:11.5px; font-weight:700;">
+        <i class="fa-solid fa-lock"></i> RSVP Registration is closed for historical / example runs. Click <strong>Plan a Group Run</strong> above to coordinate an upcoming community convoy!
+      </div>
+    ` : `
+      <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:12px 14px;">
+        <h4 style="font-size:12px; font-weight:900; color:#0f172a; margin:0 0 8px;">
+          <i class="fa-solid fa-user-plus" style="color:var(--amber-orange);"></i> RSVP with Your Rig Specs:
+        </h4>
+        <form onsubmit="submitRsvpForm(event, '${t.id}')" style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:8px;">
+          <input type="text" id="rsvpDriverName" placeholder="Your Name" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
+          <input type="text" id="rsvpRigModel" placeholder="e.g. '22 Rubicon JL (35s)" required style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" />
+          <select id="rsvpRole" style="padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;">
+            <option value="Participant">Participant</option>
+            <option value="Tail Gunner / Sweep">Tail Gunner / Sweep</option>
+          </select>
+          <button type="submit" style="background:var(--forest-dark); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer;">
+            Confirm RSVP
+          </button>
+        </form>
+      </div>
+    `}
   `;
 
   modal.style.display = 'flex';
@@ -13607,13 +13655,18 @@ function closeConvoyDetailModal() {
 
 function submitRsvpForm(e, tripId) {
   e.preventDefault();
-  const name = document.getElementById('rsvpDriverName').value;
-  const rig = document.getElementById('rsvpRigModel').value;
-  const role = document.getElementById('rsvpRole').value;
-
   const trips = getCommunityTrips();
   const t = trips.find(x => x.id === tripId);
   if (!t) return;
+
+  if (t.status === 'Completed' || (t.title || '').includes('Example Only')) {
+    alert("Registration is closed for past / example demonstration runs.");
+    return;
+  }
+
+  const name = document.getElementById('rsvpDriverName').value;
+  const rig = document.getElementById('rsvpRigModel').value;
+  const role = document.getElementById('rsvpRole').value;
 
   if (!t.roster) t.roster = [];
   t.roster.push({

@@ -34,7 +34,7 @@ export default function TripCalendar({
   onOpenPlanRunModal
 }: TripCalendarProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
-  const [showCompleted, setShowCompleted] = useState(false);
+  const [showCompleted, setShowCompleted] = useState(true);
 
   // Filter trips
   const filteredTrips = useMemo(() => {
@@ -151,7 +151,7 @@ export default function TripCalendar({
             onChange={(e) => setShowCompleted(e.target.checked)}
             className="rounded border-stone-700 text-amber-500 focus:ring-0"
           />
-          <span>Include Completed Runs</span>
+          <span>Include Past / Example Runs</span>
         </label>
       </div>
 

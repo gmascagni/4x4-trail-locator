@@ -13,16 +13,16 @@ interface TrailRunSchedulerProps {
   onClearPrefill?: () => void;
 }
 
-// Initial seed trips (real community runs on verified trails)
+// Initial seed trips (Historical demonstration runs for example only)
 const INITIAL_DEMO_TRIPS: Trip[] = [
   {
     id: "trip-fins-and-things",
     trailId: "trail-fins-and-things",
     trailName: "Fins & Things (Badge of Honor)",
-    title: "Saturday Sandstone Fins & Frenchie's Fin Run",
-    description: "Morning technical run tackling the slickrock domes and steep fin climbs. Air down to 12-14 PSI at the north staging parking lot. Full recovery kit and spotters on Frenchie's Fin.",
-    startTime: new Date(Date.now() + 86400000 * 2).toISOString(), // 2 days ahead
-    endTime: new Date(Date.now() + 86400000 * 2 + 14400000).toISOString(), // +4 hours
+    title: "[Example Only] Saturday Sandstone Fins & Frenchie's Fin Run",
+    description: "(Historical demonstration run) Morning technical run tackling the slickrock domes and steep fin climbs. Air down to 12-14 PSI at the north staging parking lot. Full recovery kit and spotters on Frenchie's Fin.",
+    startTime: "2026-08-15T09:00:00.000Z", // Past demonstration date
+    endTime: "2026-08-15T13:00:00.000Z",
     meetingLocation: "Fins & Things North Entrance Staging Lot, Sand Flats Rd, Moab, UT",
     meetingPointCoordinates: { lat: 38.5815, lng: -109.4795 },
     organizerId: "host-utah-guide",
@@ -35,17 +35,17 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     difficultyRating: "Moderate",
     minimumRequirements: ['33" Tires min', 'Rear Locker required', 'Full-size spare', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
-    status: "Upcoming",
-    createdAt: new Date().toISOString()
+    status: "Completed",
+    createdAt: "2026-08-01T12:00:00.000Z"
   },
   {
     id: "trip-hells-revenge",
     trailId: "trail-hells-revenge",
     trailName: "Hell's Revenge (Badge of Honor)",
-    title: "Escalator & Hell's Gate Technical Crawl",
-    description: "High exposure slickrock crawling. Minimum 35-inch tires and true locking differentials strongly advised for the optional Hell's Gate and Escalator hot tubs.",
-    startTime: new Date(Date.now() + 86400000 * 5).toISOString(), // 5 days ahead
-    endTime: new Date(Date.now() + 86400000 * 5 + 18000000).toISOString(), // +5 hours
+    title: "[Example Only] Escalator & Hell's Gate Technical Crawl",
+    description: "(Historical demonstration run) High exposure slickrock crawling. Minimum 35-inch tires and true locking differentials strongly advised for the optional Hell's Gate and Escalator hot tubs.",
+    startTime: "2026-08-22T08:30:00.000Z", // Past demonstration date
+    endTime: "2026-08-22T13:30:00.000Z",
     meetingLocation: "Sand Flats Recreation Area Staging Kiosk, Moab, UT",
     meetingPointCoordinates: { lat: 38.5756, lng: -109.5211 },
     organizerId: "host-crawler-pro",
@@ -58,17 +58,17 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     difficultyRating: "Hard",
     minimumRequirements: ['35" Tires min', 'Front Locker required', 'Rear Locker required', 'Winch required'],
     commsChannel: "GMRS Channel 19 / 462.650 MHz",
-    status: "Upcoming",
-    createdAt: new Date().toISOString()
+    status: "Completed",
+    createdAt: "2026-08-05T12:00:00.000Z"
   },
   {
     id: "trip-beasley-knob",
     trailId: "trail-beasley-knob",
     trailName: "Beasley Knob OHV Trail System",
-    title: "Chattahoochee Mountain Forest & Clay Ruts",
-    description: "Exploring the 93B mountain ridge cutouts and hill climbs in Blairsville. Winch and mud terrain tires recommended if damp.",
-    startTime: new Date(Date.now() + 86400000 * 9).toISOString(), // 9 days ahead
-    endTime: new Date(Date.now() + 86400000 * 9 + 18000000).toISOString(),
+    title: "[Example Only] Chattahoochee Mountain Forest & Clay Ruts",
+    description: "(Historical demonstration run) Exploring the 93B mountain ridge cutouts and hill climbs in Blairsville. Winch and mud terrain tires recommended if damp.",
+    startTime: "2026-08-29T10:00:00.000Z", // Past demonstration date
+    endTime: "2026-08-29T15:00:00.000Z",
     meetingLocation: "Beasley Knob Trailhead Staging, Blairsville, GA",
     meetingPointCoordinates: { lat: 34.8465, lng: -83.9142 },
     organizerId: "host-appalachian",
@@ -81,8 +81,8 @@ const INITIAL_DEMO_TRIPS: Trip[] = [
     difficultyRating: "Hard",
     minimumRequirements: ['33" Tires min', 'Winch required', 'Rated recovery points'],
     commsChannel: "GMRS Channel 16 / 462.575 MHz (Standard 4x4)",
-    status: "Upcoming",
-    createdAt: new Date().toISOString()
+    status: "Completed",
+    createdAt: "2026-08-10T12:00:00.000Z"
   }
 ];
 
@@ -169,7 +169,24 @@ export default function TrailRunScheduler({
     try {
       const stored = localStorage.getItem('local_trail_trips');
       if (stored) {
-        setTrips(JSON.parse(stored));
+        const parsed: Trip[] = JSON.parse(stored);
+        // Ensure default seed trips always reflect "[Example Only]" and past dates
+        const sanitized = parsed.map(t => {
+          const matchDefault = INITIAL_DEMO_TRIPS.find(d => d.id === t.id);
+          if (matchDefault) {
+            return {
+              ...t,
+              title: matchDefault.title,
+              description: matchDefault.description,
+              startTime: matchDefault.startTime,
+              endTime: matchDefault.endTime,
+              status: matchDefault.status
+            };
+          }
+          return t;
+        });
+        setTrips(sanitized);
+        localStorage.setItem('local_trail_trips', JSON.stringify(sanitized));
       } else {
         setTrips(INITIAL_DEMO_TRIPS);
         localStorage.setItem('local_trail_trips', JSON.stringify(INITIAL_DEMO_TRIPS));

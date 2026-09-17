@@ -278,8 +278,12 @@ export default function TripDetailDrawer({
               <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold border ${diffStyle.bg} ${diffStyle.text} ${diffStyle.border}`}>
                 {trip.difficultyRating} Difficulty
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                {trip.status}
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold ${
+                trip.status === 'Completed' || trip.title.includes('Example Only')
+                  ? 'bg-stone-800 text-stone-400 border border-stone-700'
+                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+              }`}>
+                {trip.status === 'Completed' || trip.title.includes('Example Only') ? 'Past Run (Example Only)' : trip.status}
               </span>
               <span className="text-xs text-stone-400 font-mono">
                 {trip.trailName}
@@ -301,6 +305,17 @@ export default function TripDetailDrawer({
 
         {/* Content Body */}
         <div className="p-5 space-y-6 flex-1">
+          {/* Example / Past Notice Banner */}
+          {(trip.status === 'Completed' || trip.title.includes('Example Only')) && (
+            <div className="p-3.5 bg-amber-950/30 border border-amber-700/40 rounded-xl text-xs text-amber-200 font-mono flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-amber-300 block mb-0.5">Historical Demonstration Run (Example Only)</strong>
+                This run is provided solely as an example to illustrate convoy coordination, meeting locations, and rig criteria. It is not an active upcoming run, and registration is closed.
+              </div>
+            </div>
+          )}
+
           {/* Quick Info Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
             <div className="p-3 bg-stone-950 rounded-xl border border-stone-800 space-y-1">
@@ -406,7 +421,7 @@ export default function TripDetailDrawer({
                 Convoy Roster ({roster.length} / {trip.maxRigs} Rigs)
               </h3>
 
-              {!myParticipant && (
+              {!myParticipant && trip.status !== 'Completed' && !trip.title.includes('Example Only') && (
                 <button
                   type="button"
                   onClick={() => setIsRsvpOpen(!isRsvpOpen)}
@@ -415,6 +430,11 @@ export default function TripDetailDrawer({
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>{openSpots > 0 ? 'RSVP / Join Convoy' : 'Join Waitlist'}</span>
                 </button>
+              )}
+              {(trip.status === 'Completed' || trip.title.includes('Example Only')) && (
+                <span className="text-[11px] font-mono text-stone-400 bg-stone-950 border border-stone-800 px-2.5 py-1 rounded-md">
+                  Registration Closed (Example Run)
+                </span>
               )}
             </div>
 
